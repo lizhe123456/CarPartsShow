@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.carpartsshow">
+    <!--允许程序打开网络套接字-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--允许程序获取网络状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--允许程序设置内置sd卡的写权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--允许程序访问WiFi网络信息-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:name=".app.App"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.FingerprintLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ForgetPassActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.NewPassActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.CreditMoneyActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.me.activity.MyOrderActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.me.activity.MyCollectActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.MyCouponActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.MyIntegralActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.AboutUsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.FeedbackActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.UpdatePassActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.UpdateAddressActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.IntegralShopActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.IntegralRecordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.MyMoneyActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.activity.IntegralGoodsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.me.activity.NewsActivity"
+            android:screenOrientation="portrait"/>
+    </application>
+
+</manifest>

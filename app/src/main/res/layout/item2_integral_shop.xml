@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dm_8"
+    android:paddingRight="@dimen/dm_8"
+    android:paddingTop="@dimen/dm_8"
+    android:paddingBottom="@dimen/dm_12"
+    android:layout_margin="@dimen/dm_2"
+    android:background="@drawable/goods_item">
+    <ImageView
+        android:id="@+id/img_good"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_155"
+        android:scaleType="fitXY"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.carpartsshow.view.NoMarginsTextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8766"
+            android:textColor="@color/tv_FE3F19"
+            android:textSize="@dimen/dm_21"/>
+        <com.carpartsshow.view.NoMarginsTextView
+            android:id="@+id/tv_houz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="积分"
+            android:textColor="@color/tv_666"
+            android:textSize="@dimen/dm_10"
+            android:layout_marginLeft="@dimen/dm_5"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/goods_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/dm_11"
+        android:textColor="@color/tv_333"
+        android:text="生命之源特级初榨橄榄油1L（西 班牙进口）"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+</LinearLayout>

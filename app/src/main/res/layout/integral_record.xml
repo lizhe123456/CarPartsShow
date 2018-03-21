@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dm_12"
+    android:paddingLeft="@dimen/dm_15"
+    android:paddingTop="@dimen/dm_12"
+    android:background="@color/white"
+    android:layout_marginBottom="@dimen/dm_10">
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="兑换时间：2017-07-07 12:12:12"
+        android:textColor="@color/tv_000"
+        android:textSize="@dimen/dm_12" />
+
+    <View
+        android:id="@+id/xian"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:layout_below="@+id/tv_time"
+        android:layout_marginTop="@dimen/dm_12"
+        android:background="@color/slide_line" />
+
+    <ImageView
+        android:id="@+id/goods_img"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_below="@+id/xian"
+        android:layout_marginTop="@dimen/dm_12" />
+
+    `
+
+    <TextView
+        android:id="@+id/tv_goods_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="大众老新捷达雨刮器 桑塔纳POLO宝来 逸有无骨雨刷汽车原装配件"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textSize="@dimen/dm_14"
+        android:textColor="@color/tv_000"
+        android:layout_toRightOf="@+id/goods_img"
+        android:layout_alignTop="@+id/goods_img"
+        android:layout_marginRight="@dimen/dm_20"
+        android:layout_marginLeft="@dimen/dm_8"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/goods_img"
+        android:layout_alignBottom="@+id/goods_img"
+        android:layout_marginLeft="@dimen/dm_8"
+        android:textColor="@color/red_login"
+        android:textSize="@dimen/dm_16"
+        android:text="8888"/>
+    <TextView
+        android:id="@+id/tv_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/dm_16"
+        android:layout_alignBottom="@+id/goods_img"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dm_15"
+        android:text="02"
+        android:textColor="@color/tv_000"/>
+</RelativeLayout>

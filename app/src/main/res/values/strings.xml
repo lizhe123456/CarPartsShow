@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">CarPartsShow</string>
+    <string name="login">登录</string>
+    <string name="tv_phone_hint">请输入手机号</string>
+    <string name="tv_password_hint">请输入密码</string>
+    <string name="tv_register">注册</string>
+    <string name="login_title">欢迎回来</string>
+    <string name="tv_user_name">企业用户名</string>
+    <string name="tv_fingerprint_text">点击进行指纹登录</string>
+    <string name="switch_login_mode">切换登录方式</string>
+    <string name="switch_user">切换账号</string>
+    <string name="tv_code_hint">输入验证码</string>
+    <string name="xyb">下一步</string>
+    <string name="exit_login">退出登录</string>
+</resources>
