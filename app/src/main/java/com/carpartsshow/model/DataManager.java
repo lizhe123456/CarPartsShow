@@ -3,6 +3,7 @@ package com.carpartsshow.model;
 import com.carpartsshow.model.db.RealmHelper;
 import com.carpartsshow.model.http.HttpHelper;
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.CouponBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
@@ -152,12 +153,22 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse> classification(String userId, int showType) {
-        return httpHelper.classification(userId, showType);
+    public Flowable<CPSResponse<ClassificationBean>> classification(String userId) {
+        return httpHelper.classification(userId);
     }
 
     @Override
     public Flowable<CPSResponse> carFilter(String val) {
         return httpHelper.carFilter(val);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchListGoods(Map<String, String> map) {
+        return httpHelper.fetchListGoods(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map) {
+        return httpHelper.fetchListSplitGoods(map);
     }
 }

@@ -44,4 +44,12 @@
     <dimen name="dm_24">24dp</dimen>
     <dimen name="dm_180">180dp</dimen>
     <dimen name="dm_68">68dp</dimen>
+    <dimen name="dm_240">240dp</dimen>
+    <dimen name="dm_130">130dp</dimen>
+    <dimen name="dm_80">80dp</dimen>
+    <dimen name="dm_23">23dp</dimen>
+    <dimen name="dm_150">150dp</dimen>
+    <dimen name="dm_7">7dp</dimen>
+    <dimen name="dm_120">120dp</dimen>
+    <dimen name="dm_4">4dp</dimen>
 </resources>

@@ -22,7 +22,7 @@
         android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入商品名称进行搜索"
+        android:hint="搜索商品名称/关键词"
         android:textSize="@dimen/dm_15"
         android:layout_marginLeft="@dimen/dm_5"
         android:textColor="@color/tv_999"

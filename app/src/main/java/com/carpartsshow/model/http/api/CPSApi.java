@@ -1,6 +1,7 @@
 package com.carpartsshow.model.http.api;
 
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.CouponBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
@@ -21,6 +22,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by lizhe on 2018/3/14.
@@ -141,12 +143,19 @@ public interface CPSApi {
 
     //商品分类查找
     @GET("/api/Home/Classification")
-    Flowable<CPSResponse> classification(@Query("RepairUser_ID") String userId,
-                                         @Query("ShowType") int showType);
+    Flowable<CPSResponse<ClassificationBean>> classification(@Query("RepairUser_ID") String userId);
 
     //车辆类型
     @GET("/api/Home/CarFilter")
     Flowable<CPSResponse> carFilter(@Query("val") String val);
+
+    //商品搜索
+    @GET("/api/Home/ListGoods")
+    Flowable<CPSResponse> listGoods(@QueryMap Map<String, String> map);
+
+    //商品搜索分页
+    @GET("/api/Home/ListSplitGoods")
+    Flowable<CPSResponse> listSplitGoods(@QueryMap Map<String, String> map);
 
 
 }

@@ -7,6 +7,7 @@ import com.carpartsshow.di.scope.ActivityScope;
 import com.carpartsshow.ui.ForgetPassActivity;
 import com.carpartsshow.ui.LoginActivity;
 import com.carpartsshow.ui.NewPassActivity;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.me.activity.FeedbackActivity;
 import com.carpartsshow.ui.me.activity.IntegralGoodsActivity;
 import com.carpartsshow.ui.me.activity.IntegralRecordActivity;
@@ -53,4 +54,6 @@ public interface ActivityComponent {
     void inject(IntegralRecordActivity integralRecordActivity);
 
     void inject(IntegralGoodsActivity integralGoodsActivity);
+
+    void inject(GoodsSearchActivity goodsSearchActivity);
 }

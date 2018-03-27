@@ -2,6 +2,7 @@ package com.carpartsshow.model.http;
 
 import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.CouponBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
@@ -150,13 +151,23 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> classification(String userId, int showType) {
-        return cpsApi.classification(userId, showType);
+    public Flowable<CPSResponse<ClassificationBean>> classification(String userId) {
+        return cpsApi.classification(userId);
     }
 
     @Override
     public Flowable<CPSResponse> carFilter(String val) {
         return cpsApi.carFilter(val);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchListGoods(Map<String, String> map) {
+        return cpsApi.listGoods(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map) {
+        return cpsApi.listSplitGoods(map);
     }
 
 }

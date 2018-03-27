@@ -1,6 +1,7 @@
 package com.carpartsshow.model.http;
 
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.CouponBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
@@ -70,7 +71,11 @@ public interface HttpHelper {
 
     Flowable<CPSResponse> goodsDetail(String userId, String goodsId);
 
-    Flowable<CPSResponse> classification(String userId, int showType);
+    Flowable<CPSResponse<ClassificationBean>> classification(String userId);
 
     Flowable<CPSResponse> carFilter(String val);
+
+    Flowable<CPSResponse> fetchListGoods(Map<String, String> map);
+
+    Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map);
 }
