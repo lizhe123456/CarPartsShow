@@ -3,7 +3,6 @@ package com.carpartsshow.ui.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.model.http.bean.HomePageBean;
@@ -25,6 +23,7 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.HomePagePresenter;
 import com.carpartsshow.presenter.home.contract.HomePageContract;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.carpartsshow.ui.home.activity.MessageRecordActivity;
 import com.carpartsshow.ui.home.adapter.HomeCategoryAdapter;
 import com.carpartsshow.ui.home.adapter.HomePageAdapter;
 import com.carpartsshow.ui.home.adapter.ListDateItemAdapter;
@@ -37,14 +36,11 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
+
 
 
 /**
@@ -262,10 +258,9 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             case R.id.iv_scan:
                 break;
             case R.id.et_search:
-
-
                 break;
             case R.id.iv_message:
+                startActivity(new Intent(getContext(), MessageRecordActivity.class));
                 break;
         }
     }

@@ -5,17 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.carpartsshow.R;
 import com.carpartsshow.base.adapter.SecondaryListAdapter;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.util.GlideuUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,29 +63,36 @@ public class CarClassifyAdapter extends SecondaryListAdapter<CarClassifyAdapter.
     public void onGroupItemBindViewHolder(RecyclerView.ViewHolder holder, int groupItemIndex) {
         ((GroupItemViewHolder) holder).tvGroupName.setText(dts.get(groupItemIndex).getGroupItem().getName());
         GlideuUtil.loadImageView(context,dts.get(groupItemIndex).getGroupItem().getCategory_ImgPath(),((GroupItemViewHolder) holder).ivImg);
-
+//        ((GroupItemViewHolder) holder).ivItemGo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                rotateOnYCoordinate(v);
+//            }
+//        });
     }
 
     @Override
     public void onSubItemBindViewHolder(RecyclerView.ViewHolder holder, int groupItemIndex, int subItemIndex) {
-
         ((SubItemViewHolder) holder).tvSubName.setText(dts.get(groupItemIndex).getSubItems().get(subItemIndex).getName());
 
     }
 
     @Override
     public void onGroupItemClick(Boolean isExpand, GroupItemViewHolder holder, int groupItemIndex) {
-        Toast.makeText(context, "group item " + String.valueOf(groupItemIndex) + " is expand " +
-                String.valueOf(isExpand), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onSubItemClick(SubItemViewHolder holder, int groupItemIndex, int subItemIndex) {
-        Toast.makeText(context, "sub item " + String.valueOf(subItemIndex) + " in group item " +
-                String.valueOf(groupItemIndex), Toast.LENGTH_SHORT).show();
 
     }
+
+    @Override
+    public View dropDown(GroupItemViewHolder holder) {
+        return holder.ivItemGo;
+    }
+
 
     public static class GroupItemViewHolder extends RecyclerView.ViewHolder {
 

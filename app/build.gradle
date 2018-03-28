@@ -45,4 +45,6 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.13'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     implementation files('libs/tbs_sdk_thirdapp_v3.6.0.1183_43604_sharewithdownload_withoutGame_obfs_20180211_105126.jar')
+    implementation files('libs/pinyin4j-2.5.0.jar')
+
 }

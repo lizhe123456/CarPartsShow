@@ -67,6 +67,19 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     }
 
     @Override
+    protected void init() {
+        super.init();
+        if (SpUtil.getObject(this,"user") != null) {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.setClass(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+            overridePendingTransition(0, 0);
+        }
+    }
+
+    @Override
     protected void setData() {
         pass = SpUtil.getString(this,"pass");
         mobile = SpUtil.getString(this,"username");
@@ -77,7 +90,6 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             isRemember = true;
             selectState.setImageResource(R.drawable.round_btn_selected);
         }
-//        mPresenter.passLogin("17688943972","123456");
     }
 
     @OnClick({R.id.iv_exit, R.id.select_state, R.id.text_password, R.id.text_password2, R.id.switch_login_mode,R.id.tv_login,R.id.iv_visual})
@@ -159,10 +171,12 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             SpUtil.putString(this,"pass",pass);
         }
         SpUtil.putObject(this,"user",loginBean);
-        this.finish();
         Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.setClass(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
+        overridePendingTransition(0, 0);
     }
 
 }

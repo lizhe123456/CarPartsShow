@@ -52,4 +52,9 @@
     <dimen name="dm_7">7dp</dimen>
     <dimen name="dm_120">120dp</dimen>
     <dimen name="dm_4">4dp</dimen>
+    <dimen name="dm_90">90dp</dimen>
+    <dimen name="dm_35">35dp</dimen>
+    <dimen name="dm_59">59dp</dimen>
+    <dimen name="dm_113">113dp</dimen>
+    <dimen name="dm_73">73dp</dimen>
 </resources>

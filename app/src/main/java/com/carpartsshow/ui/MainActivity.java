@@ -1,5 +1,6 @@
 package com.carpartsshow.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,8 @@ import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.home.HomeFragment;
 import com.carpartsshow.ui.me.MeFragment;
 import com.carpartsshow.ui.scancode.ScanCodeFragment;
+import com.carpartsshow.ui.shopping.ShoppingCartActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -73,7 +76,9 @@ public class MainActivity extends BaseActivity {
                 tag = CLASSIFY;
                 break;
             case R.id.tv_shopping_cart:
-                tag = SHOPPINGCART;
+                Intent intent = new Intent();
+                intent.setClass(this, ShoppingCartActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_me:
                 tag = ME;
@@ -111,11 +116,11 @@ public class MainActivity extends BaseActivity {
 //                tvMe.setSelected(false);
                 break;
             case SHOPPINGCART :
-                tvHome.setSelected(false);
-                tvClassify.setSelected(false);
-//                tvScanCode.setSelected(false);
-                tvShoppingCart.setSelected(true);
-                tvMe.setSelected(false);
+//                tvHome.setSelected(false);
+//                tvClassify.setSelected(false);
+////                tvScanCode.setSelected(false);
+//                tvShoppingCart.setSelected(true);
+//                tvMe.setSelected(false);
                 break;
             case ME :
                 tvHome.setSelected(false);
@@ -155,7 +160,7 @@ public class MainActivity extends BaseActivity {
                     foundFragment = new ScanCodeFragment();
                     break;
                 case SHOPPINGCART:
-                    foundFragment = new ScanCodeFragment();
+//                    foundFragment = new ScanCodeFragment();
                     break;
                 case ME:
                     foundFragment = new MeFragment();

@@ -1,8 +1,12 @@
 package com.carpartsshow.base.adapter;
 
+import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +143,13 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
      */
     public abstract void onSubItemClick(SVH holder, int groupItemIndex, int subItemIndex);
 
+    /**
+     * 传入你需要执行动画的view
+     * @param holder
+     * @return
+     */
+    public abstract View dropDown(GVH holder);
+
     @Override
     public final void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
@@ -149,6 +160,30 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
         if ( itemStatus.getViewType() == ItemStatus.VIEW_TYPE_GROUPITEM ) {
 
             onGroupItemBindViewHolder(holder, itemStatus.getGroupItemIndex());
+            dropDown((GVH) holder).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int groupItemIndex = itemStatus.getGroupItemIndex();
+                    if ( !groupItemStatus.get(groupItemIndex) ) {
+
+                        groupItemStatus.set(groupItemIndex, true);
+                        //显示展开数据
+                        notifyItemRangeInserted(holder.getAdapterPosition() + 1, dt.getSubItems
+                                ().size());
+                        //不需要转动画，注释此处，并注释 abstract 方法 dropDown(GVH holder)
+                        rotateOnYCoordinate(dropDown((GVH) holder));
+                    } else {
+
+                        groupItemStatus.set(groupItemIndex, false);
+                        //影藏展开数据
+                        notifyItemRangeRemoved(holder.getAdapterPosition() + 1, dt.getSubItems
+                                ().size());
+                        //不需要转动画，注释此处
+                        dropDown(dropDown((GVH) holder));
+                    }
+
+                }
+            });
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,22 +192,13 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
                     int groupItemIndex = itemStatus.getGroupItemIndex();
 
                     if ( !groupItemStatus.get(groupItemIndex) ) {
-
                         onGroupItemClick(false, (GVH) holder, groupItemIndex);
-
                         groupItemStatus.set(groupItemIndex, true);
-                        notifyItemRangeInserted(holder.getAdapterPosition() + 1, dt.getSubItems
-                                ().size());
 
 
                     } else {
-
                         onGroupItemClick(true, (GVH) holder, groupItemIndex);
-
                         groupItemStatus.set(groupItemIndex, false);
-                        notifyItemRangeRemoved(holder.getAdapterPosition() + 1, dt.getSubItems
-                                ().size());
-
                     }
 
                 }
@@ -339,5 +365,22 @@ public abstract class SecondaryListAdapter<GVH, SVH extends RecyclerView.ViewHol
         public List<V> getSubItems() {
             return subItems;
         }
+    }
+    //旋转动画
+    private void rotateOnYCoordinate(View view) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "Rotation", 0f, 90f,90f);
+        objectAnimator.setDuration(500);
+        objectAnimator.setInterpolator(new AccelerateInterpolator()); // 设置插入器
+        objectAnimator.reverse();
+        objectAnimator.start();
+    }
+
+    //还远旋转动画
+    private void dropDown(View view) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "Rotation", 90f, 0f,0f);
+        objectAnimator.setDuration(500);
+        objectAnimator.setInterpolator(new AccelerateInterpolator());
+        objectAnimator.reverse();
+        objectAnimator.start();
     }
 }

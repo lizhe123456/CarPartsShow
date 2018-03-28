@@ -5,9 +5,11 @@ import android.app.Activity;
 
 import com.carpartsshow.di.module.FragmentModule;
 import com.carpartsshow.di.scope.FragmentScope;
+import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.home.HomeFragment;
 import com.carpartsshow.ui.me.MeFragment;
 import com.carpartsshow.ui.me.activity.MyIntegralActivity;
+import com.carpartsshow.ui.me.fragment.news.NewsListFragment;
 
 import dagger.Component;
 
@@ -24,4 +26,8 @@ public interface FragmentComponent {
     void inject(MeFragment meFragment);
 
     void inject(HomeFragment homeFragment);
+
+    void inject(ClassifyFragment classifyFragment);
+
+    void inject(NewsListFragment newsListFragment);
 }

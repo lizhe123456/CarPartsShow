@@ -55,7 +55,7 @@ public class ClassificationItemBean implements Parcelable {
     private boolean UniversalParts;
     List<ClassificationItem2Bean> list;
 
-    protected ClassificationItemBean(Parcel in) {
+    public ClassificationItemBean(Parcel in) {
         ID = in.readInt();
         Code = in.readString();
         Name = in.readString();
@@ -70,6 +70,9 @@ public class ClassificationItemBean implements Parcelable {
         Category_ImgPath = in.readString();
         Category_FirstImgPath = in.readString();
         UniversalParts = in.readByte() != 0;
+    }
+
+    public ClassificationItemBean() {
     }
 
     public static final Creator<ClassificationItemBean> CREATOR = new Creator<ClassificationItemBean>() {
@@ -284,6 +287,9 @@ public class ClassificationItemBean implements Parcelable {
             Category_ImgPath = in.readString();
             Category_FirstImgPath = in.readString();
             UniversalParts = in.readByte() != 0;
+        }
+
+        public ClassificationItem2Bean() {
         }
 
         public static final Creator<ClassificationItem2Bean> CREATOR = new Creator<ClassificationItem2Bean>() {

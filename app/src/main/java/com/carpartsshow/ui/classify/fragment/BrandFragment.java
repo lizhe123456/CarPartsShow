@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carpartsshow.R;
@@ -15,11 +16,14 @@ import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.ui.classify.adapter.brand.BrandAdapter;
+import com.carpartsshow.ui.classify.adapter.brand.BrandComparator;
+import com.carpartsshow.util.PinyinUtils;
 import com.carpartsshow.view.SideBar;
 import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +41,8 @@ public class BrandFragment extends BaseFragment {
     ListView listView;
     @BindView(R.id.right_side)
     SideBar rightSide;
+    @BindView(R.id.dialog)
+    TextView tvDialog;
 
     private BrandAdapter mAdapter;
 
@@ -59,12 +65,14 @@ public class BrandFragment extends BaseFragment {
     protected void init() {
         Bundle bundle = getArguments();
         mListBrandBeans = bundle.getParcelableArrayList("list");
-
+        filledData(mListBrandBeans);
+        rightSide.setTextView(tvDialog);
     }
 
     @Override
     protected void setData() {
         mAdapter = new BrandAdapter(getContext(), mListBrandBeans);
+        Collections.sort(mListBrandBeans,new BrandComparator());
         listView.setAdapter(mAdapter);
         //设置右侧触摸监听
         rightSide.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -85,10 +93,31 @@ public class BrandFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 //                mTvTitle.setText(((ContactSortModel) adapter.getItem(position - 1)).getName());
-                CPSToast.showText(getContext().getApplicationContext(),mAdapter.getItem(position).getCompany_FirstWord());
+//                CPSToast.showText(getContext().getApplicationContext(),mAdapter.getItem(position).getCompany_FirstWord());
             }
         });
 
+    }
+
+    private List<ClassificationBean.ListBrandBean> filledData(List<ClassificationBean.ListBrandBean> date) {
+        List<ClassificationBean.ListBrandBean> mSortList = new ArrayList<>();
+        ArrayList<String> indexString = new ArrayList<>();
+
+        for (int i = 0; i < date.size(); i++) {
+            ClassificationBean.ListBrandBean sortModel = new ClassificationBean.ListBrandBean();
+            String pinyin = PinyinUtils.getPingYin(date.get(i).getCompany_FirstWord());
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+                sortModel.setCompany_FirstWord(sortString.toUpperCase());
+                if (!indexString.contains(sortString)) {
+                    indexString.add(sortString);
+                }
+            }
+            mSortList.add(sortModel);
+        }
+        Collections.sort(indexString);
+        rightSide.setIndexText(indexString);
+        return mSortList;
     }
 
 

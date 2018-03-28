@@ -55,6 +55,5 @@
         android:background="@color/slide_line"
         android:layout_toRightOf="@+id/iv_goods"
         android:layout_below="@+id/iv_goods"
-        android:layout_marginTop="10dp"
-        />
+        android:layout_marginTop="10dp"/>
 </RelativeLayout>

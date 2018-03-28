@@ -3,10 +3,12 @@ package com.carpartsshow.ui.home.activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
@@ -15,6 +17,7 @@ import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
+import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.GoodsSearchPresenter;
 import com.carpartsshow.presenter.home.contract.GoodsSearchContract;
 import com.carpartsshow.ui.classify.ClassifyFragment;
@@ -22,7 +25,9 @@ import com.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.carpartsshow.ui.home.fragment.GoodsFragment;
+import com.carpartsshow.util.SpUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +46,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     EditText etSearch;
     @BindView(R.id.rl_title)
     RelativeLayout rlTitle;
+    @BindView(R.id.ll_label)
+    LinearLayout mLlabel;
     @BindView(R.id.tv_label_delete)
     TextView tvLabelDelete;
     @BindView(R.id.tv_label_brand_delete)
@@ -49,9 +56,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     TextView tvLabelModelsDelete;
     @BindView(R.id.tv_zh)
     TextView tvZh;
-    @BindView(R.id.tv_xl)
+    @BindView(R.id.tv_classify)
     TextView tvXl;
-    @BindView(R.id.tv_jf)
+    @BindView(R.id.tv_brand)
     TextView tvJf;
     @BindView(R.id.tv_models)
     TextView tvModels;
@@ -70,6 +77,10 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
 
+    private String latelBrand;
+    private String latelClassify;
+    private String latelCarBrand;
+    private LoginBean loginBean;
 
     @Override
     protected int setLayout() {
@@ -84,7 +95,46 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     protected void setData() {
+        latelBrand = getIntent().getStringExtra("brand");
+        latelClassify = getIntent().getStringExtra("classify");
+        latelCarBrand = getIntent().getStringExtra("carBrand");
+        initLabel();
+        fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
+        loginBean = SpUtil.getObject(getApplicationContext(),"user");
+        mPresenter.getClassification(loginBean.getRepairUser_ID());
+    }
+
+    //初始化标签
+    private void initLabel() {
+        if (TextUtils.isEmpty(latelClassify) && TextUtils.isEmpty(latelCarBrand) && TextUtils.isEmpty(latelBrand)){
+            mLlabel.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(latelClassify)){
+            tvLabelDelete.setVisibility(View.GONE);
+        }else {
+            mLlabel.setVisibility(View.VISIBLE);
+            tvLabelDelete.setVisibility(View.VISIBLE);
+            tvLabelDelete.setText(latelClassify);
+        }
+
+        if (TextUtils.isEmpty(latelCarBrand)){
+            tvLabelModelsDelete.setVisibility(View.GONE);
+        }else {
+            mLlabel.setVisibility(View.VISIBLE);
+            tvLabelModelsDelete.setVisibility(View.VISIBLE);
+            tvLabelModelsDelete.setText(latelCarBrand);
+        }
+
+        if (TextUtils.isEmpty(latelBrand)){
+            tvLabelBrandDelete.setVisibility(View.GONE);
+        }else {
+            mLlabel.setVisibility(View.VISIBLE);
+            tvLabelBrandDelete.setVisibility(View.VISIBLE);
+            tvLabelBrandDelete.setText(latelBrand);
+        }
+
     }
 
     @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models})
@@ -94,10 +144,13 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 this.finish();
                 break;
             case R.id.tv_label_delete:
+
                 break;
             case R.id.tv_label_brand_delete:
+
                 break;
             case R.id.tv_label_models_delete:
+
                 break;
             case R.id.tv_zh:
                 //价格
@@ -118,6 +171,10 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         }
     }
 
+    private void updateData(){
+
+    }
+
     @Override
     public void stateError() {
 
@@ -136,7 +193,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     public void showCarBrand(List<ClassificationBean.ListCarBrandBean> listCarBrandBeans) {
-        models = CarBrandFragment.newInstance(listCarBrandBeans);
+        models = CarBrandFragment.newInstance((ArrayList<ClassificationBean.ListCarBrandBean>) listCarBrandBeans);
     }
 
     //设置fragment 切换
@@ -158,16 +215,16 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         if (foundFragment == null){
             switch (tag){
                 case FRAGMENT_TAG_GOODS:
-                    foundFragment = classification;
+                    foundFragment = new GoodsFragment();
                     break;
                 case FRAGMENT_TAG_BRAND:
                     foundFragment = brand;
                     break;
                 case FRAGMENT_TAG_CARCLASSIFY:
-                    foundFragment = models;
+                    foundFragment = classification;
                     break;
                 case FRAGMENT_TAG_CARBRAND:
-                    foundFragment = new CarBrandFragment();
+                    foundFragment = models;
                     break;
             }
         }

@@ -88,24 +88,27 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
                 classificationBean.setCompany_ID(listCategoryBean.getCompany_ID());
                 classificationBean.setGCode(listCategoryBean.getGCode());
                 classificationBean.setID(listCategoryBean.getID());
+                classificationBean.setName(listCategoryBean.getName());
                 List<ClassificationItemBean.ClassificationItem2Bean> list1 = new ArrayList<>();
                 for (ClassificationBean.ListCategoryBean listCategoryBean1 : listCategoryBeans) {
                     if (classificationBean.getID() == listCategoryBean1.getParentID()){
                         ClassificationItemBean.ClassificationItem2Bean classificationBean1 = new ClassificationItemBean.ClassificationItem2Bean();
-                        classificationBean1.setCategory_ChooseOff(listCategoryBean.getCategory_ChooseOff());
-                        classificationBean1.setCategory_ChooseOn(listCategoryBean.getCategory_ChooseOn());
-                        classificationBean1.setCategory_Code(listCategoryBean.getCategory_Code());
-                        classificationBean1.setCategory_FirstCode(listCategoryBean.getCategory_FirstCode());
-                        classificationBean1.setCategory_FirstImgPath(listCategoryBean.getCategory_FirstImgPath());
-                        classificationBean1.setCategory_ID(listCategoryBean.getCategory_ID());
-                        classificationBean1.setCategory_ImgPath(listCategoryBean.getCategory_ImgPath());
-                        classificationBean1.setCode(listCategoryBean.getCode());
-                        classificationBean1.setCompany_ID(listCategoryBean.getCompany_ID());
-                        classificationBean1.setGCode(listCategoryBean.getGCode());
-                        classificationBean1.setID(listCategoryBean.getID());
+                        classificationBean1.setCategory_ChooseOff(listCategoryBean1.getCategory_ChooseOff());
+                        classificationBean1.setCategory_ChooseOn(listCategoryBean1.getCategory_ChooseOn());
+                        classificationBean1.setCategory_Code(listCategoryBean1.getCategory_Code());
+                        classificationBean1.setCategory_FirstCode(listCategoryBean1.getCategory_FirstCode());
+                        classificationBean1.setCategory_FirstImgPath(listCategoryBean1.getCategory_FirstImgPath());
+                        classificationBean1.setCategory_ID(listCategoryBean1.getCategory_ID());
+                        classificationBean1.setCategory_ImgPath(listCategoryBean1.getCategory_ImgPath());
+                        classificationBean1.setCode(listCategoryBean1.getCode());
+                        classificationBean1.setCompany_ID(listCategoryBean1.getCompany_ID());
+                        classificationBean1.setGCode(listCategoryBean1.getGCode());
+                        classificationBean1.setID(listCategoryBean1.getID());
+                        classificationBean1.setName(listCategoryBean1.getName());
                         list1.add(classificationBean1);
                     }
                 }
+                classificationBean.setList(list1);
                 list.add(classificationBean);
             }
         }

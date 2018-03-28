@@ -9,7 +9,9 @@ import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
+import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -57,7 +59,7 @@ public interface HttpHelper {
 
     Flowable<CPSResponse<List<IntergralShopBean.IstIntegerGoods>>> fetchsplitListIntegerGoods(int size,int page,String searchValue,String userId,String goodsTypeId);
 
-    Flowable<CPSResponse> fetchSplitListNotice(int type,int size,int page);
+    Flowable<CPSResponse<List<NewsListBean>>> fetchSplitListNotice(String type, int page, int size);
 
     Flowable<CPSResponse<List<NewTypeBean>>> fetchListNoticeType();
 
@@ -78,4 +80,14 @@ public interface HttpHelper {
     Flowable<CPSResponse> fetchListGoods(Map<String, String> map);
 
     Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map);
+
+    Flowable<CPSResponse> fetchAddCar(Map<String, Object> map);
+
+    Flowable<CPSResponse> fetchSubCar(Map<String, Object> map);
+
+    Flowable<CPSResponse> fetchAppendCollections(Map<String, Object> map);
+
+    Flowable<CPSResponse> fetchDelCards(String cids);
+
+    Flowable<CPSResponse<List<MsgBean>>> fetchSplitUserMsg(String userId, int page);
 }

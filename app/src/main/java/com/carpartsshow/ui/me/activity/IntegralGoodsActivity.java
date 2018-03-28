@@ -25,6 +25,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lizhe on 2018/3/16.
+ * 积分兑换
  */
 
 public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> implements IntegralGoodsContract.View {

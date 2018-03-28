@@ -8,12 +8,9 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.ui.classify.adapter.CarClassifyAdapter;
-import com.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 
 

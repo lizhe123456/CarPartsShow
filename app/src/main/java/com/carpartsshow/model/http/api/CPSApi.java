@@ -9,7 +9,9 @@ import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
+import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -107,16 +109,31 @@ public interface CPSApi {
 
     //新闻中心
     @GET("/api/Home/SplitListNotice")
-    Flowable<CPSResponse> splitListNotice(@Query("NewsType") int type, @Query("PageIndex") int page, @Query("PageSize") int size);
+    Flowable<CPSResponse<List<NewsListBean>>> splitListNotice(@Query("NewsType") String type, @Query("PageIndex") int page, @Query("PageSize") int size);
 
     //新闻类型
     @GET("/api/Home/ListNoticeType")
     Flowable<CPSResponse<List<NewTypeBean>>> listNoticeType();
 
     //购物车
-    @POST("/api/User/UserCar")
-    @FormUrlEncoded
-    Flowable<CPSResponse<ShopCarBean>> userShopingCarList(@Field("RepairUser_ID") String userId, @Field("PageIndex") int page, @Field("PageSize") int size);
+    @GET("/api/User/UserCar")
+    Flowable<CPSResponse<ShopCarBean>> userShopingCarList(@Query("RepairUser_ID") String userId, @Query("PageIndex") int page, @Query("PageSize") int size);
+
+    //购物车加一
+    @POST("/api/User/AddCar")
+    Flowable<CPSResponse> addCar(@Body Map<String, Object> params);
+
+    //购物车减一
+    @POST("/api/User/SubCar")
+    Flowable<CPSResponse> subCar(@Body Map<String, Object> params);
+
+    //购物车加入收藏
+    @POST("/api/User/AppendCollections")
+    Flowable<CPSResponse> appendCollections(@Body Map<String ,Object> map);
+
+    //购物车移除
+    @GET("/api/User/DelCards")
+    Flowable<CPSResponse> delCards(@Query("Cids") String cids);
 
     //信用记录
     @GET("/api/User/SplitCreditRecord")
@@ -156,6 +173,11 @@ public interface CPSApi {
     //商品搜索分页
     @GET("/api/Home/ListSplitGoods")
     Flowable<CPSResponse> listSplitGoods(@QueryMap Map<String, String> map);
+
+    //消息记录
+    @POST("/api/User/SplitUserMsg")
+    Flowable<CPSResponse<List<MsgBean>>> splitUserMsg(@Query("RepairUser_ID") String userId, @Query("PageIndex") int page);
+
 
 
 }

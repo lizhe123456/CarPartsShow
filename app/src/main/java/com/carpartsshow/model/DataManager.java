@@ -11,7 +11,9 @@ import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
+import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -118,8 +120,8 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse> fetchSplitListNotice(int type, int size, int page) {
-        return httpHelper.fetchSplitListNotice(type, size, page);
+    public Flowable<CPSResponse<List<NewsListBean>>> fetchSplitListNotice(String type, int page, int size) {
+        return httpHelper.fetchSplitListNotice(type, page, size);
     }
 
     @Override
@@ -170,5 +172,30 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map) {
         return httpHelper.fetchListSplitGoods(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchAddCar(Map<String, Object> map) {
+        return httpHelper.fetchAddCar(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSubCar(Map<String, Object> map) {
+        return httpHelper.fetchSubCar(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchAppendCollections(Map<String, Object> map) {
+        return httpHelper.fetchAppendCollections(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchDelCards(String cids) {
+        return httpHelper.fetchDelCards(cids);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<MsgBean>>> fetchSplitUserMsg(String userId, int page) {
+        return httpHelper.fetchSplitUserMsg(userId, page);
     }
 }

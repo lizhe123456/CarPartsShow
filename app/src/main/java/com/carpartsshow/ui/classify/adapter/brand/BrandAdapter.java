@@ -13,7 +13,10 @@ import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.util.GlideuUtil;
+import com.carpartsshow.util.PinyinUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,6 +24,7 @@ import java.util.List;
  */
 
 public class BrandAdapter extends BaseAdapter implements SectionIndexer {
+
     private List<ClassificationBean.ListBrandBean> list = null;
     private Context mContext;
 
@@ -58,12 +62,11 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder = new ViewHolder();
             view = LayoutInflater.from(mContext).inflate(R.layout.item_brand, null);
             viewHolder.tvTitle = (TextView) view.findViewById(R.id.tv_name);
-            view.setTag(viewHolder);
             viewHolder.tvLetter = (TextView) view.findViewById(R.id.tv_catagory);
             viewHolder.imageView = view.findViewById(R.id.iv_img);
             viewHolder.relativeLayout = view.findViewById(R.id.rl_layout);
             GlideuUtil.loadImageView(mContext,mContent.getLogo(),viewHolder.imageView);
-
+            view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
@@ -110,4 +113,6 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
     public Object[] getSections() {
         return null;
     }
+
+
 }

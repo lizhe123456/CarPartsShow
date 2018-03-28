@@ -21,6 +21,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lizhe on 2018/3/15.
+ * 我的收藏
  */
 
 public class MyCollectActivity extends MvpActivity<CollectionPresenter> implements CollectionContract.View {

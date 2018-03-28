@@ -69,8 +69,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.home.activity.GoodsDetailsActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             />
+        <activity android:name=".ui.shopping.ShoppingCartActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.home.activity.MessageRecordActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+
     </application>
 
 </manifest>

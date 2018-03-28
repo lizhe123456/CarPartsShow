@@ -298,7 +298,10 @@ public class ClassificationBean implements Serializable {
         private String Category;
         private String Company_FirstWord;
 
-        protected ListBrandBean(Parcel in) {
+        public ListBrandBean() {
+        }
+
+        public ListBrandBean(Parcel in) {
             ID = in.readInt();
             Name = in.readString();
             Logo = in.readString();
@@ -423,7 +426,7 @@ public class ClassificationBean implements Serializable {
         }
     }
 
-    public static class ListCarBrandBean {
+    public static class ListCarBrandBean implements Parcelable{
         /**
          * CarBrand_ID : 00a81eb7-ecf1-4e52-a98e-889250771c28
          * CarBrand_Name : 海格
@@ -442,6 +445,31 @@ public class ClassificationBean implements Serializable {
         private String Code;
         private int OrderID;
         private List<VCJListBean> listBeans;
+
+        protected ListCarBrandBean(Parcel in) {
+            CarBrand_ID = in.readString();
+            CarBrand_Name = in.readString();
+            CarBrand_ImgPath = in.readString();
+            CarBrand_FirstCode = in.readString();
+            Name = in.readString();
+            Code = in.readString();
+            OrderID = in.readInt();
+        }
+
+        public ListCarBrandBean() {
+        }
+
+        public static final Creator<ListCarBrandBean> CREATOR = new Creator<ListCarBrandBean>() {
+            @Override
+            public ListCarBrandBean createFromParcel(Parcel in) {
+                return new ListCarBrandBean(in);
+            }
+
+            @Override
+            public ListCarBrandBean[] newArray(int size) {
+                return new ListCarBrandBean[size];
+            }
+        };
 
         public List<VCJListBean> getListBeans() {
             return listBeans;
@@ -505,6 +533,22 @@ public class ClassificationBean implements Serializable {
 
         public void setOrderID(int OrderID) {
             this.OrderID = OrderID;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(CarBrand_ID);
+            dest.writeString(CarBrand_Name);
+            dest.writeString(CarBrand_ImgPath);
+            dest.writeString(CarBrand_FirstCode);
+            dest.writeString(Name);
+            dest.writeString(Code);
+            dest.writeInt(OrderID);
         }
     }
 

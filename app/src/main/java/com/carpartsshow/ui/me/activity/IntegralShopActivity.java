@@ -18,6 +18,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lizhe on 2018/3/16.
+ * 积分商城
  */
 
 public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> implements IntegralShopContract.View {

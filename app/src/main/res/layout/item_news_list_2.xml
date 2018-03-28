@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/dm_15">
+
+
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="斯巴鲁推13款50周年纪念版车型 2018年芝加哥车展亮相"
+        android:textColor="@color/tv_000"
+        android:textSize="@dimen/dm_15"/>
+
+    <LinearLayout
+        android:id="@+id/ll_img_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tv_desc"
+        android:layout_marginTop="@dimen/dm_8">
+        <ImageView
+            android:id="@+id/iv_img1"
+            android:layout_width="@dimen/dm_113"
+            android:layout_height="@dimen/dm_73"
+            android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/dm_5"/>
+        <ImageView
+            android:id="@+id/iv_img2"
+            android:layout_width="@dimen/dm_113"
+            android:layout_height="@dimen/dm_73"
+            android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/dm_5"/>
+        <ImageView
+            android:id="@+id/iv_img3"
+            android:layout_width="@dimen/dm_113"
+            android:layout_height="@dimen/dm_73"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2017-03-02"
+        android:textColor="@color/tv_999"
+        android:textSize="@dimen/dm_13"
+        android:layout_below="@+id/ll_img_layout"
+        android:layout_marginTop="@dimen/dm_8"/>
+    <TextView
+        android:id="@+id/tv_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:drawablePadding="@dimen/dm_3"
+        android:drawableRight="@drawable/address_more"
+        android:text="详情"
+        android:textColor="@color/tv_999"
+        android:textSize="@dimen/dm_13"
+        android:layout_below="@+id/ll_img_layout"
+        android:layout_marginTop="@dimen/dm_8"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:layout_marginTop="@dimen/dm_15"
+        android:background="#BDBDBD"
+        android:layout_below="@+id/tv_go"/>
+</RelativeLayout>

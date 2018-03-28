@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/rl_group"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
     <ImageView
         android:id="@+id/item_img"
         android:layout_width="@dimen/dm_40"
@@ -27,5 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dm_15"/>
+        android:paddingRight="@dimen/dm_15"
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingBottom="@dimen/dm_15"
+        android:paddingTop="@dimen/dm_15"
+        android:src="@drawable/more"
+        android:layout_centerVertical="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:background="@color/slide_line"
+        android:layout_below="@+id/item_img"/>
 </RelativeLayout>

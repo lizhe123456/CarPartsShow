@@ -8,6 +8,7 @@ import com.carpartsshow.ui.ForgetPassActivity;
 import com.carpartsshow.ui.LoginActivity;
 import com.carpartsshow.ui.NewPassActivity;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.carpartsshow.ui.home.activity.MessageRecordActivity;
 import com.carpartsshow.ui.me.activity.FeedbackActivity;
 import com.carpartsshow.ui.me.activity.IntegralGoodsActivity;
 import com.carpartsshow.ui.me.activity.IntegralRecordActivity;
@@ -15,8 +16,10 @@ import com.carpartsshow.ui.me.activity.IntegralShopActivity;
 import com.carpartsshow.ui.me.activity.MyCollectActivity;
 import com.carpartsshow.ui.me.activity.MyCouponActivity;
 import com.carpartsshow.ui.me.activity.MyIntegralActivity;
+import com.carpartsshow.ui.me.activity.NewsActivity;
 import com.carpartsshow.ui.me.activity.UpdateAddressActivity;
 import com.carpartsshow.ui.me.activity.UpdatePassActivity;
+import com.carpartsshow.ui.shopping.ShoppingCartActivity;
 
 import dagger.Component;
 
@@ -56,4 +59,10 @@ public interface ActivityComponent {
     void inject(IntegralGoodsActivity integralGoodsActivity);
 
     void inject(GoodsSearchActivity goodsSearchActivity);
+
+    void inject(ShoppingCartActivity shoppingCartActivity);
+
+    void inject(MessageRecordActivity messageRecordActivity);
+
+    void inject(NewsActivity newsActivity);
 }

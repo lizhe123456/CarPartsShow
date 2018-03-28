@@ -112,6 +112,15 @@ public class ShopCarBean implements Serializable {
         private int Price;
         private String Name;
         private String ImagePath;
+        private boolean isSelected;
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean selected) {
+            isSelected = selected;
+        }
 
         public String getBuyCar_ID() {
             return BuyCar_ID;
