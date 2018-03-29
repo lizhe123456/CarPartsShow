@@ -4,6 +4,7 @@ import com.carpartsshow.base.BasePresenter;
 import com.carpartsshow.base.BaseView;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,14 @@ public interface GoodsSearchContract {
         void showBrand(List<ClassificationBean.ListBrandBean> listBrandBeans);
 
         void showCarBrand(List<ClassificationBean.ListCarBrandBean> listCarBrandBeans);
+
+        void showGoodsList(GoodsListBean goodsListBean);
     }
 
     interface Presenter extends BasePresenter<View>{
         void getClassification(String userId);
 
-        void getGoodsSearch(Map<String ,String> map);
+        void getGoodsSearch(Map<String ,Object> map);
     }
 
 }

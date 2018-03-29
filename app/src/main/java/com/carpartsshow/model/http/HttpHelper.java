@@ -3,7 +3,9 @@ package com.carpartsshow.model.http;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
+import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
@@ -12,6 +14,7 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -65,7 +68,9 @@ public interface HttpHelper {
 
     Flowable<CPSResponse<ShopCarBean>> userShopingCarList(String userId, int size, int page);
 
-    Flowable<CPSResponse> splitCreditRecord(String userId, int size, int page,int creditRecordState);
+    Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page, int creditRecordState);
+
+    Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page);
 
     Flowable<CPSResponse<HomePageBean>> getHomePageData(String userId, int size, int page);
 
@@ -79,7 +84,7 @@ public interface HttpHelper {
 
     Flowable<CPSResponse> fetchListGoods(Map<String, String> map);
 
-    Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map);
+    Flowable<CPSResponse<GoodsListBean>> fetchListSplitGoods(Map<String, Object> map);
 
     Flowable<CPSResponse> fetchAddCar(Map<String, Object> map);
 
@@ -90,4 +95,9 @@ public interface HttpHelper {
     Flowable<CPSResponse> fetchDelCards(String cids);
 
     Flowable<CPSResponse<List<MsgBean>>> fetchSplitUserMsg(String userId, int page);
+
+    Flowable<CPSResponse> fetchSubmitOrder(Map<String,Object> map);
+
+    Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds);
+
 }

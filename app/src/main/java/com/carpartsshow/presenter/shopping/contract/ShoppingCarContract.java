@@ -2,6 +2,7 @@ package com.carpartsshow.presenter.shopping.contract;
 
 import com.carpartsshow.base.BasePresenter;
 import com.carpartsshow.base.BaseView;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 
 /**
@@ -18,6 +19,8 @@ public interface ShoppingCarContract {
         void updateNum(int type,int position);
 
         void state(String msg);
+
+        void showToOrder(OrderBean orderBean);
     }
 
     interface Presenter extends BasePresenter<View>{
@@ -28,10 +31,11 @@ public interface ShoppingCarContract {
         void plus(String userId,String productId,int productType,int position);
         //减一
         void reduce(String userId,String buyCarId,int position);
-
         //收藏
         void collections(String userId,String pids);
         //删除
         void delCards(String userId,String cids);
+        //生成订单
+        void generateOrder(String userId,String pids);
     }
 }

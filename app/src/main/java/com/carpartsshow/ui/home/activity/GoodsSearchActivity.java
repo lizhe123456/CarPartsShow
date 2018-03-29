@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -12,24 +14,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
-import com.carpartsshow.base.BaseActivity;
-import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.eventbus.GoodsMoreBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.GoodsSearchPresenter;
 import com.carpartsshow.presenter.home.contract.GoodsSearchContract;
-import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.carpartsshow.util.SpUtil;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -68,6 +72,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     private CarClassifyFragment classification;
     private BrandFragment brand;
     private CarBrandFragment models;
+    private GoodsFragment goodsFragment;
 
     private static final String FRAGMENT_TAG_BRAND = "brand";
     private static final String FRAGMENT_TAG_GOODS = "goods";
@@ -79,8 +84,19 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     private String latelBrand;
     private String latelClassify;
-    private String latelCarBrand;
+    private int latelCarBrand;
     private LoginBean loginBean;
+    private String searchValue;
+
+    //商品搜索请求参数map
+    private Map<String , Object> map;
+    //ASC   desc
+    private String orderASC = "";
+    private int page = 1;
+
+    public boolean isClassifyShow;
+    public boolean isBrandShow;
+    public boolean isCarShow;
 
     @Override
     protected int setLayout() {
@@ -95,19 +111,45 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     protected void setData() {
-        latelBrand = getIntent().getStringExtra("brand");
-        latelClassify = getIntent().getStringExtra("classify");
-        latelCarBrand = getIntent().getStringExtra("carBrand");
+        EventBus.getDefault().register(this);
+        latelBrand = getIntent().getStringExtra("brand") == null ? "" : getIntent().getStringExtra("brand");
+        latelClassify = getIntent().getStringExtra("classify") == null ? "" : getIntent().getStringExtra("classify");
+        latelCarBrand = getIntent().getIntExtra("carBrand",-1) ;
+        searchValue = getIntent().getStringExtra("searchValue") == null ? "" : getIntent().getStringExtra("searchValue");
         initLabel();
         fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
         loginBean = SpUtil.getObject(getApplicationContext(),"user");
         mPresenter.getClassification(loginBean.getRepairUser_ID());
+        map = new HashMap<>();
+        map.put("RepairUser_ID",loginBean.getRepairUser_ID());
+        map.put("PageIndex",page);
+        map.put("BrandName",latelBrand);
+        map.put("CategoryName",latelClassify);
+        if (latelCarBrand != -1) {
+            map.put("CarID", latelCarBrand);
+        }
+        map.put("SearchValue",searchValue);
+        mPresenter.getGoodsSearch(map);
+        page++;
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    searchValue = etSearch.getText().toString().trim();
+                    map.put("SearchValue",searchValue);
+                    page = 1;
+                    mPresenter.getGoodsSearch(map);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     //初始化标签
     private void initLabel() {
-        if (TextUtils.isEmpty(latelClassify) && TextUtils.isEmpty(latelCarBrand) && TextUtils.isEmpty(latelBrand)){
+        if (TextUtils.isEmpty(latelClassify) && latelCarBrand == -1 && TextUtils.isEmpty(latelBrand)){
             mLlabel.setVisibility(View.GONE);
         }
 
@@ -119,7 +161,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             tvLabelDelete.setText(latelClassify);
         }
 
-        if (TextUtils.isEmpty(latelCarBrand)){
+        if (latelCarBrand == -1){
             tvLabelModelsDelete.setVisibility(View.GONE);
         }else {
             mLlabel.setVisibility(View.VISIBLE);
@@ -134,7 +176,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             tvLabelBrandDelete.setVisibility(View.VISIBLE);
             tvLabelBrandDelete.setText(latelBrand);
         }
-
+        etSearch.setText(searchValue == null ? "" : searchValue);
+        etSearch.setSelection(etSearch.getText().length());
     }
 
     @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models})
@@ -154,25 +197,51 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 break;
             case R.id.tv_zh:
                 //价格
-
                 break;
             case R.id.tv_classify:
                 //分类
-                setContentFragment(FRAGMENT_TAG_CARCLASSIFY);
+                if (!isClassifyShow) {
+                    setContentFragment(FRAGMENT_TAG_CARCLASSIFY);
+                    isClassifyShow = true;
+                    isCarShow = false;
+                    isBrandShow = false;
+                }else {
+                    isCarShow = false;
+                    isBrandShow = false;
+                    isClassifyShow = false;
+                    setContentFragment(FRAGMENT_TAG_GOODS);
+                }
                 break;
             case R.id.tv_brand:
                 //品牌
-                setContentFragment(FRAGMENT_TAG_BRAND);
+                if (!isBrandShow) {
+                    setContentFragment(FRAGMENT_TAG_BRAND);
+                    isBrandShow = true;
+                    isClassifyShow = false;
+                    isCarShow = false;
+                }else {
+                    isCarShow = false;
+                    isBrandShow = false;
+                    isClassifyShow = false;
+                    setContentFragment(FRAGMENT_TAG_GOODS);
+                }
                 break;
             case R.id.tv_models:
                 //车型
-                setContentFragment(FRAGMENT_TAG_CARBRAND);
+                if (!isCarShow) {
+                    isCarShow = true;
+                    isBrandShow = false;
+                    isClassifyShow = false;
+                    setContentFragment(FRAGMENT_TAG_CARBRAND);
+                }else {
+                    isCarShow = false;
+                    isBrandShow = false;
+                    isClassifyShow = false;
+                    setContentFragment(FRAGMENT_TAG_GOODS);
+                }
+
                 break;
         }
-    }
-
-    private void updateData(){
-
     }
 
     @Override
@@ -194,6 +263,32 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     @Override
     public void showCarBrand(List<ClassificationBean.ListCarBrandBean> listCarBrandBeans) {
         models = CarBrandFragment.newInstance((ArrayList<ClassificationBean.ListCarBrandBean>) listCarBrandBeans);
+    }
+
+    @Override
+    public void showGoodsList(GoodsListBean goodsListBean) {
+        if (page == 1){
+            goodsListBean.setIsMore(1);
+        }else {
+            goodsListBean.setIsMore(2);
+        }
+        //向商品Fragment发送数据
+        EventBus.getDefault().post(goodsListBean);
+        page++;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getGoosData(GoodsMoreBean bean){
+        //刷新ui
+        if (bean.getInteger() == 1) {
+            page = 1;
+            map.put("PageIndex",page);
+            mPresenter.getGoodsSearch(map);
+        }else {
+            map.put("PageIndex",page);
+            mPresenter.getGoodsSearch(map);
+            page++;
+        }
     }
 
     //设置fragment 切换
@@ -241,4 +336,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         invalidateOptionsMenu();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

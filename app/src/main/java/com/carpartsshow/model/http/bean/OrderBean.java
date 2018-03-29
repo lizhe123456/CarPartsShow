@@ -1,58 +1,41 @@
 package com.carpartsshow.model.http.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * Created by lizhe on 2018/3/14.
+ * Created by lizhe on 2018/3/29.
  */
 
-public class UserInfoBean implements Serializable{
+public class OrderBean implements Serializable {
 
 
     /**
-     * ListServicePhone : null
-     * CurrentRepairUser : {"RepairUser_ID":"ddeqwdq","RepairUser_Name":"小李修理厂","RepairUser_State":0,"RepairUser_Sex":0,"RepairUser_RealName":"小李","RepairUser_Mobile":"15971486093","RepairUser_Pwd":"E10ADC3949BA59ABBE56E057F20F883E","RepairUser_CreateTime":"2017-05-03T00:00:00","RepairUser_IsMaster":false,"RepairUser_ParentID":null,"RepairUser_SCode":"123123","RepairUser_Provice":"湖北省","RepairUser_City":"武汉市","RepairUser_Region":"武昌区","RepairUser_DetailAddress":"丁字桥向阳佳苑B区509","RepairUser_CostMoney":0,"RepairUser_ImgOne":"1","RepairUser_ImgTwo":"2","RepairUser_ImgLicense":"3","RepairUser_ImgHandheldIdentityCard":"4","RepairUser_Integer":241911,"RepairUser_CreditMoney":50000,"Company_ID":"0465ad54-ef0a-401f-a4a8-1072fa544da2","RepairUser_CreditBeOverMoney":0,"RepairUser_CreditType":0,"RepairUser_CreditMonth":1,"RepairUser_CreditDay":20}
-     * CollectionCount : 19
+     * Coupon : null
      * CouponCount : 2
-     * WaitOrder : 0
-     * PayCompluteOrder : 7
-     * WaitGoodsOrder : 0
-     * CompluteOrder : 0
-     * SaleOrder : 0
+     * IsUseCompanyName : 1
+     * ListReceiptAddress : [{"Provice":null,"City":null,"Region":null,"DetailAddress":"小李修理厂","PersonName":null,"Mobile":null,"CompanyName":null}]
+     * ListGoods : []
+     * ProductAttrIds : "0b6f8047-96f8-465d-861e-e586a9b01616,"
+     * CurrentRepairUser : {"RepairUser_ID":"ddeqwdq","RepairUser_Name":"小李修理厂","RepairUser_State":0,"RepairUser_Sex":0,"RepairUser_RealName":"小李","RepairUser_Mobile":"15971486093","RepairUser_Pwd":"E10ADC3949BA59ABBE56E057F20F883E","RepairUser_CreateTime":"2017-05-03T00:00:00","RepairUser_IsMaster":false,"RepairUser_ParentID":null,"RepairUser_SCode":"123123","RepairUser_Provice":"130000","RepairUser_City":"130700","RepairUser_Region":"130725","RepairUser_DetailAddress":"Qasd","RepairUser_CostMoney":0,"RepairUser_ImgOne":"1","RepairUser_ImgTwo":"2","RepairUser_ImgLicense":"3","RepairUser_ImgHandheldIdentityCard":"4","RepairUser_Integer":0,"RepairUser_CreditMoney":0,"Company_ID":"0465ad54-ef0a-401f-a4a8-1072fa544da2","RepairUser_CreditBeOverMoney":0,"RepairUser_CreditType":0,"RepairUser_CreditMonth":0,"RepairUser_CreditDay":0,"DefaultAddress":null,"OrganizationId":null,"OrganizationCode":null,"OrganizationName":null,"CompanyId":null}
+     * listProductAttrId : ["\"0b6f8047-96f8-465d-861e-e586a9b01616,\""]
      */
 
-    private Object ListServicePhone;
-    private CurrentRepairUserBean CurrentRepairUser;
-    private int CollectionCount;
+    private Object Coupon;
     private int CouponCount;
-    private int WaitOrder;
-    private int PayCompluteOrder;
-    private int WaitGoodsOrder;
-    private int CompluteOrder;
-    private int SaleOrder;
+    private String IsUseCompanyName;
+    private String ProductAttrIds;
+    private CurrentRepairUserBean CurrentRepairUser;
+    private List<ListReceiptAddressBean> ListReceiptAddress;
+    private List<GoodsBean> ListGoods;
+    private List<String> listProductAttrId;
 
-    public Object getListServicePhone() {
-        return ListServicePhone;
+    public Object getCoupon() {
+        return Coupon;
     }
 
-    public void setListServicePhone(Object ListServicePhone) {
-        this.ListServicePhone = ListServicePhone;
-    }
-
-    public CurrentRepairUserBean getCurrentRepairUser() {
-        return CurrentRepairUser;
-    }
-
-    public void setCurrentRepairUser(CurrentRepairUserBean CurrentRepairUser) {
-        this.CurrentRepairUser = CurrentRepairUser;
-    }
-
-    public int getCollectionCount() {
-        return CollectionCount;
-    }
-
-    public void setCollectionCount(int CollectionCount) {
-        this.CollectionCount = CollectionCount;
+    public void setCoupon(Object Coupon) {
+        this.Coupon = Coupon;
     }
 
     public int getCouponCount() {
@@ -63,47 +46,55 @@ public class UserInfoBean implements Serializable{
         this.CouponCount = CouponCount;
     }
 
-    public int getWaitOrder() {
-        return WaitOrder;
+    public String getIsUseCompanyName() {
+        return IsUseCompanyName;
     }
 
-    public void setWaitOrder(int WaitOrder) {
-        this.WaitOrder = WaitOrder;
+    public void setIsUseCompanyName(String IsUseCompanyName) {
+        this.IsUseCompanyName = IsUseCompanyName;
     }
 
-    public int getPayCompluteOrder() {
-        return PayCompluteOrder;
+    public String getProductAttrIds() {
+        return ProductAttrIds;
     }
 
-    public void setPayCompluteOrder(int PayCompluteOrder) {
-        this.PayCompluteOrder = PayCompluteOrder;
+    public void setProductAttrIds(String ProductAttrIds) {
+        this.ProductAttrIds = ProductAttrIds;
     }
 
-    public int getWaitGoodsOrder() {
-        return WaitGoodsOrder;
+    public CurrentRepairUserBean getCurrentRepairUser() {
+        return CurrentRepairUser;
     }
 
-    public void setWaitGoodsOrder(int WaitGoodsOrder) {
-        this.WaitGoodsOrder = WaitGoodsOrder;
+    public void setCurrentRepairUser(CurrentRepairUserBean CurrentRepairUser) {
+        this.CurrentRepairUser = CurrentRepairUser;
     }
 
-    public int getCompluteOrder() {
-        return CompluteOrder;
+    public List<ListReceiptAddressBean> getListReceiptAddress() {
+        return ListReceiptAddress;
     }
 
-    public void setCompluteOrder(int CompluteOrder) {
-        this.CompluteOrder = CompluteOrder;
+    public void setListReceiptAddress(List<ListReceiptAddressBean> ListReceiptAddress) {
+        this.ListReceiptAddress = ListReceiptAddress;
     }
 
-    public int getSaleOrder() {
-        return SaleOrder;
+    public List<GoodsBean> getListGoods() {
+        return ListGoods;
     }
 
-    public void setSaleOrder(int SaleOrder) {
-        this.SaleOrder = SaleOrder;
+    public void setListGoods(List<GoodsBean> ListGoods) {
+        this.ListGoods = ListGoods;
     }
 
-    public static class CurrentRepairUserBean implements Serializable{
+    public List<String> getListProductAttrId() {
+        return listProductAttrId;
+    }
+
+    public void setListProductAttrId(List<String> listProductAttrId) {
+        this.listProductAttrId = listProductAttrId;
+    }
+
+    public static class CurrentRepairUserBean {
         /**
          * RepairUser_ID : ddeqwdq
          * RepairUser_Name : 小李修理厂
@@ -116,22 +107,27 @@ public class UserInfoBean implements Serializable{
          * RepairUser_IsMaster : false
          * RepairUser_ParentID : null
          * RepairUser_SCode : 123123
-         * RepairUser_Provice : 湖北省
-         * RepairUser_City : 武汉市
-         * RepairUser_Region : 武昌区
-         * RepairUser_DetailAddress : 丁字桥向阳佳苑B区509
+         * RepairUser_Provice : 130000
+         * RepairUser_City : 130700
+         * RepairUser_Region : 130725
+         * RepairUser_DetailAddress : Qasd
          * RepairUser_CostMoney : 0
          * RepairUser_ImgOne : 1
          * RepairUser_ImgTwo : 2
          * RepairUser_ImgLicense : 3
          * RepairUser_ImgHandheldIdentityCard : 4
-         * RepairUser_Integer : 241911
-         * RepairUser_CreditMoney : 50000
+         * RepairUser_Integer : 0
+         * RepairUser_CreditMoney : 0
          * Company_ID : 0465ad54-ef0a-401f-a4a8-1072fa544da2
          * RepairUser_CreditBeOverMoney : 0
          * RepairUser_CreditType : 0
-         * RepairUser_CreditMonth : 1
-         * RepairUser_CreditDay : 20
+         * RepairUser_CreditMonth : 0
+         * RepairUser_CreditDay : 0
+         * DefaultAddress : null
+         * OrganizationId : null
+         * OrganizationCode : null
+         * OrganizationName : null
+         * CompanyId : null
          */
 
         private String RepairUser_ID;
@@ -161,6 +157,11 @@ public class UserInfoBean implements Serializable{
         private int RepairUser_CreditType;
         private int RepairUser_CreditMonth;
         private int RepairUser_CreditDay;
+        private Object DefaultAddress;
+        private Object OrganizationId;
+        private Object OrganizationCode;
+        private Object OrganizationName;
+        private Object CompanyId;
 
         public String getRepairUser_ID() {
             return RepairUser_ID;
@@ -376,6 +377,209 @@ public class UserInfoBean implements Serializable{
 
         public void setRepairUser_CreditDay(int RepairUser_CreditDay) {
             this.RepairUser_CreditDay = RepairUser_CreditDay;
+        }
+
+        public Object getDefaultAddress() {
+            return DefaultAddress;
+        }
+
+        public void setDefaultAddress(Object DefaultAddress) {
+            this.DefaultAddress = DefaultAddress;
+        }
+
+        public Object getOrganizationId() {
+            return OrganizationId;
+        }
+
+        public void setOrganizationId(Object OrganizationId) {
+            this.OrganizationId = OrganizationId;
+        }
+
+        public Object getOrganizationCode() {
+            return OrganizationCode;
+        }
+
+        public void setOrganizationCode(Object OrganizationCode) {
+            this.OrganizationCode = OrganizationCode;
+        }
+
+        public Object getOrganizationName() {
+            return OrganizationName;
+        }
+
+        public void setOrganizationName(Object OrganizationName) {
+            this.OrganizationName = OrganizationName;
+        }
+
+        public Object getCompanyId() {
+            return CompanyId;
+        }
+
+        public void setCompanyId(Object CompanyId) {
+            this.CompanyId = CompanyId;
+        }
+    }
+
+    public static class ListReceiptAddressBean {
+        /**
+         * Provice : null
+         * City : null
+         * Region : null
+         * DetailAddress : 小李修理厂
+         * PersonName : null
+         * Mobile : null
+         * CompanyName : null
+         */
+
+        private Object Provice;
+        private Object City;
+        private Object Region;
+        private String DetailAddress;
+        private Object PersonName;
+        private Object Mobile;
+        private Object CompanyName;
+
+        public Object getProvice() {
+            return Provice;
+        }
+
+        public void setProvice(Object Provice) {
+            this.Provice = Provice;
+        }
+
+        public Object getCity() {
+            return City;
+        }
+
+        public void setCity(Object City) {
+            this.City = City;
+        }
+
+        public Object getRegion() {
+            return Region;
+        }
+
+        public void setRegion(Object Region) {
+            this.Region = Region;
+        }
+
+        public String getDetailAddress() {
+            return DetailAddress;
+        }
+
+        public void setDetailAddress(String DetailAddress) {
+            this.DetailAddress = DetailAddress;
+        }
+
+        public Object getPersonName() {
+            return PersonName;
+        }
+
+        public void setPersonName(Object PersonName) {
+            this.PersonName = PersonName;
+        }
+
+        public Object getMobile() {
+            return Mobile;
+        }
+
+        public void setMobile(Object Mobile) {
+            this.Mobile = Mobile;
+        }
+
+        public Object getCompanyName() {
+            return CompanyName;
+        }
+
+        public void setCompanyName(Object CompanyName) {
+            this.CompanyName = CompanyName;
+        }
+    }
+
+    public class GoodsBean implements Serializable{
+
+        /**
+         * Company_ID : 0465ad54-ef0a-401f-a4a8-1072fa544da2
+         * Goods_ID : 0014031c-2877-422c-9428-a307f8d86923
+         * Name : XYA-2615U	福特全顺汽油车/XYA-2615U/K3320-3000	空气滤芯
+         * ImagePath : /UploadFiles/Goods/G0000015767/e7461a3c06904ffe8b01525c5d4093ff.jpg
+         * Goods_Price : 15
+         * Goods_Integer : 0
+         * Goods_Type : 0
+         * Number : 1
+         */
+
+        private String Company_ID;
+        private String Goods_ID;
+        private String Name;
+        private String ImagePath;
+        private int Goods_Price;
+        private int Goods_Integer;
+        private int Goods_Type;
+        private int Number;
+
+        public int getNumber() {
+            return Number;
+        }
+
+        public void setNumber(int number) {
+            Number = number;
+        }
+
+        public String getCompany_ID() {
+            return Company_ID;
+        }
+
+        public void setCompany_ID(String Company_ID) {
+            this.Company_ID = Company_ID;
+        }
+
+        public String getGoods_ID() {
+            return Goods_ID;
+        }
+
+        public void setGoods_ID(String Goods_ID) {
+            this.Goods_ID = Goods_ID;
+        }
+
+        public String getName() {
+            return Name;
+        }
+
+        public void setName(String Name) {
+            this.Name = Name;
+        }
+
+        public String getImagePath() {
+            return ImagePath;
+        }
+
+        public void setImagePath(String ImagePath) {
+            this.ImagePath = ImagePath;
+        }
+
+        public int getGoods_Price() {
+            return Goods_Price;
+        }
+
+        public void setGoods_Price(int Goods_Price) {
+            this.Goods_Price = Goods_Price;
+        }
+
+        public int getGoods_Integer() {
+            return Goods_Integer;
+        }
+
+        public void setGoods_Integer(int Goods_Integer) {
+            this.Goods_Integer = Goods_Integer;
+        }
+
+        public int getGoods_Type() {
+            return Goods_Type;
+        }
+
+        public void setGoods_Type(int Goods_Type) {
+            this.Goods_Type = Goods_Type;
         }
     }
 }

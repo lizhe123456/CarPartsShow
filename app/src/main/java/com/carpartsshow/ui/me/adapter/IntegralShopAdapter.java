@@ -1,6 +1,7 @@
 package com.carpartsshow.ui.me.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import com.carpartsshow.R;
@@ -55,7 +56,7 @@ public class IntegralShopAdapter extends BaseAdapter<IntergralShopBean> {
             adapter.addFirstDataSet(item.getIntegerGoodsList());
         }else if (position == 2){
             RecyclerView recyclerView = holder.getView(R.id.recyclerView_item);
-            StaggeredGridLayoutManager linearLayoutManager1 = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+            GridLayoutManager linearLayoutManager1 = new GridLayoutManager(getContext(),2);
             recyclerView.setLayoutManager(linearLayoutManager1);
             item2Adapter = new Item2Adapter(getContext());
             recyclerView.setAdapter(item2Adapter);

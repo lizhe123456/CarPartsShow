@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.HomePagePresenter;
@@ -100,7 +101,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     Intent intent = new Intent();
                     intent.setClass(getContext(),GoodsSearchActivity.class);
-                    intent.putExtra("",etSearch.getText().toString().trim());
+                    intent.putExtra("searchValue",etSearch.getText().toString().trim());
                     startActivity(intent);
                     return true;
                 }
@@ -207,13 +208,34 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         }
     }
 
-    private void initCategory(List<HomePageBean.ListFirstCategoryBean> listFirstCategory) {
+    private void initCategory(final List<HomePageBean.ListFirstCategoryBean> listFirstCategory) {
+
         HomeCategoryAdapter adapter = new HomeCategoryAdapter(getContext());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
         adapter.addFirstDataSet(listFirstCategory);
+        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                HomePageBean.ListFirstCategoryBean listFirstCategoryBean = (HomePageBean.ListFirstCategoryBean) item;
+                if (listFirstCategoryBean.getName().equals("积分商城")){
+                    //跳积分商城
+                }else if (listFirstCategoryBean.getName().equals("车型匹配")){
+                    //跳车型
+                }else if (listFirstCategoryBean.getName().equals("品牌大全")){
+                    //跳品牌
+                }else if (listFirstCategoryBean.getName().equals("全部分类")){
+                    //跳分类
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(getContext(),GoodsSearchActivity.class);
+                    intent.putExtra("classify",listFirstCategoryBean.getName());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 

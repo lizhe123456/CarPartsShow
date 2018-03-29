@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:id="@+id/ll_receipt_address">
+    <TextView
+        android:id="@+id/receipt_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/more"
+        android:textSize="@dimen/dm_13"
+        android:text="收货攻速"
+        android:layout_marginLeft="@dimen/dm_20"
+        android:textColor="@color/tv_000"
+        android:padding="@dimen/dm_10"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:background="@color/slide_line"/>
+</LinearLayout>

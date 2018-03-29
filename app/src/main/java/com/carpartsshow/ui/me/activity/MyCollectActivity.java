@@ -16,6 +16,10 @@ import com.carpartsshow.ui.me.adapter.CollectionAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -55,12 +59,24 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     protected void setData() {
-        LoginBean loginBean = SpUtil.getObject(this,"user");
+        final LoginBean loginBean = SpUtil.getObject(this,"user");
         mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
         mAdapter = new CollectionAdapter(this);
         StaggeredGridLayoutManager linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                mPresenter.getCollectionList(loginBean.getRepairUser_ID(),2);
+            }
+        });
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
+            }
+        });
     }
 
 
@@ -90,16 +106,18 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                     allSelect.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
                             null, null, null);
                     allSelect.setCompoundDrawablePadding(8);
-                    mAdapter.allSelect(isAllSelect);
                     isAllSelect = true;
+                    mAdapter.allSelect(isAllSelect);
+
                 }else {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.drawable.round_btn_normal);
                     allSelect.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
                             null, null, null);
                     allSelect.setCompoundDrawablePadding(8);
+                    isAllSelect = false;
                     mAdapter.allSelect(isAllSelect);
-                    isAllSelect = true;
+
                 }
                 break;
             case R.id.tv_delete:
@@ -118,11 +136,13 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     public void showData(CollectionBean collectionBean) {
+        refresh.finishRefresh();
         mAdapter.addFirstDataSet(collectionBean.getCollectionListProduct());
     }
 
     @Override
     public void loadMore(CollectionBean couponBean) {
+        refresh.finishLoadmore();
         mAdapter.addMoreDataSet(couponBean.getCollectionListProduct());
     }
 }

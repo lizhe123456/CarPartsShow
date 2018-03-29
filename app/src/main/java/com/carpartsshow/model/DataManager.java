@@ -5,7 +5,9 @@ import com.carpartsshow.model.http.HttpHelper;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
+import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
@@ -14,6 +16,7 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -135,8 +138,12 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse> splitCreditRecord(String userId, int size, int page, int creditRecordState) {
+    public Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page, int creditRecordState) {
         return httpHelper.splitCreditRecord(userId, size, page, creditRecordState);
+    }
+    @Override
+    public Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page) {
+        return httpHelper.splitCreditRecord(userId, size, page);
     }
 
     @Override
@@ -170,7 +177,7 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map) {
+    public Flowable<CPSResponse<GoodsListBean>> fetchListSplitGoods(Map<String, Object> map) {
         return httpHelper.fetchListSplitGoods(map);
     }
 
@@ -197,5 +204,15 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse<List<MsgBean>>> fetchSplitUserMsg(String userId, int page) {
         return httpHelper.fetchSplitUserMsg(userId, page);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSubmitOrder(Map<String, Object> map) {
+        return httpHelper.fetchSubmitOrder(map);
+    }
+
+    @Override
+    public Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds) {
+        return httpHelper.fetchToOder(userId, productAttrIds);
     }
 }

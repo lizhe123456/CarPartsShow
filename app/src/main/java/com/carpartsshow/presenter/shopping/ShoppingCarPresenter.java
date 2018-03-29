@@ -3,6 +3,7 @@ package com.carpartsshow.presenter.shopping;
 import com.carpartsshow.base.BasePresenterImpl;
 import com.carpartsshow.base.CommonSubscriber;
 import com.carpartsshow.model.DataManager;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
@@ -118,6 +119,22 @@ public class ShoppingCarPresenter extends BasePresenterImpl<ShoppingCarContract.
                         getShoppingCarData(userId,1);
                         //删除成功
                         mView.state(cpsResponse.getMessage());
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void generateOrder(String userId, String pids) {
+        mView.loading("提交中..");
+        addSubscribe(dataManager.fetchToOder(userId,pids)
+                .compose(RxUtil.<CPSResponse<OrderBean>>rxSchedulerHelper())
+                .compose(RxUtil.<OrderBean>handle())
+                .subscribeWith(new CommonSubscriber<OrderBean>(mView){
+                    @Override
+                    public void onNext(OrderBean orderBean) {
+                        super.onNext(orderBean);
+                        mView.showToOrder(orderBean);
                     }
                 })
         );

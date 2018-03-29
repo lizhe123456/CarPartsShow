@@ -3,7 +3,9 @@ package com.carpartsshow.model.http.api;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
+import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
@@ -12,6 +14,7 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -137,10 +140,15 @@ public interface CPSApi {
 
     //信用记录
     @GET("/api/User/SplitCreditRecord")
-    Flowable<CPSResponse> splitCreditRecord(@Query("RepairUser_ID") String userId,
-                                            @Query("PageIndex") int page,
-                                            @Query("PageSize") int size,
-                                            @Query("CreditRecord_State") int creditRecordState);
+    Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(@Query("RepairUser_ID") String userId,
+                                                                         @Query("PageIndex") int page,
+                                                                         @Query("PageSize") int size,
+                                                                         @Query("CreditRecord_State") int creditRecordState);
+
+    @GET("/api/User/SplitCreditRecord")
+    Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(@Query("RepairUser_ID") String userId,
+                                                                         @Query("PageIndex") int page,
+                                                                         @Query("PageSize") int size);
 
     //首页
     @GET("/api/Home/Index")
@@ -172,12 +180,19 @@ public interface CPSApi {
 
     //商品搜索分页
     @GET("/api/Home/ListSplitGoods")
-    Flowable<CPSResponse> listSplitGoods(@QueryMap Map<String, String> map);
+    Flowable<CPSResponse<GoodsListBean>> listSplitGoods(@QueryMap Map<String, Object> map);
 
     //消息记录
     @POST("/api/User/SplitUserMsg")
     Flowable<CPSResponse<List<MsgBean>>> splitUserMsg(@Query("RepairUser_ID") String userId, @Query("PageIndex") int page);
 
+    //提交提单
+    @POST("/api/User/SubmitOrder")
+    Flowable<CPSResponse> submitOrder(@Body Map<String , Object> param);
 
+    //立即购买
+    @GET("/api/User/ToOrder")
+    Flowable<CPSResponse<OrderBean>> toOder(@Query("RepairUser_ID") String userId,
+                                            @Query("ProductAttrIds") String productAttrIds);
 
 }

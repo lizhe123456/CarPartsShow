@@ -4,7 +4,9 @@ import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
+import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
 import com.carpartsshow.model.http.bean.IntergralBean;
@@ -13,6 +15,7 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -135,8 +138,12 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> splitCreditRecord(String userId, int size, int page, int creditRecordState) {
-        return cpsApi.splitCreditRecord(userId, size, page, creditRecordState);
+    public Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page, int creditRecordState) {
+        return cpsApi.splitCreditRecord(userId, page, size, creditRecordState);
+    }
+    @Override
+    public Flowable<CPSResponse<List<ConsumptionRecordBean>>> splitCreditRecord(String userId, int size, int page) {
+        return cpsApi.splitCreditRecord(userId, page, size);
     }
 
     @Override
@@ -170,7 +177,7 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> fetchListSplitGoods(Map<String, String> map) {
+    public Flowable<CPSResponse<GoodsListBean>> fetchListSplitGoods(Map<String, Object> map) {
         return cpsApi.listSplitGoods(map);
     }
 
@@ -197,6 +204,18 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<List<MsgBean>>> fetchSplitUserMsg(String userId, int page) {
         return cpsApi.splitUserMsg(userId,page);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSubmitOrder(Map<String, Object> map) {
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("sbOrder",map);
+        return cpsApi.submitOrder(map1);
+    }
+
+    @Override
+    public Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds) {
+        return cpsApi.toOder(userId, productAttrIds);
     }
 
 }

@@ -11,13 +11,18 @@ import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
+import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -122,6 +127,23 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
                 mAdapter.allSelected(isAll);
                 break;
             case R.id.tv_pay:
+                String opis = "";
+                int num2 = 0;
+                for (ShopCarBean.ListCarProductBean listCarProductBean:mAdapter.getDataSource()) {
+                    if (listCarProductBean.isSelected()){
+                        if (num2 == 0) {
+                            opis += listCarProductBean.getProduct_ID()+",";
+                        }else {
+                            opis += ",|" + listCarProductBean.getProduct_ID();
+                        }
+                        num2++;
+                    }
+                }
+                if (!TextUtils.isEmpty(opis)){
+                    mPresenter.generateOrder(loginBean.getRepairUser_ID(),opis);
+                }else {
+                    CPSToast.showText(this, "您没有选中任何商品。");
+                }
                 break;
             case R.id.tv_collection:
                 String pis = "";
@@ -139,7 +161,7 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
                 if (!TextUtils.isEmpty(pis)){
                     mPresenter.collections(loginBean.getRepairUser_ID(),pis);
                 }else {
-                    CPSToast.showText(this, "至少选择一个");
+                    CPSToast.showText(this, "您没有选中任何商品。");
                 }
                 break;
             case R.id.tv_delete:
@@ -158,7 +180,7 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
                 if (!TextUtils.isEmpty(cids)){
                     mPresenter.delCards(loginBean.getRepairUser_ID(),cids);
                 }else {
-                    CPSToast.showText(this,"至少选择一个");
+                    CPSToast.showText(this,"您没有选中任何商品。");
                 }
 
                 break;
@@ -198,6 +220,11 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
     @Override
     public void state(String msg) {
         CPSToast.showText(this,msg);
+    }
+
+    @Override
+    public void showToOrder(OrderBean orderBean) {
+        ConfirmOrderActivity.start(this,orderBean,1);
     }
 
     //购物车加一

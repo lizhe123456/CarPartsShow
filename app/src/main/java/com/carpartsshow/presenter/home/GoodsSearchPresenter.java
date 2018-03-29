@@ -7,6 +7,7 @@ import com.carpartsshow.base.CommonSubscriber;
 import com.carpartsshow.model.DataManager;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.home.contract.GoodsSearchContract;
 import com.carpartsshow.util.RxUtil;
@@ -53,14 +54,16 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
 
     //商品搜索
     @Override
-    public void getGoodsSearch(Map<String, String> map) {
+    public void getGoodsSearch(Map<String, Object> map) {
+        mView.loading("加载中..");
         addSubscribe(dataManager.fetchListSplitGoods(map)
-                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
-                .compose(RxUtil.handleState())
-                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                .compose(RxUtil.<CPSResponse<GoodsListBean>>rxSchedulerHelper())
+                .compose(RxUtil.<GoodsListBean>handle())
+                .subscribeWith(new CommonSubscriber<GoodsListBean>(mView){
                     @Override
-                    public void onNext(CPSResponse cpsResponse) {
+                    public void onNext(GoodsListBean cpsResponse) {
                         super.onNext(cpsResponse);
+                        mView.showGoodsList(cpsResponse);
                     }
                 })
 

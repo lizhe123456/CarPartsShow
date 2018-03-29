@@ -216,8 +216,10 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
                 break;
             case R.id.money:
                 //信用使用记录
-                intent.setClass(getContext(),MyMoneyActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent();
+                intent1.setClass(getContext(),MyMoneyActivity.class);
+                intent1.putExtra("userInfo",userInfoBean);
+                startActivity(intent1);
                 break;
             case R.id.collection:
                 intent.setClass(getContext(), MyCollectActivity.class);

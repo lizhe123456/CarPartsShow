@@ -12,6 +12,7 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
+import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.GoodsSearchPresenter;
 import com.carpartsshow.presenter.home.contract.GoodsSearchContract;
@@ -128,6 +129,10 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
         });
     }
 
+    @Override
+    public void showGoodsList(GoodsListBean goodsListBean) {
+
+    }
 
 
     @OnClick({R.id.tv_models, R.id.tv_classify, R.id.tv_brand,R.id.iv_back, R.id.et_search})

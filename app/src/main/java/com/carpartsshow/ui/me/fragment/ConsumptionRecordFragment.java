@@ -2,7 +2,6 @@ package com.carpartsshow.ui.me.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.base.MvpFragment;
@@ -11,7 +10,6 @@ import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.me.CreditMoneyPresenter;
 import com.carpartsshow.presenter.me.contract.CreditMoneyContract;
 import com.carpartsshow.ui.me.adapter.ConsumptionRecordAdapter;
-import com.carpartsshow.ui.me.adapter.IntegralAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -25,14 +23,10 @@ import butterknife.BindView;
 
 /**
  * Created by lizhe on 2018/3/15.
- * 待还款
+ * 消费记录
  */
 
-public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> implements CreditMoneyContract.View {
-    @BindView(R.id.my_moe)
-    TextView myMoe;
-    @BindView(R.id.tv_num)
-    TextView tvNum;
+public class ConsumptionRecordFragment extends MvpFragment<CreditMoneyPresenter> implements CreditMoneyContract.View{
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
@@ -42,8 +36,10 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
 
     @Override
     protected int setLayout() {
-        return R.layout.fragment_wait_repay;
+        return R.layout.fragment_consumption_record;
     }
+
+
 
     @Override
     protected void initInject() {
@@ -58,17 +54,17 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,1);
+        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),1);
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,1);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),1);
             }
         });
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,2);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),2);
             }
         });
     }

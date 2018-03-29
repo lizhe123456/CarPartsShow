@@ -6,8 +6,12 @@ import android.view.View;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.UserInfoBean;
+import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.NoMarginsTextView;
+import com.carpartsshow.widgets.CPSToast;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -33,28 +37,32 @@ public class MyMoneyActivity extends BaseActivity {
 
     @Override
     protected void setData() {
-        LoginBean loginBean = SpUtil.getObject(this,"user");
-        tvPrice.setText(loginBean.getRepairUser_CreditMoney() == null ? "0" : loginBean.getRepairUser_CreditMoney());
-        tvPriceZ.setText("10,000");
+        UserInfoBean userInfoBean = (UserInfoBean) getIntent().getSerializableExtra("userInfo");
+        tvPrice.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CostMoney()+"");
+        tvPriceZ.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditMoney()+"");
     }
 
 
     @OnClick({R.id.iv_back, R.id.iv_ed, R.id.tv_hq, R.id.tv_wt, R.id.tv_te})
     public void onViewClicked(View view) {
+        Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.iv_back:
                 this.finish();
                 break;
             case R.id.iv_ed:
-                Intent intent = new Intent();
                 intent.setClass(this,CreditMoneyActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_hq:
+                intent.setClass(this,CreditMoneyActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_wt:
+                CPSToast.showText(this,"暂不开放");
                 break;
             case R.id.tv_te:
+                CPSToast.showText(this,"暂不开放");
                 break;
         }
     }

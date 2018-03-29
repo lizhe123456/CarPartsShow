@@ -7,8 +7,12 @@ import com.carpartsshow.di.module.FragmentModule;
 import com.carpartsshow.di.scope.FragmentScope;
 import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.home.HomeFragment;
+import com.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.carpartsshow.ui.me.MeFragment;
 import com.carpartsshow.ui.me.activity.MyIntegralActivity;
+import com.carpartsshow.ui.me.fragment.ConsumptionRecordFragment;
+import com.carpartsshow.ui.me.fragment.RepayCompleteFragment;
+import com.carpartsshow.ui.me.fragment.WaitRepayFragment;
 import com.carpartsshow.ui.me.fragment.news.NewsListFragment;
 
 import dagger.Component;
@@ -30,4 +34,12 @@ public interface FragmentComponent {
     void inject(ClassifyFragment classifyFragment);
 
     void inject(NewsListFragment newsListFragment);
+
+    void inject(WaitRepayFragment waitRepayFragment);
+
+    void inject(RepayCompleteFragment repayCompleteFragment);
+
+    void inject(ConsumptionRecordFragment consumptionRecordFragment);
+
+    void inject(GoodsFragment goodsFragment);
 }
