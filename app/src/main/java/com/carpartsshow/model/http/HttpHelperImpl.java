@@ -2,10 +2,12 @@ package com.carpartsshow.model.http;
 
 import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.CarFilterBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
@@ -16,6 +18,7 @@ import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -157,7 +160,7 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> goodsDetail(String userId, String goodsId) {
+    public Flowable<CPSResponse<GoodsDetailBean>> goodsDetail(String userId, String goodsId) {
         return cpsApi.goodsDetail(userId, goodsId);
     }
 
@@ -167,7 +170,7 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> carFilter(String val) {
+    public Flowable<CPSResponse<CarFilterBean>> carFilter(String val) {
         return cpsApi.carFilter(val);
     }
 
@@ -216,6 +219,11 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds) {
         return cpsApi.toOder(userId, productAttrIds);
+    }
+
+    @Override
+    public Flowable<CPSResponse<OrderListBean>> fetchSplitListOrder(String userId, int size, int page, int type) {
+        return cpsApi.splitListOrder(userId, size, page, type);
     }
 
 }

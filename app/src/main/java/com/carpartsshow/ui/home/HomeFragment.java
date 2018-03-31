@@ -1,19 +1,26 @@
 package com.carpartsshow.ui.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.carpartsshow.R;
@@ -26,12 +33,12 @@ import com.carpartsshow.presenter.home.contract.HomePageContract;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.home.activity.MessageRecordActivity;
 import com.carpartsshow.ui.home.adapter.HomeCategoryAdapter;
-import com.carpartsshow.ui.home.adapter.HomePageAdapter;
 import com.carpartsshow.ui.home.adapter.ListDateItemAdapter;
 import com.carpartsshow.ui.home.adapter.SeckillGoodsAdapter;
 import com.carpartsshow.ui.home.adapter.SpecialOfferAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.CountdownTextView;
+import com.carpartsshow.widgets.CPSToast;
 import com.carpartsshow.widgets.GlideImageLoader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.youth.banner.Banner;
@@ -77,8 +84,14 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     RecyclerView rvDataItem;
     @BindView(R.id.tv_title)
     TextView tvTitle;
+    @BindView(R.id.ll_notice)
+    LinearLayout linearLayoutNotice;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
+    @BindView(R.id.rl_title)
+    RelativeLayout rlTile;
 
-    private HomePageAdapter mAdapter;
+//    private HomePageAdapter mAdapter;
 
     @Override
     protected int setLayout() {
@@ -91,6 +104,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         getFragmentComponent().inject(this);
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void setData() {
         loginBean = SpUtil.getObject(getContext(), "user");
@@ -108,6 +123,26 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                 return false;
             }
         });
+        recyclerView.setNestedScrollingEnabled(false);
+        rvDataItem.setNestedScrollingEnabled(false);
+        rvCradItem.setNestedScrollingEnabled(false);
+        rvGoodsItem.setNestedScrollingEnabled(false);
+
+//        nestedScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY <= 0) {
+//                    rlTile.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));//AGB由相关工具获得，或者美工提供
+//                } else if (scrollY > 0 && scrollY <= 180) {
+//                    float scale = (float) scrollY / 180;
+//                    float alpha = (255 * scale);
+//                    // 只是layout背景透明(仿知乎滑动效果)
+//                    rlTile.setBackgroundColor(Color.argb((int) alpha, 227, 29, 26));
+//                } else {
+//                    rlTile.setBackgroundColor(Color.argb((int) 255, 227, 29, 26));
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -163,6 +198,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         SpecialOfferAdapter adapter = new SpecialOfferAdapter(getContext());
         rvCradItem.setAdapter(adapter);
         adapter.addFirstDataSet(specialOfferBeans);
+        rvCradItem.setVisibility(View.VISIBLE);
     }
 
     private void initDataItem(List<HomePageBean.ListDateItemBean> listDateItem) {
@@ -173,7 +209,18 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvDataItem.setAdapter(adapter);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.img_layout, null);
         adapter.addHeaderView(view);
+        rvDataItem.setVisibility(View.VISIBLE);
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden){
+            vfNews.stopFlipping();
+        }else {
+            vfNews.startFlipping();
+        }
     }
 
     private void initGoods(List<HomePageBean.ListSeckillGoodsBean> listSeckillGoods) {
@@ -183,6 +230,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvGoodsItem.setLayoutManager(linearLayoutManager);
         rvGoodsItem.setAdapter(adapter);
         adapter.addFirstDataSet(listSeckillGoods);
+        rvGoodsItem.setVisibility(View.VISIBLE);
     }
 
     private void initTime(HomePageBean.TimeLimit timeLimit) {
@@ -192,8 +240,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
 
             }
         });
-        tvTime.init("hh:mm:ss", 213215);
-        tvTime.start(0);
+        tvTime.setTime(9,59,59);
+        tvTime.start();
     }
 
     private void initListNotice(List<HomePageBean.ListNoticeBean> listNotice) {
@@ -206,6 +254,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             textView.setText(bean.getNotice_Title());
             vfNews.addView(textView);
         }
+        linearLayoutNotice.setVisibility(View.VISIBLE);
     }
 
     private void initCategory(final List<HomePageBean.ListFirstCategoryBean> listFirstCategory) {
@@ -236,6 +285,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                 }
             }
         });
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 
@@ -263,14 +313,6 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     public void loadMore(HomePageBean homePageBean) {
 
-    }
-
-    public void setFitsSystemWindows(Activity activity, boolean value) {
-        ViewGroup contentFrameLayout = (ViewGroup) activity.findViewById(android.R.id.content);
-        View parentView = contentFrameLayout.getChildAt(0);
-        if (parentView != null && Build.VERSION.SDK_INT >= 14) {
-            parentView.setFitsSystemWindows(value);
-        }
     }
 
 

@@ -65,7 +65,6 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder.tvLetter = (TextView) view.findViewById(R.id.tv_catagory);
             viewHolder.imageView = view.findViewById(R.id.iv_img);
             viewHolder.relativeLayout = view.findViewById(R.id.rl_layout);
-            GlideuUtil.loadImageView(mContext,mContent.getLogo(),viewHolder.imageView);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -81,7 +80,7 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
         }
 
         viewHolder.tvTitle.setText(this.list.get(position).getName());
-
+        GlideuUtil.loadImageView(mContext,mContent.getLogo(),viewHolder.imageView);
         return view;
 
     }

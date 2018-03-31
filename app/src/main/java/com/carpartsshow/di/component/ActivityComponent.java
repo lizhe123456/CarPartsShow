@@ -7,6 +7,8 @@ import com.carpartsshow.di.scope.ActivityScope;
 import com.carpartsshow.ui.ForgetPassActivity;
 import com.carpartsshow.ui.LoginActivity;
 import com.carpartsshow.ui.NewPassActivity;
+import com.carpartsshow.ui.classify.activity.CarBrandDetailsActivity;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.home.activity.MessageRecordActivity;
 import com.carpartsshow.ui.me.activity.FeedbackActivity;
@@ -20,6 +22,7 @@ import com.carpartsshow.ui.me.activity.NewsActivity;
 import com.carpartsshow.ui.me.activity.UpdateAddressActivity;
 import com.carpartsshow.ui.me.activity.UpdatePassActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
+import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 
 import dagger.Component;
 
@@ -65,4 +68,10 @@ public interface ActivityComponent {
     void inject(MessageRecordActivity messageRecordActivity);
 
     void inject(NewsActivity newsActivity);
+
+    void inject(CarBrandDetailsActivity carBrandDetailsActivity);
+
+    void inject(GoodsDetailsActivity goodsDetailsActivity);
+
+    void inject(ConfirmOrderActivity confirmOrderActivity);
 }

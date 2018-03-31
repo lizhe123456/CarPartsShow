@@ -28,9 +28,8 @@ public class LoadingDialog extends Dialog {
 
     /**
      * 为加载进度个对话框设置不同的提示消息
-     *
      * @param message 给用户展示的提示信息
-     * @return build模式设计，可以链式调用
+     *
      */
     public LoadingDialog setMessage(String message) {
         textView.setText(message);

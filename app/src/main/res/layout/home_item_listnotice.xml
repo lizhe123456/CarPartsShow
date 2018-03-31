@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autoScrollHeight="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,4 +22,5 @@
         android:inAnimation="@anim/anim_marquee_in"
         android:outAnimation="@anim/anim_marquee_out"
         android:paddingLeft="@dimen/x10" />
+
 </LinearLayout>

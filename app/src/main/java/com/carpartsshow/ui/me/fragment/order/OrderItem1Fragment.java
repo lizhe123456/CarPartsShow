@@ -1,27 +1,29 @@
 package com.carpartsshow.ui.me.fragment.order;
 
-import com.carpartsshow.R;
-import com.carpartsshow.base.BaseFragment;
+import com.carpartsshow.ui.me.fragment.order.adapter.WaitOrderAdapter;
+import com.carpartsshow.ui.me.fragment.order.base.BaseOrderFragment;
+import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 
 /**
  * Created by lizhe on 2018/3/16.
  * 待付款
  */
 
-public class OrderItem1Fragment extends BaseFragment{
+public class OrderItem1Fragment extends BaseOrderFragment{
+
+    private WaitOrderAdapter mAdapter;
+
 
     @Override
-    protected int setLayout() {
-        return R.layout.fragment_order1;
+    public OrderAdapter setAdapter() {
+        mAdapter = new WaitOrderAdapter(getContext());
+        return mAdapter;
     }
+
 
     @Override
-    protected void init() {
-
+    public int request() {
+        return 1;
     }
 
-    @Override
-    protected void setData() {
-
-    }
 }

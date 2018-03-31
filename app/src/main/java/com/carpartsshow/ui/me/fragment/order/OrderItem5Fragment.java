@@ -1,26 +1,23 @@
 package com.carpartsshow.ui.me.fragment.order;
 
-import com.carpartsshow.R;
-import com.carpartsshow.base.BaseFragment;
+import com.carpartsshow.ui.me.fragment.order.adapter.CustomerServiceAdapter;
+import com.carpartsshow.ui.me.fragment.order.base.BaseOrderFragment;
+import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 
 /**
  * Created by lizhe on 2018/3/16.
  * 退货/售后
  */
 
-public class OrderItem5Fragment extends BaseFragment{
+public class OrderItem5Fragment extends BaseOrderFragment{
+
     @Override
-    protected int setLayout() {
-        return R.layout.fragment_order5;
+    public OrderAdapter setAdapter() {
+        return new CustomerServiceAdapter(getContext());
     }
 
     @Override
-    protected void init() {
-
-    }
-
-    @Override
-    protected void setData() {
-
+    public int request() {
+        return 5;
     }
 }

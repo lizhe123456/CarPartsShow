@@ -1,31 +1,31 @@
 package com.carpartsshow.ui.classify.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
+import com.carpartsshow.eventbus.CarClassifyBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
-import com.carpartsshow.ui.classify.adapter.CarBrandAdapter;
-import com.carpartsshow.ui.classify.adapter.brand.BrandComparator;
+import com.carpartsshow.ui.classify.activity.CarBrandDetailsActivity;
+import com.carpartsshow.ui.classify.adapter.CarBrandAdapterV2;
+import com.carpartsshow.ui.classify.adapter.CarBrandDetailsAdapter;
 import com.carpartsshow.ui.classify.adapter.brand.CarBrandComparator;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.util.PinyinUtils;
 import com.carpartsshow.view.SideBar;
-import com.carpartsshow.view.XRecyclerView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.carpartsshow.widgets.AnimatedExpandableListView;
+import com.carpartsshow.widgets.CPSToast;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by lizhe on 2018/3/27.
@@ -35,17 +35,17 @@ import butterknife.Unbinder;
 public class CarBrandFragment extends BaseFragment {
 
 
-    @BindView(R.id.recyclerView)
-    XRecyclerView recyclerView;
-    @BindView(R.id.refresh)
-    SmartRefreshLayout refresh;
+    @BindView(R.id.expandable_lv)
+    AnimatedExpandableListView expandableListView;
     @BindView(R.id.right_side)
     SideBar rightSide;
     @BindView(R.id.dialog)
     TextView dialog;
 
     private ArrayList<ClassificationBean.ListCarBrandBean> list;
-    private CarBrandAdapter mAdapter;
+    private CarBrandAdapterV2 mAdapter;
+    private boolean flag;
+    private int requestCode = 1;
 
     public static CarBrandFragment newInstance(ArrayList<ClassificationBean.ListCarBrandBean> list) {
         CarBrandFragment myFragment = new CarBrandFragment();
@@ -70,13 +70,10 @@ public class CarBrandFragment extends BaseFragment {
 
     @Override
     protected void setData() {
-        mAdapter = new CarBrandAdapter(getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mAdapter = new CarBrandAdapterV2(getContext());
         Collections.sort(list,new CarBrandComparator());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.setData(list);
+        expandableListView.setAdapter(mAdapter);
+        mAdapter.loadMore(list);
         //设置右侧触摸监听
         rightSide.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -84,11 +81,49 @@ public class CarBrandFragment extends BaseFragment {
                 //该字母首次出现的位置
                 int position = mAdapter.getPositionForSection(s.charAt(0));
                 if (position != -1) {
-                    recyclerView.scrollToPosition(position + 1);
+                }
+            }
+        });
+        mAdapter.setOnOpenListener(new CarBrandAdapterV2.OnOpenListener() {
+            @Override
+            public void open(int groupPosition) {
+                if (flag) {
+                    flag = false;
+                    expandableListView.collapseGroupWithAnimation(groupPosition);
+                }else {
+                    flag = true;
+                    expandableListView.expandGroupWithAnimation(groupPosition);
                 }
             }
         });
 
+
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+
+        mAdapter.setOnItemListener(new CarBrandAdapterV2.OnItemListener() {
+            @Override
+            public void OnGroupItemClick(ClassificationBean.ListCarBrandBean listCarBrandBean) {
+//                CPSToast.showText(getContext(),listCarBrandBean.getName());
+            }
+
+            @Override
+            public void OnSubItemClick(ClassificationBean.ListCarBrandBean listCarBrandBean,ClassificationBean.VCJListBean vcjListBean) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), CarBrandDetailsActivity.class);
+                intent.putExtra("group", listCarBrandBean.getCarBrand_Name() + "," + vcjListBean.getName());
+                startActivityForResult(intent, requestCode);
+            }
+
+        });
+
+        View view = new View(getContext());
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100));
+        expandableListView.addFooterView(view);
     }
 
     private List<ClassificationBean.ListCarBrandBean> filledData(List<ClassificationBean.ListCarBrandBean> date) {
@@ -112,4 +147,23 @@ public class CarBrandFragment extends BaseFragment {
         return mSortList;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == this.requestCode){
+            if (resultCode == 1){
+                int cid = data.getIntExtra("cid",-1);
+                String name = data.getStringExtra("label");
+                if (getActivity() instanceof GoodsSearchActivity) {
+                    EventBus.getDefault().post(new CarClassifyBean("carBrand",name,cid));
+                }else {
+                    Intent intent = new Intent();
+                    intent.putExtra("carBrand", name);
+                    intent.putExtra("cid",cid);
+                    intent.setClass(getContext(), GoodsSearchActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
 }

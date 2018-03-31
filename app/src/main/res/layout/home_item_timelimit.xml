@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/dm_10"
     android:paddingBottom="@dimen/dm_10"
     android:paddingRight="@dimen/dm_15"
@@ -17,6 +18,16 @@
         android:textSize="@dimen/dm_15"
         android:layout_centerVertical="true"/>
 
+    <!--<com.carpartsshow.view.CountdownTextView-->
+        <!--android:id="@+id/tv_time"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_toRightOf="@+id/tv_title"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:textSize="@dimen/dm_10"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:layout_marginLeft="@dimen/dm_18"/>-->
+
     <com.carpartsshow.view.CountdownTextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
@@ -24,9 +35,9 @@
         android:layout_toRightOf="@+id/tv_title"
         android:layout_centerVertical="true"
         android:textSize="@dimen/dm_10"
-        android:textColor="@color/white"
-        android:layout_marginLeft="@dimen/dm_18"/>
-
+        android:background="@color/bg_f5f5f5"
+        android:layout_marginLeft="@dimen/dm_18"
+        app:viewSize="12"/>
     <TextView
         android:id="@+id/tv_go"
         android:layout_width="wrap_content"

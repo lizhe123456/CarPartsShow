@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refresh"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.carpartsshow.widgets.AnimatedExpandableListView
+        android:id="@+id/expandable_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlEnablePureScrollMode="true"
-        app:srlEnableLoadmore="true"
-        app:srlDragRate="1">
-        <com.carpartsshow.view.XRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:scrollbars="none"/>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:groupIndicator="@null"
+        android:divider="@null"/>
+
     <com.carpartsshow.view.SideBar
         android:id="@+id/right_side"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
+
     <TextView
         android:id="@+id/dialog"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:background="@drawable/shape_slide_grey"
         android:gravity="center"
         android:text="A"
         android:textColor="@android:color/white"
-        android:layout_centerInParent="true"
         android:textSize="36sp"
         android:visibility="gone"
         tools:visibility="visible" />

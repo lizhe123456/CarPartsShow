@@ -63,13 +63,12 @@ public class CarClassifyAdapter extends SecondaryListAdapter<CarClassifyAdapter.
     public void onGroupItemBindViewHolder(RecyclerView.ViewHolder holder, int groupItemIndex) {
         ((GroupItemViewHolder) holder).tvGroupName.setText(dts.get(groupItemIndex).getGroupItem().getName());
         GlideuUtil.loadImageView(context,dts.get(groupItemIndex).getGroupItem().getCategory_ImgPath(),((GroupItemViewHolder) holder).ivImg);
-//        ((GroupItemViewHolder) holder).ivItemGo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                rotateOnYCoordinate(v);
-//            }
-//        });
+        ((GroupItemViewHolder) holder).ivItemGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -121,5 +120,6 @@ public class CarClassifyAdapter extends SecondaryListAdapter<CarClassifyAdapter.
             nodeLayout = itemView.findViewById(R.id.ll_node_layout);
         }
     }
+
 
 }

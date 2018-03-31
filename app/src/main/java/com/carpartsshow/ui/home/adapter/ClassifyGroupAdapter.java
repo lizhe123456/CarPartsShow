@@ -27,10 +27,20 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
     private Context context;
     private List<ClassificationItemBean> classificationItemBeans = new ArrayList<>();
     private LayoutInflater mInflater;
+    private OnOpenListener onOpenListener;
+    private OnItemListener onGroupItemListener;
 
     public ClassifyGroupAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
+    }
+
+    public void setOnOpenListener(OnOpenListener onOpenListener) {
+        this.onOpenListener = onOpenListener;
+    }
+
+    public void setOnItemListener(OnItemListener onGroupItemListener) {
+        this.onGroupItemListener = onGroupItemListener;
     }
 
     @Override
@@ -82,7 +92,7 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         GroupItemViewHolder holder;
         if (convertView == null) {
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -94,11 +104,23 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
         }
         holder.tvGroupName.setText(getClassificationItemBeans().get(groupPosition).getName());
         GlideuUtil.loadImageView(context,getClassificationItemBeans().get(groupPosition).getCategory_ImgPath(), holder.ivImg);
+        holder.ivItemGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOpenListener.open(groupPosition);
+            }
+        });
+        holder.groupLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onGroupItemListener.OnGroupItemClick(getClassificationItemBeans().get(groupPosition));
+            }
+        });
         return convertView;
     }
 
     @Override
-    public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getRealChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         SubItemViewHolder holder;
         if (convertView == null) {
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -109,7 +131,12 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
             holder = (SubItemViewHolder) convertView.getTag();
         }
         holder.tvSubName.setText(getClassificationItem2BeanList(groupPosition).get(childPosition).getName());
-
+        holder.nodeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onGroupItemListener.OnSubItemClick(getClassificationItem2BeanList(groupPosition).get(childPosition));
+            }
+        });
         return convertView;
     }
 
@@ -165,6 +192,17 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
         objectAnimator.setInterpolator(new AccelerateInterpolator());
         objectAnimator.reverse();
         objectAnimator.start();
+
+    }
+
+    public interface OnOpenListener{
+        void open(int groupPosition);
+    }
+
+    public interface OnItemListener{
+        void OnGroupItemClick(ClassificationItemBean classificationItemBean);
+
+        void OnSubItemClick(ClassificationItemBean.ClassificationItem2Bean classificationItem2Bean);
     }
 
 }

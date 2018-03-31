@@ -22,8 +22,6 @@ public abstract class MvpFragment<T extends BasePresenter> extends BaseFragment 
     @Inject
     protected T mPresenter;
 
-    protected LoadingDialog loadingDialog;
-
     protected FragmentComponent getFragmentComponent(){
         return DaggerFragmentComponent.builder()
                 .appComponent(App.getInstance().getAppComponent())
@@ -31,9 +29,6 @@ public abstract class MvpFragment<T extends BasePresenter> extends BaseFragment 
                 .build();
     }
 
-    protected void initLoading(){
-        loadingDialog = new LoadingDialog(getContext());
-    }
 
     @Override
     protected void init() {

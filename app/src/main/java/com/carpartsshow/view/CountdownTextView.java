@@ -1,23 +1,19 @@
 package com.carpartsshow.view;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.TypedArray;
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
+import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carpartsshow.R;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,140 +23,156 @@ import java.util.TimerTask;
  */
 
 @SuppressLint("AppCompatCustomView")
-public class CountdownTextView extends TextView {
+public class CountdownTextView extends LinearLayout {
 
-    private long mSeconds;
-    private String mStrFormat;
-    private Map<Integer,Timer> mTimerMap;
-    private TimerTask mTimerTask;
-    private final int what_count_down_tick = 1;
-    private String TAG = "CountdownTextView";
+    private TextView tv_hour_decade;
+    private TextView tv_hour_unit;
+    private TextView tv_min_decade;
+    private TextView tv_min_unit;
+    private TextView tv_sec_decade;
+    private TextView tv_sec_unit;
 
-    public CountdownTextView(Context context) {
-        super(context);
-    }
+    private Context context;
 
-    public CountdownTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    private int hour_decade;
+    private int hour_unit;
+    private int min_decade;
+    private int min_unit;
+    private int sec_decade;
+    private int sec_unit;
 
-    public CountdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-    @TargetApi(21)
-    public CountdownTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    private Timer timer;
 
-    /**
-     *
-     * @param format  例如：剩余%s
-     * @param seconds
-     */
-    public void init(String format,long seconds){
-        mTimerMap = new HashMap<>();
-        if(!TextUtils.isEmpty(format)){
-            mStrFormat = format;
-        }
-        mSeconds = seconds; //设置总共的秒数
-        mTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                if(mSeconds > 0){
-                    mSeconds --;
-                    mHandler.sendEmptyMessage(what_count_down_tick);
-                }
-            }
-        };
-    }
+    private Handler handler = new Handler() {
 
-    public void start(int position){
-        if(mTimerMap.get(position) == null){
-            Timer timer = new Timer();
-            mTimerMap.put(position,timer);
-            mTimerMap.get(position).schedule(mTimerTask,0,1000);
-        }
-    }
-
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what){
-                case what_count_down_tick:
-                    String time;
-                    if(mSeconds <= 0){
-                        time = String.format(mStrFormat,"00:00:00");
-                    }else {
-                        Log.e(TAG,"mSeconds="+mSeconds+"#what_count_down_tick:"+second2TimeSecond(mSeconds)+"#"+String.format(mStrFormat,second2TimeSecond(mSeconds)));
-                        time = mStrFormat== null ? second2TimeSecond(mSeconds) : String.format(mStrFormat,second2TimeSecond(mSeconds));
-                    }
-                    SpannableStringBuilder style=new SpannableStringBuilder(time);
-                    style.setSpan(new BackgroundColorSpan(Color.WHITE),1,3,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    style.setSpan(new BackgroundColorSpan(Color.WHITE),4,6,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg)),4,6, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                    style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg)),1,3, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                    setText(style);
-                    setText(time);
-                    break;
-            }
+        public void handleMessage(Message msg) {
+            countDown();
         }
     };
 
-    @Override
-    public void removeOnLayoutChangeListener(OnLayoutChangeListener listener) {
-        Log.e(TAG,"removeOnLayoutChangeListener");
-        super.removeOnLayoutChangeListener(listener);
+    public CountdownTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        this.context = context;
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.view_countdowntimer, this);
+
+        tv_hour_decade = (TextView) view.findViewById(R.id.tv_hour_decade);
+        tv_hour_unit = (TextView) view.findViewById(R.id.tv_hour_unit);
+        tv_min_decade = (TextView) view.findViewById(R.id.tv_min_decade);
+        tv_min_unit = (TextView) view.findViewById(R.id.tv_min_unit);
+        tv_sec_decade = (TextView) view.findViewById(R.id.tv_sec_decade);
+        tv_sec_unit = (TextView) view.findViewById(R.id.tv_sec_unit);
+
+        TypedArray array = context.obtainStyledAttributes(attrs,R.styleable.SnapUpCountDownTimerView);
+        int size = array.getInteger(R.styleable.SnapUpCountDownTimerView_viewSize, 12);
+
+
+        tv_hour_decade.setTextSize(size);
+        tv_hour_unit.setTextSize(size);
+        tv_min_decade.setTextSize(size);
+        tv_min_unit.setTextSize(size);
+        tv_sec_decade.setTextSize(size);
+        tv_sec_unit.setTextSize(size);
+        ((TextView)view.findViewById(R.id.colon_minute)).setTextSize(size);
+        ((TextView)view.findViewById(R.id.colon_hour)).setTextSize(size);
     }
 
-    @Override
-    public void removeOnAttachStateChangeListener(OnAttachStateChangeListener listener) {
-        Log.e(TAG,"removeOnAttachStateChangeListener");
-        super.removeOnAttachStateChangeListener(listener);
+
+    public void start() {
+        if (timer == null) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.sendEmptyMessage(0);
+                }
+            }, 0, 1000);
+        }
     }
 
-    /**
-     * 转化为 hh:mm:ss 格式
-     * @param second
-     * @return
-     */
-    private String second2TimeSecond(long second) {
-        long hours = second / 3600;
-        long minutes = (second%3600)/ 60;
-        long seconds = second % 60;
 
-        String hourString = "";
-        String minuteString = "";
-        String secondString = "";
-        if(hours < 10){
-            hourString = "0";
-            if(hours == 0){
-                hourString += "0";
-            }else{
-                hourString += String.valueOf(hours);
-            }
-        }else{
-            hourString = String.valueOf(hours);
+    public void stop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
-        if (minutes < 10) {
-            minuteString = "0";
-            if (minutes == 0) {
-                minuteString += "0";
-            }else {
-                minuteString += String.valueOf(minutes);
-            }
-        }else{
-            minuteString = String.valueOf(minutes);
+    }
+
+
+    public void setTime(int hour, int min, int sec) {
+
+        if (hour >= 60 || min >= 60 || sec >= 60 || hour < 0 || min < 0
+                || sec < 0) {
+            throw new RuntimeException("时间格式错误,请检查你的代码");
         }
-        if(seconds < 10){
-            secondString = "0";
-            if (seconds == 0) {
-                secondString += "0";
-            }else {
-                secondString += String.valueOf(seconds);
+
+        hour_decade = hour / 10;
+        hour_unit = hour - hour_decade * 10;
+
+        min_decade = min / 10;
+        min_unit = min - min_decade * 10;
+
+        sec_decade = sec / 10;
+        sec_unit = sec - sec_decade * 10;
+
+        tv_hour_decade.setText(hour_decade + "");
+        tv_hour_unit.setText(hour_unit + "");
+        tv_min_decade.setText(min_decade + "");
+        tv_min_unit.setText(min_unit + "");
+        tv_sec_decade.setText(sec_decade + "");
+        tv_sec_unit.setText(sec_unit + "");
+    }
+
+
+    private void countDown() {
+        if (isCarry4Unit(tv_sec_unit)) {
+            if (isCarry4Decade(tv_sec_decade)) {
+                if (isCarry4Unit(tv_min_unit)) {
+                    if (isCarry4Decade(tv_min_decade)) {
+                        if (isCarry4Unit(tv_hour_unit)) {
+                            if (isCarry4Decade(tv_hour_decade)) {
+                                Toast.makeText(context, "计数完成",
+                                        Toast.LENGTH_SHORT).show();
+                                stop();
+                                setTime(0, 0, 0);//重置为0
+                            }
+                        }
+                    }
+                }
             }
-        }else {
-            secondString = String.valueOf(seconds);
         }
-        return hourString + ":" + minuteString+":"+secondString;
+    }
+
+
+    private boolean isCarry4Decade(TextView tv) {
+
+        int time = Integer.valueOf(tv.getText().toString());
+        time = time - 1;
+        if (time < 0) {
+            time = 5;
+            tv.setText(time + "");
+            return true;
+        } else {
+            tv.setText(time + "");
+            return false;
+        }
+    }
+
+
+    private boolean isCarry4Unit(TextView tv) {
+
+        int time = Integer.valueOf(tv.getText().toString());
+        time = time - 1;
+        if (time < 0) {
+            time = 9;
+            tv.setText(time + "");
+            return true;
+        } else {
+            tv.setText(time + "");
+            return false;
+        }
     }
 
 }

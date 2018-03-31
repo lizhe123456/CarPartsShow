@@ -1,5 +1,6 @@
 package com.carpartsshow.ui.shopping;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,13 @@ import com.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
+import com.carpartsshow.util.JsonUtil;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
+import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -128,15 +132,9 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
                 break;
             case R.id.tv_pay:
                 String opis = "";
-                int num2 = 0;
-                for (ShopCarBean.ListCarProductBean listCarProductBean:mAdapter.getDataSource()) {
+                for (ShopCarBean.ListCarProductBean listCarProductBean : mAdapter.getDataSource()) {
                     if (listCarProductBean.isSelected()){
-                        if (num2 == 0) {
-                            opis += listCarProductBean.getProduct_ID()+",";
-                        }else {
-                            opis += ",|" + listCarProductBean.getProduct_ID();
-                        }
-                        num2++;
+                        opis += listCarProductBean.getProduct_ID()+","+listCarProductBean.getBuyCar_Num()+"|";
                     }
                 }
                 if (!TextUtils.isEmpty(opis)){
@@ -209,7 +207,6 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
             int num = mAdapter.getDataSource().get(position).getBuyCar_Num() + 1;
             mAdapter.getDataSource().get(position).setBuyCar_Num(num);
             mAdapter.shopNotifyItemChanged(position);
-
         } else {
             int num = mAdapter.getDataSource().get(position).getBuyCar_Num() - 1;
             mAdapter.getDataSource().get(position).setBuyCar_Num(num);
@@ -224,14 +221,14 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
 
     @Override
     public void showToOrder(OrderBean orderBean) {
-        ConfirmOrderActivity.start(this,orderBean,1);
+        String json = new Gson().toJson(orderBean);
+        ConfirmOrderActivity.start(this,json);
     }
 
     //购物车加一
     @Override
     public void plus(ShopCarBean.ListCarProductBean item, int position) {
         mPresenter.plus(loginBean.getRepairUser_ID(), item.getProduct_ID(), item.getProduct_Type(), position);
-
     }
 
     //购物减一

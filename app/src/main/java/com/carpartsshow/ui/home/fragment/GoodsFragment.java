@@ -2,14 +2,18 @@ package com.carpartsshow.ui.home.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
 import com.carpartsshow.base.MvpFragment;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.eventbus.GoodsMoreBean;
 import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.shopping.AddCarPresenter;
 import com.carpartsshow.presenter.shopping.contract.AddCarContract;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.home.adapter.GoodsListAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
@@ -72,6 +76,13 @@ public class GoodsFragment extends MvpFragment<AddCarPresenter> implements AddCa
             @Override
             public void joinCar(GoodsListBean.ListGoodsBean item) {
                 mPresenter.plus(loginBean.getRepairUser_ID(),item.getGoods_ID(),0);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                GoodsListBean.ListGoodsBean listGoodsBean = (GoodsListBean.ListGoodsBean) item;
+                GoodsDetailsActivity.newInstance(getContext(),listGoodsBean.getGoods_ID());
             }
         });
     }

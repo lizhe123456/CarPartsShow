@@ -21,7 +21,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.LoginActivity"
             android:screenOrientation="portrait">
@@ -71,15 +70,18 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.home.activity.GoodsDetailsActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop"/>
         <activity android:name=".ui.shopping.ShoppingCartActivity"
-            android:launchMode="singleTask"
+
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.home.activity.MessageRecordActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />
-
+        <activity android:name=".ui.classify.activity.CarBrandDetailsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.shopping.activity.ConfirmOrderActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

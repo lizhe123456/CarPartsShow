@@ -14,6 +14,7 @@ import com.carpartsshow.ui.me.fragment.ConsumptionRecordFragment;
 import com.carpartsshow.ui.me.fragment.RepayCompleteFragment;
 import com.carpartsshow.ui.me.fragment.WaitRepayFragment;
 import com.carpartsshow.ui.me.fragment.news.NewsListFragment;
+import com.carpartsshow.ui.me.fragment.order.base.BaseOrderFragment;
 
 import dagger.Component;
 
@@ -42,4 +43,6 @@ public interface FragmentComponent {
     void inject(ConsumptionRecordFragment consumptionRecordFragment);
 
     void inject(GoodsFragment goodsFragment);
+
+    void inject(BaseOrderFragment baseOrderFragment);
 }

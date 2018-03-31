@@ -34,6 +34,29 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
     //分类
     @Override
     public void getClassification(String userId) {
+
+        addSubscribe(dataManager.classification(userId)
+                .compose(RxUtil.<CPSResponse<ClassificationBean>>rxSchedulerHelper())
+                .compose(RxUtil.<ClassificationBean>handle())
+                .subscribeWith(new CommonSubscriber<ClassificationBean>(mView){
+                    @Override
+                    public void onNext(ClassificationBean classificationBean) {
+                        super.onNext(classificationBean);
+                        mView.showBrand(classificationBean.getListBrand());
+                        mView.showClassification(handleClassificationBean(classificationBean.getListCategory()));
+                        List<ClassificationBean.ListCarBrandBean> listCarBrandBeans = classificationBean.getListCarBrand();
+                        getCarBrandBean(listCarBrandBeans,classificationBean.getVCJList());
+                        mView.showCarBrand(listCarBrandBeans);
+                    }
+                })
+
+        );
+    }
+
+    //分类
+    @Override
+    public void getClassification(String userId,int type) {
+        mView.loading("加载中..");
         addSubscribe(dataManager.classification(userId)
                 .compose(RxUtil.<CPSResponse<ClassificationBean>>rxSchedulerHelper())
                 .compose(RxUtil.<ClassificationBean>handle())

@@ -1,10 +1,12 @@
 package com.carpartsshow.model.http;
 
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.CarFilterBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
@@ -15,6 +17,7 @@ import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -76,11 +79,11 @@ public interface HttpHelper {
 
     Flowable<CPSResponse> seckillGoodsDetail(String userId, String seckillId);
 
-    Flowable<CPSResponse> goodsDetail(String userId, String goodsId);
+    Flowable<CPSResponse<GoodsDetailBean>> goodsDetail(String userId, String goodsId);
 
     Flowable<CPSResponse<ClassificationBean>> classification(String userId);
 
-    Flowable<CPSResponse> carFilter(String val);
+    Flowable<CPSResponse<CarFilterBean>> carFilter(String val);
 
     Flowable<CPSResponse> fetchListGoods(Map<String, String> map);
 
@@ -100,4 +103,5 @@ public interface HttpHelper {
 
     Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds);
 
+    Flowable<CPSResponse<OrderListBean>> fetchSplitListOrder(String userId,int size, int page, int type);
 }

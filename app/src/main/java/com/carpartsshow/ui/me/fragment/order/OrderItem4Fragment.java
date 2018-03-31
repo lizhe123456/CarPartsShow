@@ -2,25 +2,24 @@ package com.carpartsshow.ui.me.fragment.order;
 
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
+import com.carpartsshow.ui.me.fragment.order.adapter.CompleteOrederAdapter;
+import com.carpartsshow.ui.me.fragment.order.base.BaseOrderFragment;
+import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 
 /**
  * Created by lizhe on 2018/3/16.
  * 已完成
  */
 
-public class OrderItem4Fragment extends BaseFragment{
+public class OrderItem4Fragment extends BaseOrderFragment{
+
     @Override
-    protected int setLayout() {
-        return R.layout.fragment_order4;
+    public OrderAdapter setAdapter() {
+        return new CompleteOrederAdapter(getContext());
     }
 
     @Override
-    protected void init() {
-
-    }
-
-    @Override
-    protected void setData() {
-
+    public int request() {
+        return 4;
     }
 }

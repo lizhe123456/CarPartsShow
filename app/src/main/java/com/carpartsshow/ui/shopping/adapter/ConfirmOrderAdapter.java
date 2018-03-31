@@ -20,15 +20,19 @@ public class ConfirmOrderAdapter extends BaseAdapter<OrderBean.GoodsBean> {
     @Override
     protected void bindDataToItemView(BaseViewHolder holder, OrderBean.GoodsBean item, int position) {
         holder.setVisible(R.id.tv_goods_num,true);
-        holder.setText(R.id.tv_goods_num,"x"+item.getName())
+        holder.setText(R.id.tv_goods_num,"x"+item.getNumber())
                 .setGlieuImage(R.id.iv_goods,item.getImagePath());
         if (item.getGoods_Type() == 2){
-            holder.setText(R.id.tv_price,"¥"+item.getGoods_Price()+".00");
-        }else {
             holder.setText(R.id.tv_price,"积分："+item.getGoods_Integer());
+            holder.setVisible(R.id.tv_rmb,false);
+            holder.setText(R.id.tv_xiaoj,"积分："+(item.getGoods_Integer() * item.getNumber()));
+        }else {
+            holder.setVisible(R.id.tv_rmb,true);
+            holder.setText(R.id.tv_price,item.getGoods_Price()+".00");
+            holder.setText(R.id.tv_xiaoj,"¥"+(item.getGoods_Price() * item.getNumber())+".00");
         }
 
-        holder.setText(R.id.tv_znum,"共"+item.getNumber()+"件商品").setText(R.id.tv_xiaoj,"¥"+(item.getGoods_Price() * item.getNumber()));
+        holder.setText(R.id.tv_znum,"共"+item.getNumber()+"件商品");
     }
 
     @Override

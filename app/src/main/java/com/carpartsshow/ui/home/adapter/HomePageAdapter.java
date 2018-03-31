@@ -88,15 +88,15 @@ public class HomePageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             recyclerView.setAdapter(adapter);
             adapter.addFirstDataSet(list);
         }else if (getItemViewType(position) == 2){
-            List<HomePageBean.ListNoticeBean> list = (List<HomePageBean.ListNoticeBean>) mData.get(position);
-            ViewFlipper viewFlipper = holder.getView(R.id.vf_news);
-            for (HomePageBean.ListNoticeBean bean : list) {
-                TextView textView = new TextView(mContext);
-                textView.setTextColor(mContext.getResources().getColor(R.color.tv_000));
-                textView.setTextSize(15);
-                textView.setText(bean.getNotice_Title());
-                viewFlipper.addView(textView);
-            }
+//            List<HomePageBean.ListNoticeBean> list = (List<HomePageBean.ListNoticeBean>) mData.get(position);
+//            ViewFlipper viewFlipper = holder.getView(R.id.vf_news);
+//            for (HomePageBean.ListNoticeBean bean : list) {
+//                TextView textView = new TextView(mContext);
+//                textView.setTextColor(mContext.getResources().getColor(R.color.tv_000));
+//                textView.setTextSize(15);
+//                textView.setText(bean.getNotice_Title());
+//                viewFlipper.addView(textView);
+//            }
         }else if (getItemViewType(position) == 3){
             holder.setOnClickListener(R.id.tv_go, new View.OnClickListener() {
                 @Override
@@ -104,9 +104,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 }
             });
-            CountdownTextView countdownTextView = holder.getView(R.id.tv_time);
-            countdownTextView.init("hh:mm:ss",213215);
-            countdownTextView.start(0);
         }else if (getItemViewType(position) == 4){
             List<HomePageBean.ListSeckillGoodsBean> list = (List<HomePageBean.ListSeckillGoodsBean>) mData.get(position);
             RecyclerView recyclerView = holder.getView(R.id.recyclerView);

@@ -16,6 +16,7 @@
         android:paddingTop="@dimen/dm_15"
         android:paddingBottom="@dimen/dm_15" />
     <View
+        android:id="@+id/xian"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_0.5"
         android:background="#dddddd"

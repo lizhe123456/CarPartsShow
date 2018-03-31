@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
+import com.carpartsshow.app.App;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
@@ -71,7 +72,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     @Override
     protected void setData() {
         LoginBean loginBean = SpUtil.getObject(getContext(), "user");
-        mPresenter.getClassification(loginBean.getRepairUser_ID());
+        mPresenter.getClassification(loginBean.getRepairUser_ID(),0);
     }
 
 
@@ -127,6 +128,8 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
             }
         });
+        viewPager.setCurrentItem(0);
+        selectedModels();
     }
 
     @Override
@@ -148,6 +151,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
                 viewPager.setCurrentItem(2);
                 break;
             case R.id.iv_back:
+                App.getInstance().exitApp();
                 break;
             case R.id.et_search:
                 break;

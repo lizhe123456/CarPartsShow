@@ -431,35 +431,35 @@ public class OrderBean implements Serializable {
          * CompanyName : null
          */
 
-        private Object Provice;
-        private Object City;
-        private Object Region;
+        private String Provice;
+        private String City;
+        private String Region;
         private String DetailAddress;
-        private Object PersonName;
-        private Object Mobile;
-        private Object CompanyName;
+        private String PersonName;
+        private String Mobile;
+        private String CompanyName;
 
-        public Object getProvice() {
+        public String getProvice() {
             return Provice;
         }
 
-        public void setProvice(Object Provice) {
+        public void setProvice(String Provice) {
             this.Provice = Provice;
         }
 
-        public Object getCity() {
+        public String getCity() {
             return City;
         }
 
-        public void setCity(Object City) {
+        public void setCity(String City) {
             this.City = City;
         }
 
-        public Object getRegion() {
+        public String getRegion() {
             return Region;
         }
 
-        public void setRegion(Object Region) {
+        public void setRegion(String Region) {
             this.Region = Region;
         }
 
@@ -471,27 +471,27 @@ public class OrderBean implements Serializable {
             this.DetailAddress = DetailAddress;
         }
 
-        public Object getPersonName() {
+        public String getPersonName() {
             return PersonName;
         }
 
-        public void setPersonName(Object PersonName) {
+        public void setPersonName(String PersonName) {
             this.PersonName = PersonName;
         }
 
-        public Object getMobile() {
+        public String getMobile() {
             return Mobile;
         }
 
-        public void setMobile(Object Mobile) {
+        public void setMobile(String Mobile) {
             this.Mobile = Mobile;
         }
 
-        public Object getCompanyName() {
+        public String getCompanyName() {
             return CompanyName;
         }
 
-        public void setCompanyName(Object CompanyName) {
+        public void setCompanyName(String CompanyName) {
             this.CompanyName = CompanyName;
         }
     }

@@ -12,9 +12,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.eventbus.CarClassifyBean;
 import com.carpartsshow.eventbus.GoodsMoreBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
@@ -84,12 +86,13 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     private String latelBrand;
     private String latelClassify;
-    private int latelCarBrand;
+    private String latelCarBrand;
+    private int cid;
     private LoginBean loginBean;
     private String searchValue;
 
     //商品搜索请求参数map
-    private Map<String , Object> map;
+    private Map<String , Object> map = new HashMap<>();
     //ASC   desc
     private String orderASC = "";
     private int page = 1;
@@ -114,24 +117,23 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         EventBus.getDefault().register(this);
         latelBrand = getIntent().getStringExtra("brand") == null ? "" : getIntent().getStringExtra("brand");
         latelClassify = getIntent().getStringExtra("classify") == null ? "" : getIntent().getStringExtra("classify");
-        latelCarBrand = getIntent().getIntExtra("carBrand",-1) ;
+        cid = getIntent().getIntExtra("cid",-1) ;
+        latelCarBrand = getIntent().getStringExtra("carBrand") ;
         searchValue = getIntent().getStringExtra("searchValue") == null ? "" : getIntent().getStringExtra("searchValue");
         initLabel();
         fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
         loginBean = SpUtil.getObject(getApplicationContext(),"user");
         mPresenter.getClassification(loginBean.getRepairUser_ID());
-        map = new HashMap<>();
         map.put("RepairUser_ID",loginBean.getRepairUser_ID());
         map.put("PageIndex",page);
         map.put("BrandName",latelBrand);
         map.put("CategoryName",latelClassify);
-        if (latelCarBrand != -1) {
-            map.put("CarID", latelCarBrand);
+        if (cid != -1) {
+            map.put("CarID", cid);
         }
         map.put("SearchValue",searchValue);
         mPresenter.getGoodsSearch(map);
-        page++;
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -149,7 +151,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     //初始化标签
     private void initLabel() {
-        if (TextUtils.isEmpty(latelClassify) && latelCarBrand == -1 && TextUtils.isEmpty(latelBrand)){
+        if (TextUtils.isEmpty(latelClassify) && TextUtils.isEmpty(latelCarBrand) && TextUtils.isEmpty(latelBrand)){
             mLlabel.setVisibility(View.GONE);
         }
 
@@ -161,7 +163,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             tvLabelDelete.setText(latelClassify);
         }
 
-        if (latelCarBrand == -1){
+        if (TextUtils.isEmpty(latelCarBrand)){
             tvLabelModelsDelete.setVisibility(View.GONE);
         }else {
             mLlabel.setVisibility(View.VISIBLE);
@@ -187,16 +189,25 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 this.finish();
                 break;
             case R.id.tv_label_delete:
-
+                latelClassify = "";
+                map.put("CategoryName",latelClassify);
+                tvLabelDelete.setVisibility(View.GONE);
+                updateDate(map);
                 break;
             case R.id.tv_label_brand_delete:
-
+                latelBrand = "";
+                map.put("BrandName",latelBrand);
+                tvLabelBrandDelete.setVisibility(View.GONE);
+                updateDate(map);
                 break;
             case R.id.tv_label_models_delete:
-
+                map.remove("CarID");
+                tvLabelModelsDelete.setVisibility(View.GONE);
+                updateDate(map);
                 break;
             case R.id.tv_zh:
                 //价格
+                map.put("","");
                 break;
             case R.id.tv_classify:
                 //分类
@@ -287,8 +298,55 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         }else {
             map.put("PageIndex",page);
             mPresenter.getGoodsSearch(map);
-            page++;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getType(CarClassifyBean carClassifyBean){
+        switch (carClassifyBean.getType()){
+            case "brand":
+                latelBrand = carClassifyBean.getName();
+                map.put("BrandName",latelBrand);
+                tvLabelBrandDelete.setVisibility(View.VISIBLE);
+                tvLabelBrandDelete.setText(latelBrand);
+                updateDate(map);
+                isCarShow = false;
+                isBrandShow = false;
+                isClassifyShow = false;
+                setContentFragment(FRAGMENT_TAG_GOODS);
+                break;
+            case "classify":
+                latelClassify = carClassifyBean.getName();
+                map.put("CategoryName",latelClassify);
+                tvLabelDelete.setVisibility(View.VISIBLE);
+                tvLabelDelete.setText(latelClassify);
+                updateDate(map);
+                isCarShow = false;
+                isBrandShow = false;
+                isClassifyShow = false;
+                setContentFragment(FRAGMENT_TAG_GOODS);
+                break;
+            case "carBrand":
+                latelCarBrand = carClassifyBean.getName();
+                cid = carClassifyBean.getCid();
+                map.put("CarID", cid);
+                updateDate(map);
+                tvLabelModelsDelete.setText(latelCarBrand);
+                tvLabelModelsDelete.setVisibility(View.VISIBLE);
+                isCarShow = false;
+                isBrandShow = false;
+                isClassifyShow = false;
+                setContentFragment(FRAGMENT_TAG_GOODS);
+                break;
+        }
+        if (!isShow(mLlabel)){
+            mLlabel.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updateDate(Map<String , Object> map){
+        page = 1;
+        mPresenter.getGoodsSearch(map);
     }
 
     //设置fragment 切换

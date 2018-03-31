@@ -1,5 +1,6 @@
 package com.carpartsshow.ui.classify.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -7,24 +8,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
+import com.carpartsshow.eventbus.CarClassifyBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.ui.classify.adapter.brand.BrandAdapter;
 import com.carpartsshow.ui.classify.adapter.brand.BrandComparator;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.carpartsshow.util.DensityUtils;
 import com.carpartsshow.util.PinyinUtils;
+import com.carpartsshow.util.SystemUtil;
 import com.carpartsshow.view.SideBar;
 import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +84,9 @@ public class BrandFragment extends BaseFragment {
         mAdapter = new BrandAdapter(getContext(), mListBrandBeans);
         Collections.sort(mListBrandBeans,new BrandComparator());
         listView.setAdapter(mAdapter);
+        View view = new View(getContext());
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100));
+        listView.addFooterView(view);
         //设置右侧触摸监听
         rightSide.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -94,6 +107,14 @@ public class BrandFragment extends BaseFragment {
                                     int position, long id) {
 //                mTvTitle.setText(((ContactSortModel) adapter.getItem(position - 1)).getName());
 //                CPSToast.showText(getContext().getApplicationContext(),mAdapter.getItem(position).getCompany_FirstWord());
+                if (getActivity() instanceof GoodsSearchActivity) {
+                    EventBus.getDefault().post(new CarClassifyBean("brand",mAdapter.getItem(position).getName()));
+                }else {
+                    Intent intent = new Intent();
+                    intent.putExtra("brand", mAdapter.getItem(position).getName());
+                    intent.setClass(getContext(), GoodsSearchActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

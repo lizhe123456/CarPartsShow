@@ -28,6 +28,8 @@ public interface GoodsSearchContract {
     interface Presenter extends BasePresenter<View>{
         void getClassification(String userId);
 
+        void getClassification(String userId,int type);
+
         void getGoodsSearch(Map<String ,Object> map);
     }
 

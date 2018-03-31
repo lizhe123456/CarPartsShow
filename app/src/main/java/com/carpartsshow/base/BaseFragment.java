@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carpartsshow.view.LoadingDialog;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -27,6 +29,8 @@ public abstract class BaseFragment extends Fragment {
 
     protected Bundle savedInstanceState;
 
+    protected LoadingDialog loadingDialog;
+
     @LayoutRes
     protected abstract int setLayout();
 
@@ -43,6 +47,10 @@ public abstract class BaseFragment extends Fragment {
         init();
         return mRootView;
 
+    }
+
+    protected void initLoading(){
+        loadingDialog = new LoadingDialog(getContext());
     }
 
     private void lazyFetchDataIfPrepared() {

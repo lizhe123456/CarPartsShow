@@ -1,10 +1,12 @@
 package com.carpartsshow.model.http.api;
 
 import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.CarFilterBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.GoodsListBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
@@ -15,6 +17,7 @@ import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -163,8 +166,8 @@ public interface CPSApi {
 
     //返回商品详情
     @GET("/api/Home/GoodsDetail")
-    Flowable<CPSResponse> goodsDetail(@Query("RepairUser_ID") String userId,
-                                      @Query("Goods_ID") String goodsId);
+    Flowable<CPSResponse<GoodsDetailBean>> goodsDetail(@Query("RepairUser_ID") String userId,
+                                                       @Query("Goods_ID") String goodsId);
 
     //商品分类查找
     @GET("/api/Home/Classification")
@@ -172,7 +175,7 @@ public interface CPSApi {
 
     //车辆类型
     @GET("/api/Home/CarFilter")
-    Flowable<CPSResponse> carFilter(@Query("val") String val);
+    Flowable<CPSResponse<CarFilterBean>> carFilter(@Query("val") String val);
 
     //商品搜索
     @GET("/api/Home/ListGoods")
@@ -194,5 +197,7 @@ public interface CPSApi {
     @GET("/api/User/ToOrder")
     Flowable<CPSResponse<OrderBean>> toOder(@Query("RepairUser_ID") String userId,
                                             @Query("ProductAttrIds") String productAttrIds);
-
+    //获取订单数据
+    @GET("/api/User/SplitListOrder")
+    Flowable<CPSResponse<OrderListBean>> splitListOrder(@Query("RepairUser_ID") String userId, @Query("PageSize") int size, @Query("PageIndex") int page, @Query("OrderType") int type);
 }
