@@ -25,9 +25,9 @@ public class OrderGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detail
         holder.setText(R.id.tv_goods_num,"x"+item.getOrderItem_Number())
                 .setGlieuImage(R.id.iv_goods,item.getProduct_ImgPath());
         if (item.getProduct_Type() == 2){
-            holder.setText(R.id.tv_price,"积分："+item.getOrderItem_Integer());
+            holder.setText(R.id.tv_price,"积分："+item.getOrderItem_Money());
             holder.setVisible(R.id.tv_rmb,false);
-            holder.setText(R.id.tv_xiaoj,"积分："+(item.getOrderItem_Integer() * item.getOrderItem_Number()));
+            holder.setText(R.id.tv_xiaoj,"积分："+(item.getOrderItem_Money() * item.getOrderItem_Number()));
         }else {
             holder.setVisible(R.id.tv_rmb,true);
             holder.setText(R.id.tv_price,item.getOrderItem_Money()+".00");

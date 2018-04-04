@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         app:tabIndicatorColor="@color/red_login"
         app:tabIndicatorHeight="@dimen/dm_2"
+        android:background="@color/white"
         app:tabSelectedTextColor="@color/red_login"
         app:tabTextColor="@color/tv_000"
         app:tabMode="scrollable"/>

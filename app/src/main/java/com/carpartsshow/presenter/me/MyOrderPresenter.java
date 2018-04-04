@@ -10,6 +10,8 @@ import com.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.carpartsshow.util.RxUtil;
 import com.carpartsshow.util.SpUtil;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 /**
@@ -49,4 +51,66 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                 })
         );
     }
+
+    @Override
+    public void orderUrgent(String orderId) {
+        //加急
+        addSubscribe(dataManager.fetchSureOrderUrgent(orderId)
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.updateData();
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void receiptGoods(String orderId) {
+        mView.loading("收货中..");
+        //收货
+        addSubscribe(dataManager.fetchSureOrder(orderId)
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.updateData();
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void cancelOrder(String orderId) {
+        mView.loading("取消中..");
+        //取消
+        addSubscribe(dataManager.fetchCancelOrder(orderId)
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.updateData();
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void pay(Map<String, Object> map) {
+
+    }
+
+    @Override
+    public void lookProgress() {
+
+    }
+
+
 }

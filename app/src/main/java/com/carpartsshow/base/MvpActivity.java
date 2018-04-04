@@ -1,5 +1,11 @@
 package com.carpartsshow.base;
 
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.carpartsshow.R;
 import com.carpartsshow.app.App;
 import com.carpartsshow.di.component.ActivityComponent;
 import com.carpartsshow.di.component.DaggerActivityComponent;
@@ -18,6 +24,8 @@ public abstract class MvpActivity<T extends BasePresenter> extends BaseActivity 
     protected T mPresenter;
 
     protected LoadingDialog loadingDialog;
+
+    protected ViewStub vsEmpty;
 
     protected ActivityComponent getActivityComponent(){
         return DaggerActivityComponent.builder()
@@ -60,6 +68,17 @@ public abstract class MvpActivity<T extends BasePresenter> extends BaseActivity 
     public void unLoading() {
         if (loadingDialog.isShowing()) {
             loadingDialog.cancel();
+        }
+    }
+
+    @Override
+    public void showEmpty(String msg, int resId) {
+        if (vsEmpty != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(resId);
+            textView.setText(msg);
         }
     }
 

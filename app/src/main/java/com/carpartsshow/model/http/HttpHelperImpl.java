@@ -122,7 +122,7 @@ public class HttpHelperImpl implements HttpHelper{
 
     @Override
     public Flowable<CPSResponse<List<IntergralShopBean.IstIntegerGoods>>> fetchsplitListIntegerGoods(int size, int page, String searchValue, String userId, String goodsTypeId) {
-        return cpsApi.splitListIntegerGoods(size, page, searchValue, userId, goodsTypeId);
+        return cpsApi.splitListIntegerGoods(page,size, searchValue, userId, goodsTypeId);
     }
 
     @Override
@@ -211,9 +211,7 @@ public class HttpHelperImpl implements HttpHelper{
 
     @Override
     public Flowable<CPSResponse> fetchSubmitOrder(Map<String, Object> map) {
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("sbOrder",map);
-        return cpsApi.submitOrder(map1);
+        return cpsApi.submitOrder(map);
     }
 
     @Override
@@ -224,6 +222,26 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<OrderListBean>> fetchSplitListOrder(String userId, int size, int page, int type) {
         return cpsApi.splitListOrder(userId, size, page, type);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSureOrderUrgent(String orderId) {
+        return cpsApi.sureOrderUrgent(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSureOrder(String orderId) {
+        return cpsApi.sureOrder(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchCancelOrder(String orderId) {
+        return cpsApi.cancelOrder(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchDelCollection(String orderId) {
+        return cpsApi.delCollection(orderId);
     }
 
 }

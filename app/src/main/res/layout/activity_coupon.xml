@@ -33,5 +33,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/empty_data_layout"/>
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dm_15"
+            android:textColor="@color/tv_000"
+            android:text="不使用优惠券"
+            android:paddingTop="@dimen/dm_15"
+            android:paddingBottom="@dimen/dm_15"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:visibility="gone"/>
     </RelativeLayout>
+
 </LinearLayout>

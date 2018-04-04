@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseFragment;
@@ -122,7 +123,7 @@ public class CarBrandFragment extends BaseFragment {
         });
 
         View view = new View(getContext());
-        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100));
+        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
         expandableListView.addFooterView(view);
     }
 

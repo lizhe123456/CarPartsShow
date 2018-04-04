@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
 
@@ -22,6 +23,9 @@ public class PayDialog extends Dialog {
     private ImageView selectAli;
     private ImageView selectWx;
     private ImageView selectCredit;
+    private LinearLayout llAli;
+    private LinearLayout llWx;
+    private LinearLayout llCredit;
     private TextView tvPay;
     private Context context;
 
@@ -46,6 +50,9 @@ public class PayDialog extends Dialog {
         selectAli = findViewById(R.id.select_ali);
         selectWx = findViewById(R.id.select_wx);
         selectCredit = findViewById(R.id.select_credit);
+        llAli = findViewById(R.id.ali_ll);
+        llWx = findViewById(R.id.wx_ll);
+        llCredit = findViewById(R.id.credit_ll);
         tvPay = findViewById(R.id.tv_pay);
     }
 
@@ -61,20 +68,19 @@ public class PayDialog extends Dialog {
         }
 
         if (onALiClickListener != null){
-            payDialog.selectWx.setOnClickListener(payDialog.onWxClickListener);
+            payDialog.llWx.setOnClickListener(payDialog.onWxClickListener);
         }
 
         if (onPayClickListener != null){
-            payDialog.selectAli.setOnClickListener(payDialog.onALiClickListener);
+            payDialog.llAli.setOnClickListener(payDialog.onALiClickListener);
         }
 
         if (onCreditClickListener != null){
-            payDialog.selectCredit.setOnClickListener(payDialog.onCreditClickListener);
+            payDialog.llCredit.setOnClickListener(payDialog.onCreditClickListener);
         }
 
 
     }
-
 
     public void select(int type){
         switch (type){
@@ -95,8 +101,6 @@ public class PayDialog extends Dialog {
                 break;
         }
     }
-
-
 
     public static class Builder {
         private PayDialog mDialog;

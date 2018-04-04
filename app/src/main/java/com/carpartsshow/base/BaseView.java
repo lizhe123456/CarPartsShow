@@ -8,11 +8,11 @@ public interface BaseView {
 
     void showErrorMsg(String msg);
 
-
     void stateError();
 
     void loading(String msg);
 
     void unLoading();
 
+    void showEmpty(String msg, int resId);
 }

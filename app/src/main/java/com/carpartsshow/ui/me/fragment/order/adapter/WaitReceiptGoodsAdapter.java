@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.carpartsshow.base.adapter.BaseViewHolder;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 
 /**
@@ -13,8 +14,8 @@ import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 
 public class WaitReceiptGoodsAdapter extends OrderAdapter {
 
-    public WaitReceiptGoodsAdapter(Context context) {
-        super(context);
+    public WaitReceiptGoodsAdapter(Context context, MyOrderPresenter presenter) {
+        super(context,presenter);
     }
 
     @Override

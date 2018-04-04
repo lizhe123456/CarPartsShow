@@ -18,17 +18,7 @@
         android:layout_marginTop="@dimen/dm_10"
         android:layout_marginLeft="@dimen/dm_10"
         android:layout_toRightOf="@+id/iv_goods"/>
-    <TextView
-        android:id="@+id/tv_rmb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/dm_12"
-        android:textColor="@color/tv_FA0F41"
-        android:text="¥ "
-        android:layout_toRightOf="@+id/iv_goods"
-        android:layout_alignBottom="@+id/iv_goods"
-        android:layout_marginLeft="@dimen/dm_10"
-        android:gravity="bottom"/>
+
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
@@ -36,8 +26,9 @@
         android:textColor="@color/tv_FA0F41"
         android:textSize="@dimen/dm_17"
         android:text="5888.00"
-        android:layout_alignBottom="@+id/tv_rmb"
-        android:layout_toRightOf="@+id/tv_rmb"/>
+        android:layout_toRightOf="@+id/iv_goods"
+        android:layout_alignBottom="@+id/iv_goods"
+        android:layout_marginLeft="@dimen/dm_10"/>
     <TextView
         android:id="@+id/tv_goods_num"
         android:layout_width="wrap_content"

@@ -23,4 +23,6 @@
     <color name="tv_666">#666666</color>
     <color name="transparent">#00000000</color>
     <color name="grey">#5A5A5A</color>
+    <color name="yellow_ffd">#FFD200</color>
+    <color name="bg_77000000">#73000000</color>
 </resources>

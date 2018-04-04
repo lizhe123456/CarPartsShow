@@ -1,7 +1,10 @@
 package com.carpartsshow.ui.me.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -10,13 +13,19 @@ import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.me.IntegralGoodsPresenter;
 import com.carpartsshow.presenter.me.contract.IntegralGoodsContract;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.me.adapter.GoodsAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 
@@ -32,12 +41,6 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
 
     @BindView(R.id.et_search)
     EditText etSearch;
-    @BindView(R.id.tv_zh)
-    TextView tvZh;
-    @BindView(R.id.tv_xl)
-    TextView tvXl;
-    @BindView(R.id.tv_jf)
-    TextView tvJf;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
@@ -47,6 +50,18 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
 
     private String textMsg;
     private String userId;
+    private String type;
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, IntegralGoodsActivity.class);
+        context.startActivity(starter);
+    }
+
+    public static void start(Context context,String type) {
+        Intent starter = new Intent(context, IntegralGoodsActivity.class);
+        starter.putExtra("type",type);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int setLayout() {
@@ -62,12 +77,13 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
     protected void setData() {
         LoginBean loginBean = SpUtil.getObject(this,"user");
         userId = loginBean.getRepairUser_ID();
-        mPresenter.getGoodsInfo(1,"",userId,"");
+        type = getIntent().getStringExtra("type");
         mAdapter = new GoodsAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        refresh.autoRefresh();
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -79,19 +95,58 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
                 return false;
             }
         });
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refresh.finishRefresh(3000);
+                etSearch.setText("");
+                if (TextUtils.isEmpty(type)){
+                    mPresenter.getGoodsInfo(1,"",userId,"");
+                }else {
+                    mPresenter.getGoodsInfo(1,"",userId,type);
+                }
+            }
+        });
+        refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh.finishLoadmore(3000);
+                if (TextUtils.isEmpty(type)){
+                    mPresenter.getGoodsInfo(2,"",userId,"");
+                }else {
+                    mPresenter.getGoodsInfo(2,"",userId,type);
+                }
+            }
+        });
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    if (TextUtils.isEmpty(type)){
+                        mPresenter.getGoodsInfo(2,etSearch.getText().toString().trim(),userId,"");
+                    }else {
+                        mPresenter.getGoodsInfo(2,etSearch.getText().toString().trim(),userId,type);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                IntergralShopBean.IstIntegerGoods goods = (IntergralShopBean.IstIntegerGoods) item;
+                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this,goods.getIntegerGoods_ID(),2);
+            }
+        });
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_zh, R.id.tv_xl, R.id.tv_jf})
+    @OnClick({R.id.iv_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 this.finish();
-                break;
-            case R.id.tv_zh:
-                break;
-            case R.id.tv_xl:
-                break;
-            case R.id.tv_jf:
                 break;
         }
     }
@@ -104,10 +159,12 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
     @Override
     public void showContent(List<IntergralShopBean.IstIntegerGoods> list) {
         mAdapter.addFirstDataSet(list);
+        refresh.finishRefresh();
     }
 
     @Override
     public void loadMore(List<IntergralShopBean.IstIntegerGoods> list) {
-
+        mAdapter.addMoreDataSet(list);
+        refresh.finishLoadmore();
     }
 }

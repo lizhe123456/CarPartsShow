@@ -13,6 +13,10 @@ import com.carpartsshow.presenter.me.IntegralShopPresenter;
 import com.carpartsshow.presenter.me.contract.IntegralShopContract;
 import com.carpartsshow.ui.me.adapter.IntegralShopAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -50,6 +54,21 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh.finishLoadmore(3000);
+                mPresenter.getIntegralShop(2);
+            }
+        });
+
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refresh.finishRefresh(3000);
+                mPresenter.getIntegralShop(1);
+            }
+        });
     }
 
     @OnClick({R.id.iv_back, R.id.iv_record,R.id.search_bar})
@@ -79,10 +98,12 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
     @Override
     public void showCentent(IntergralShopBean shopBean) {
         mAdapter.addFirstDataSet(shopBean);
+        refresh.finishRefresh();
     }
 
     @Override
     public void loadMore(IntergralShopBean shopBean) {
-
+        mAdapter.addMore(shopBean);
+        refresh.finishLoadmore();
     }
 }

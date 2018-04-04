@@ -223,4 +223,24 @@ public class DataManager implements RealmHelper, HttpHelper {
     public Flowable<CPSResponse<OrderListBean>> fetchSplitListOrder(String userId, int size, int page, int type) {
         return httpHelper.fetchSplitListOrder(userId, size, page, type);
     }
+
+    @Override
+    public Flowable<CPSResponse> fetchSureOrderUrgent(String orderId) {
+        return httpHelper.fetchSureOrderUrgent(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSureOrder(String orderId) {
+        return httpHelper.fetchSureOrder(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchCancelOrder(String orderId) {
+        return httpHelper.fetchCancelOrder(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchDelCollection(String orderId) {
+        return httpHelper.fetchDelCollection(orderId);
+    }
 }

@@ -23,9 +23,9 @@ public class ConfirmOrderAdapter extends BaseAdapter<OrderBean.GoodsBean> {
         holder.setText(R.id.tv_goods_num,"x"+item.getNumber())
                 .setGlieuImage(R.id.iv_goods,item.getImagePath());
         if (item.getGoods_Type() == 2){
-            holder.setText(R.id.tv_price,"积分："+item.getGoods_Integer());
+            holder.setText(R.id.tv_price,"积分："+item.getGoods_Price());
             holder.setVisible(R.id.tv_rmb,false);
-            holder.setText(R.id.tv_xiaoj,"积分："+(item.getGoods_Integer() * item.getNumber()));
+            holder.setText(R.id.tv_xiaoj,"积分："+(item.getGoods_Price() * item.getNumber()));
         }else {
             holder.setVisible(R.id.tv_rmb,true);
             holder.setText(R.id.tv_price,item.getGoods_Price()+".00");

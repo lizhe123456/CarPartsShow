@@ -27,7 +27,7 @@ public class SideBar extends View {
             "W", "X", "Y", "Z"};
 
     private OnTouchingLetterChangedListener onTouchingLetterChangedListener;
-    private List<String> letterList;
+    private List<String> letterList = new ArrayList<>();
     private int choose = -1;
     private Paint paint = new Paint();
     private TextView mTextDialog;
@@ -54,22 +54,24 @@ public class SideBar extends View {
         super.onDraw(canvas);
         int height = getHeight();// 获取对应高度
         int width = getWidth();// 获取对应宽度
-        int singleHeight = height / letterList.size();// 获取每一个字母的高度
-        for (int i = 0; i < letterList.size(); i++) {
-            paint.setColor(Color.parseColor("#606060"));
-            paint.setTypeface(Typeface.DEFAULT_BOLD);
-            paint.setAntiAlias(true);
-            paint.setTextSize(20);
-            // 选中的状态
-            if (i == choose) {
-                paint.setColor(Color.parseColor("#4F41FD"));
-                paint.setFakeBoldText(true);
+        if (letterList.size() != 0) {
+            int singleHeight = height / letterList.size();// 获取每一个字母的高度
+            for (int i = 0; i < letterList.size(); i++) {
+                paint.setColor(Color.parseColor("#606060"));
+                paint.setTypeface(Typeface.DEFAULT_BOLD);
+                paint.setAntiAlias(true);
+                paint.setTextSize(20);
+                // 选中的状态
+                if (i == choose) {
+                    paint.setColor(Color.parseColor("#4F41FD"));
+                    paint.setFakeBoldText(true);
+                }
+                // x坐标等于中间-字符串宽度的一半.
+                float xPos = width / 2 - paint.measureText(letterList.get(i)) / 2;
+                float yPos = singleHeight * i + singleHeight / 2;
+                canvas.drawText(letterList.get(i), xPos, yPos, paint);
+                paint.reset();// 重置画笔
             }
-            // x坐标等于中间-字符串宽度的一半.
-            float xPos = width / 2 - paint.measureText(letterList.get(i)) / 2;
-            float yPos = singleHeight * i + singleHeight / 2;
-            canvas.drawText(letterList.get(i), xPos, yPos, paint);
-            paint.reset();// 重置画笔
         }
     }
 

@@ -3,12 +3,18 @@ package com.carpartsshow.ui.me.fragment.news;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.presenter.home.NewsListPresenter;
 import com.carpartsshow.presenter.home.contract.NewsListContract;
+import com.carpartsshow.ui.me.activity.NewsDetailsActivity;
 import com.carpartsshow.ui.me.adapter.NewsListAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -32,6 +38,7 @@ public class NewsListFragment extends MvpFragment<NewsListPresenter> implements 
 
     private NewsListAdapter mAdapter;
     private NewTypeBean newTypeBean;
+
 
     public static NewsListFragment newInstance(NewTypeBean bean) {
         NewsListFragment myFragment = new NewsListFragment();
@@ -74,6 +81,13 @@ public class NewsListFragment extends MvpFragment<NewsListPresenter> implements 
                 mPresenter.getNewsList(newTypeBean.getItemName(),2);
             }
         });
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                NewsListBean newsListBean = (NewsListBean) item;
+                NewsDetailsActivity.start(getContext(),newsListBean.getNewsUrl());
+            }
+        });
     }
 
     @Override
@@ -92,5 +106,6 @@ public class NewsListFragment extends MvpFragment<NewsListPresenter> implements 
         mAdapter.addMoreDataSet(msgBeans);
         refresh.finishLoadmore();
     }
+
 
 }

@@ -1,6 +1,12 @@
 package com.carpartsshow.base;
 
 
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.carpartsshow.R;
 import com.carpartsshow.app.App;
 import com.carpartsshow.di.component.DaggerFragmentComponent;
 import com.carpartsshow.di.component.FragmentComponent;
@@ -21,6 +27,8 @@ public abstract class MvpFragment<T extends BasePresenter> extends BaseFragment 
 
     @Inject
     protected T mPresenter;
+
+    protected ViewStub vsEmpty;
 
     protected FragmentComponent getFragmentComponent(){
         return DaggerFragmentComponent.builder()
@@ -52,7 +60,16 @@ public abstract class MvpFragment<T extends BasePresenter> extends BaseFragment 
 
     protected abstract void initInject();
 
-
+    @Override
+    public void showEmpty(String msg, int resId) {
+        if (vsEmpty != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(resId);
+            textView.setText(msg);
+        }
+    }
 
     @Override
     public void loading(String msg) {

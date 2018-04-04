@@ -1,5 +1,6 @@
 package com.carpartsshow.ui.shopping;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +69,10 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
     private boolean isAll = false;
     private boolean isEdit = false;
 
+    public static void start(Context context) {
+        Intent starter = new Intent(context, ShoppingCartActivity.class);
+        context.startActivity(starter);
+    }
     @Override
     protected int setLayout() {
         return R.layout.activity_shoppingcart;
@@ -222,7 +227,7 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
     @Override
     public void showToOrder(OrderBean orderBean) {
         String json = new Gson().toJson(orderBean);
-        ConfirmOrderActivity.start(this,json);
+        ConfirmOrderActivity.start(this,json,0);
     }
 
     //购物车加一

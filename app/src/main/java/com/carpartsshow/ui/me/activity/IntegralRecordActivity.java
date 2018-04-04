@@ -2,6 +2,8 @@ package com.carpartsshow.ui.me.activity;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.IntegralRecordBean;
@@ -11,6 +13,10 @@ import com.carpartsshow.presenter.me.contract.IntegralRecordContract;
 import com.carpartsshow.ui.me.adapter.IntegralRecordAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -27,6 +33,7 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
     private IntegralRecordAdapter mAdapter;
+    LoginBean loginBean;
 
     @Override
     protected int setLayout() {
@@ -40,13 +47,28 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
 
     @Override
     protected void setData() {
-        LoginBean loginBean = SpUtil.getObject(this,"user");
+        loginBean = SpUtil.getObject(this,"user");
         mPresenter.getRecord(loginBean.getRepairUser_ID(),1);
         mAdapter = new IntegralRecordAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refresh.finishRefresh(3000);
+                mPresenter.getRecord(loginBean.getRepairUser_ID(),1);
+
+            }
+        });
+        refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh.finishLoadmore(3000);
+                mPresenter.getRecord(loginBean.getRepairUser_ID(),2);
+            }
+        });
     }
 
     @Override
@@ -62,11 +84,13 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
 
     @Override
     public void showContent(List<IntegralRecordBean> list) {
+        refresh.finishRefresh();
         mAdapter.addFirstDataSet(list);
     }
 
     @Override
     public void loadMore(List<IntegralRecordBean> list) {
-
+        refresh.finishLoadmore();
+        mAdapter.addMoreDataSet(list);
     }
 }

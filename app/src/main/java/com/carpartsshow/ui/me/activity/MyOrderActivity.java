@@ -1,5 +1,7 @@
 package com.carpartsshow.ui.me.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -36,6 +38,12 @@ public class MyOrderActivity extends BaseActivity {
     private List<Fragment> fragments;
 
     private int selectPage;
+
+    public static void start(Context context,int page) {
+        Intent starter = new Intent(context, MyOrderActivity.class);
+        starter.putExtra("page",page);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int setLayout() {
@@ -98,6 +106,7 @@ public class MyOrderActivity extends BaseActivity {
                 this.finish();
                 break;
             case R.id.tv_all:
+                AllOrderActivity.start(this);
                 break;
         }
     }

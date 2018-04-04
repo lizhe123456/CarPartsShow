@@ -104,4 +104,13 @@ public interface HttpHelper {
     Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds);
 
     Flowable<CPSResponse<OrderListBean>> fetchSplitListOrder(String userId,int size, int page, int type);
+
+    Flowable<CPSResponse> fetchSureOrderUrgent(String orderId);
+
+    Flowable<CPSResponse> fetchSureOrder(String orderId);
+
+    Flowable<CPSResponse> fetchCancelOrder(String orderId);
+
+    Flowable<CPSResponse> fetchDelCollection(String orderId);
+
 }

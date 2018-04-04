@@ -4,12 +4,13 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 import com.carpartsshow.R;
 import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.base.adapter.BaseViewHolder;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
-import com.carpartsshow.ui.me.activity.IntegralShopActivity;
-
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.carpartsshow.ui.me.activity.IntegralGoodsActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,13 @@ public class IntegralShopAdapter extends BaseAdapter<IntergralShopBean> {
             Item1Adapter adapter = new Item1Adapter(getContext());
             recyclerView.setAdapter(adapter);
             adapter.addFirstDataSet(item.getIntegerGoodsList());
+            adapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onClick(View view, Object item, int position) {
+                    IntergralShopBean.IntegerGoodsListBean intergralShopBean = (IntergralShopBean.IntegerGoodsListBean) item;
+                    IntegralGoodsActivity.start(getContext(), intergralShopBean.getIntegerGoodsType_ID());
+                }
+            });
         }else if (position == 2){
             RecyclerView recyclerView = holder.getView(R.id.recyclerView_item);
             GridLayoutManager linearLayoutManager1 = new GridLayoutManager(getContext(),2);
@@ -61,7 +69,18 @@ public class IntegralShopAdapter extends BaseAdapter<IntergralShopBean> {
             item2Adapter = new Item2Adapter(getContext());
             recyclerView.setAdapter(item2Adapter);
             item2Adapter.addFirstDataSet(item.getIstIntegerGoods());
+            item2Adapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onClick(View view, Object item, int position) {
+                    IntergralShopBean.IstIntegerGoods intergralShopBean = (IntergralShopBean.IstIntegerGoods) item;
+                    GoodsDetailsActivity.newInstance(getContext(),intergralShopBean.getIntegerGoods_ID(),2);
+                }
+            });
         }
+    }
+
+    public void addMore(IntergralShopBean data){
+        item2Adapter.addMoreDataSet(data.getIstIntegerGoods());
     }
 
     @Override

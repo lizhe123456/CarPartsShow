@@ -2,6 +2,7 @@ package com.carpartsshow.ui.me;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import com.carpartsshow.presenter.me.MePresenter;
 import com.carpartsshow.presenter.me.contract.MeContract;
 import com.carpartsshow.ui.LoginActivity;
 import com.carpartsshow.ui.me.activity.AboutUsActivity;
+import com.carpartsshow.ui.me.activity.AllOrderActivity;
 import com.carpartsshow.ui.me.activity.CreditMoneyActivity;
 import com.carpartsshow.ui.me.activity.FeedbackActivity;
 import com.carpartsshow.ui.me.activity.IntegralShopActivity;
@@ -235,21 +237,18 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
                 startActivity(intent);
                 break;
             case R.id.tv_exit_login:
-                SpUtil.putObject(getContext(),"user", (Serializable) null);
+                SpUtil.removeObject(getContext(),"user");
                 intent.setClass(getContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
             case R.id.all_order:
-                Intent intent5 = new Intent();
-                intent5.putExtra("page",0);
-                intent5.setClass(getContext(), MyOrderActivity.class);
-                startActivity(intent5);
+                AllOrderActivity.start(getContext());
                 break;
         }
     }
-    Dialog bottomDialog;
+
     private void show() {
-        bottomDialog = new Dialog(getContext(), R.style.BottomDialog);
+        final Dialog bottomDialog = new Dialog(getContext(), R.style.BottomDialog);
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_content_normal, null);
         TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
         TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
@@ -270,4 +269,5 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
             }
         });
     }
+
 }

@@ -9,32 +9,32 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.smtt.export.external.interfaces.SslError;
+import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebSettings.LayoutAlgorithm;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 public class X5WebView extends WebView {
-	TextView title;
-	private WebViewClient client = new WebViewClient() {
-		/**
-		 * 防止加载网页时调起系统浏览器
-		 */
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-	};
+
+	private OnWebViewListener onWebViewListener;
+
+	private WVClient client = new WVClient();
 
 	@SuppressLint("SetJavaScriptEnabled")
 	public X5WebView(Context arg0, AttributeSet arg1) {
 		super(arg0, arg1);
 		this.setWebViewClient(client);
-		// this.setWebChromeClient(chromeClient);
-		// WebStorage webStorage = WebStorage.getInstance();
+		this.setWebChromeClient(new WVChromeClient());
 		initWebViewSettings();
-		this.getView().setClickable(true);
+		this.getView().setClickable(false);
+	}
+
+	public void setOnWebViewListener(OnWebViewListener onWebViewListener) {
+		this.onWebViewListener = onWebViewListener;
 	}
 
 	private void initWebViewSettings() {
@@ -62,34 +62,53 @@ public class X5WebView extends WebView {
 		// settings 的设计
 	}
 
-	@Override
-	protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
-		boolean ret = super.drawChild(canvas, child, drawingTime);
-		canvas.save();
-		Paint paint = new Paint();
-		paint.setColor(0x7fff0000);
-		paint.setTextSize(24.f);
-		paint.setAntiAlias(true);
-		if (getX5WebViewExtension() != null) {
-			canvas.drawText(this.getContext().getPackageName() + "-pid:"
-					+ android.os.Process.myPid(), 10, 50, paint);
-			canvas.drawText(
-					"X5  Core:" + QbSdk.getTbsVersion(this.getContext()), 10,
-					100, paint);
-		} else {
-			canvas.drawText(this.getContext().getPackageName() + "-pid:"
-					+ android.os.Process.myPid(), 10, 50, paint);
-			canvas.drawText("Sys Core", 10, 100, paint);
+	private class WVClient extends WebViewClient {
+
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			//在当前Activity打开
+			view.loadUrl(url);
+
+			return true;
 		}
-		canvas.drawText(Build.MANUFACTURER, 10, 150, paint);
-		canvas.drawText(Build.MODEL, 10, 200, paint);
-		canvas.restore();
-		return ret;
+
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+			//https忽略证书问题
+			handler.proceed();
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			if (onWebViewListener != null) {
+				onWebViewListener.onPageFinish(view);
+			}
+			super.onPageFinished(view, url);
+
+		}
+
 	}
 
-	public X5WebView(Context arg0) {
-		super(arg0);
-		setBackgroundColor(85621);
+	private class WVChromeClient extends WebChromeClient {
+
+		@Override
+		public void onProgressChanged(WebView view, int newProgress) {
+			if (newProgress == 100) {
+				if (onWebViewListener != null) {
+					onWebViewListener.onProgressChange(view);
+				}
+			}
+			super.onProgressChanged(view, newProgress);
+		}
+
+	}
+
+
+	//进度回调接口
+	public interface OnWebViewListener {
+		void onProgressChange(WebView view);
+
+		void onPageFinish(WebView view);
 	}
 
 }

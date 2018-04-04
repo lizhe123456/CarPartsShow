@@ -1,6 +1,8 @@
 package com.carpartsshow.ui;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,9 +14,8 @@ import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.home.HomeFragment;
 import com.carpartsshow.ui.me.MeFragment;
-import com.carpartsshow.ui.scancode.ScanCodeFragment;
+import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -66,6 +67,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick({R.id.tv_home, R.id.tv_classify, R.id.tv_shopping_cart, R.id.tv_me, R.id.tv_scan_code})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -84,7 +86,7 @@ public class MainActivity extends BaseActivity {
                 tag = ME;
                 break;
             case R.id.tv_scan_code:
-                tag = SCANCODE;
+                ScanCodeActivity.start(this);
                 break;
         }
         selectNavigation();
@@ -157,7 +159,7 @@ public class MainActivity extends BaseActivity {
                     foundFragment = new ClassifyFragment();
                     break;
                 case SCANCODE:
-                    foundFragment = new ScanCodeFragment();
+//                    foundFragment = new ScanCodeFragment();
                     break;
                 case SHOPPINGCART:
 //                    foundFragment = new ScanCodeFragment();

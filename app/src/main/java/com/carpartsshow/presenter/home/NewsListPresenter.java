@@ -7,9 +7,7 @@ import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.home.contract.NewsListContract;
 import com.carpartsshow.util.RxUtil;
-
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
@@ -38,11 +36,16 @@ public class NewsListPresenter extends BasePresenterImpl<NewsListContract.View> 
                     @Override
                     public void onNext(List<NewsListBean> newsListBeans) {
                         super.onNext(newsListBeans);
-                        if (type == 1){
-                            mView.loadFirst(newsListBeans);
+                        if (newsListBeans == null || newsListBeans.size() == 0){
+//                            mView.showEmpty("",);
                         }else {
-                            mView.loadMore(newsListBeans);
+                            if (type == 1){
+                                mView.loadFirst(newsListBeans);
+                            }else {
+                                mView.loadMore(newsListBeans);
+                            }
                         }
+
                     }
                 })
         );

@@ -200,4 +200,21 @@ public interface CPSApi {
     //获取订单数据
     @GET("/api/User/SplitListOrder")
     Flowable<CPSResponse<OrderListBean>> splitListOrder(@Query("RepairUser_ID") String userId, @Query("PageSize") int size, @Query("PageIndex") int page, @Query("OrderType") int type);
+
+    //加急催单
+    @GET("/api/User/SureOrderUrgent")
+    Flowable<CPSResponse> sureOrderUrgent(@Query("Order_ID") String orderId);
+
+    //确认收货
+    @GET("/api/User/SureOrder")
+    Flowable<CPSResponse> sureOrder(@Query("Order_ID") String orderId);
+
+    //取消订单
+    @GET("/api/User/CancelOrder")
+    Flowable<CPSResponse> cancelOrder(@Query("Order_ID") String orderId);
+
+    @POST("/api/User/DelCollection")
+    Flowable<CPSResponse> delCollection(@Query("Cids") String cids);
+
+
 }

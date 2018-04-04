@@ -1,9 +1,7 @@
 package com.carpartsshow.ui.shopping.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,17 +15,28 @@ import android.widget.Switch;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.base.adapter.BaseAdapter;
+import com.carpartsshow.model.http.bean.AddressBean;
+import com.carpartsshow.model.http.bean.CouponBean;
+import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.presenter.shopping.SubmitOrderPresenter;
 import com.carpartsshow.presenter.shopping.contract.SubmitOrderContract;
+import com.carpartsshow.ui.me.activity.MyCouponActivity;
+import com.carpartsshow.ui.me.activity.MyOrderActivity;
+import com.carpartsshow.ui.me.adapter.AddressAdapter;
+import com.carpartsshow.ui.me.fragment.order.adapter.OrderGoodsAdapter;
 import com.carpartsshow.ui.shopping.adapter.ConfirmOrderAdapter;
+import com.carpartsshow.util.LogUtil;
+import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.PayDialog;
+import com.carpartsshow.view.ZlCustomDialog;
 import com.carpartsshow.widgets.CPSToast;
+import com.carpartsshow.widgets.CurrencyDialog;
 import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -54,32 +63,31 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     TextView tvDesc;
     @BindView(R.id.tv_coupon)
     TextView tvCoupon;
-    @BindView(R.id.hj)
-    TextView hj;
     @BindView(R.id.tv_price)
     TextView tvPrice;
     @BindView(R.id.tv_integral)
     TextView tvIntegral;
+    @BindView(R.id.coupon)
+    TextView tvCouponTop;
 
 
 
-    private OrderBean orderBean;
     private int type;
-    private ConfirmOrderAdapter mAdapter;
-    private OrderBean.ListReceiptAddressBean listReceiptAddressBean;
     private Map<String,Object> map = new HashMap<>();
     private String couponId;
+    private LoginBean loginBean;
+    PayDialog payDialog;
+    private AddressAdapter addressAdapter;
+    private int price = 0;
+    private int integer = 0;
+    CurrencyDialog currencyDialog;
+    OrderBean.ListReceiptAddressBean addressBean;
+    OrderBean orderBean;
 
-//    public static void start(Context context,OrderBean orderBean) {
-//        Intent intent = new Intent();
-//        intent.putExtra("order",orderBean);
-//        intent.setClass(context,ConfirmOrderActivity.class);
-//        context.startActivity(intent);
-//    }
-
-    public static void start(Context context, String json) {
+    public static void start(Context context, String json,int type) {
         Intent starter = new Intent(context, ConfirmOrderActivity.class);
         starter.putExtra("json", json);
+        starter.putExtra("type",type);
         context.startActivity(starter);
     }
 
@@ -96,60 +104,196 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
 
     @Override
     protected void setData() {
-        String json = getIntent().getStringExtra("json");
-        orderBean = new Gson().fromJson(json, OrderBean.class);
         type = getIntent().getIntExtra("type", 0);
-        listReceiptAddressBean = orderBean.getListReceiptAddress().get(0);
+        String json = getIntent().getStringExtra("json");
+        View view = LayoutInflater.from(this).inflate(R.layout.head_address, null);
+        //初始化头部
+        final TextView contacts = view.findViewById(R.id.tv_contacts);
+        final TextView phone = view.findViewById(R.id.tv_phone);
+        final TextView addressDesc = view.findViewById(R.id.tv_address);
+        final RelativeLayout rlAddress = view.findViewById(R.id.rl_address);
+        LinearLayout llAddress = view.findViewById(R.id.ll_receipt_address);
+        final TextView address = view.findViewById(R.id.receipt_address);
         title.setText("确认订单");
-        mAdapter = new ConfirmOrderAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.addFirstDataSet(orderBean.getListGoods());
-        View view = LayoutInflater.from(this).inflate(R.layout.head_address, null);
-        TextView address = view.findViewById(R.id.receipt_address);
-        TextView contacts = view.findViewById(R.id.tv_contacts);
-        TextView phone = view.findViewById(R.id.tv_phone);
-        TextView addressDesc = view.findViewById(R.id.tv_address);
-        RelativeLayout rlAddress = view.findViewById(R.id.rl_address);
-        LinearLayout llAddress = view.findViewById(R.id.ll_receipt_address);
-        if (TextUtils.isEmpty(listReceiptAddressBean.getMobile())) {
-            rlAddress.setVisibility(View.GONE);
-        } else {
-            contacts.setText("联系人：" + orderBean.getCurrentRepairUser().getRepairUser_RealName());
-            phone.setText(listReceiptAddressBean.getMobile());
-            addressDesc.setText(listReceiptAddressBean.getDetailAddress());
-            map.put("Mobile",listReceiptAddressBean.getMobile());
-            map.put("Address",listReceiptAddressBean.getDetailAddress());
-        }
-        String name = orderBean.getCurrentRepairUser().getRepairUser_Name();
-        address.setText("收货地址：" + name);
+        recyclerView.setNestedScrollingEnabled(false);
+        loginBean = SpUtil.getObject(this,"user");
+        if (type == 0){
+            orderBean = new Gson().fromJson(json, OrderBean.class);
+            addressBean = orderBean.getListReceiptAddress().get(0);
+            ConfirmOrderAdapter mAdapter = new ConfirmOrderAdapter(this);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.addFirstDataSet(orderBean.getListGoods());
 
-        llAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CPSToast.showText(getApplicationContext(), "呵呵哒");
+            if (TextUtils.isEmpty(addressBean.getMobile())) {
+                rlAddress.setVisibility(View.GONE);
+                String name = addressBean.getDetailAddress();
+                address.setText("收货地址：" + name);
+            } else {
+                address.setVisibility(View.GONE);
+                contacts.setText(addressBean.getPersonName());
+                phone.setText(addressBean.getMobile());
+                addressDesc.setText(addressBean.getDetailAddress());
             }
-        });
-        mAdapter.addHeaderView(view);
-        textView.setText("您有" + orderBean.getCouponCount() + "张优惠券");
+            llAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //地址选择
+                    final ZlCustomDialog dialog = new ZlCustomDialog(ConfirmOrderActivity.this);
+                    addressAdapter = new AddressAdapter(ConfirmOrderActivity.this);
+                    addressAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+                        @Override
+                        public void onClick(View view, Object item, int position) {
+                            addressBean = (OrderBean.ListReceiptAddressBean) item;
+                            if (TextUtils.isEmpty(addressBean.getMobile())) {
+                                rlAddress.setVisibility(View.GONE);
+                                String name = addressBean.getDetailAddress();
+                                address.setText("收货地址：" + name);
+                            } else {
+                                address.setVisibility(View.GONE);
+                                contacts.setText(addressBean.getPersonName());
+                                phone.setText(addressBean.getMobile());
+                                addressDesc.setText(addressBean.getDetailAddress());
+                            }
+                            initParam(orderBean);
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.show(addressAdapter,orderBean.getListReceiptAddress());
+
+                }
+            });
+            textView.setText("您有" + orderBean.getCouponCount() + "张优惠券");
+            for (OrderBean.GoodsBean goodsBean : orderBean.getListGoods()) {
+                if (goodsBean.getGoods_Type() == 2){
+                    integer += goodsBean.getGoods_Price() * goodsBean.getNumber();
+
+                }else {
+                    price += goodsBean.getGoods_Price() * goodsBean.getNumber();
+                }
+            }
+            mAdapter.addHeaderView(view);
+            initParam(orderBean);
+        }else {
+            //从我的订单跳过来的，重新提交订单
+            OrderListBean.DataBean dataBean = new Gson().fromJson(json, OrderListBean.DataBean.class);
+            if (TextUtils.isEmpty(dataBean.getAddress_Mobile())) {
+                rlAddress.setVisibility(View.GONE);
+                String name = dataBean.getAddress_FullAddress();
+                address.setText("收货地址：" + name);
+            } else {
+                address.setVisibility(View.GONE);
+                contacts.setText(dataBean.getAddress_Name());
+                phone.setText(dataBean.getAddress_Mobile());
+                addressDesc.setText(dataBean.getAddress_FullAddress());
+            }
+
+            OrderGoodsAdapter mAdapter = new OrderGoodsAdapter(this);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.addFirstDataSet(dataBean.getDetail());
+
+            for (OrderListBean.DataBean.DetailBean goodsBean : dataBean.getDetail()) {
+                if (goodsBean.getProduct_Type() == 2){
+                    integer += goodsBean.getOrderItem_Money() * goodsBean.getOrderItem_Number();
+                }else {
+                    price += goodsBean.getOrderItem_Money() * goodsBean.getOrderItem_Number();
+                }
+            }
+            tvCoupon.setText("已优惠："+dataBean.getOrder_CouponMoney()+".00元");
+            tvCouponTop.setText("优惠券优惠金额"+dataBean.getOrder_CouponMoney()+".00元");
+            textView.setVisibility(View.GONE);
+            switch1.setChecked(dataBean.isOrder_IsUseCompanyName());
+            switch1.setClickable(false);
+            if (dataBean.getOrder_Remark() != null) {
+                etDesc.setText(dataBean.getOrder_Remark().toString());
+            }
+            etDesc.setClickable(false);
+            etDesc.setFocusable(false);
+            mAdapter.addHeaderView(view);
+            map.put("Order_IsUrgent",dataBean.isOrder_IsUseCompanyName());
+            map.put("RepairUser_ID",loginBean.getRepairUser_ID());
+            map.put("Mobile",dataBean.getAddress_Mobile());
+            map.put("Order_IsUrgent",true);
+            String productAttrIds = "";
+            for (int i = 0; i < dataBean.getDetail().size(); i++) {
+                if (i == dataBean.getDetail().size()-1){
+                    productAttrIds += dataBean.getDetail().get(i).getProduct_ID() + "," + dataBean.getDetail().get(i).getOrderItem_Number();
+                }else {
+                    productAttrIds += dataBean.getDetail().get(i).getProduct_ID() + "," + dataBean.getDetail().get(i).getOrderItem_Number()+"|";
+                }
+            }
+            map.put("ProductAttrIds",productAttrIds);
+            if (TextUtils.isEmpty(dataBean.getAddress_Mobile())){
+                map.put("IsUseCompanyName","1");
+            }else {
+                map.put("PersonName",dataBean.getAddress_Name());
+                map.put("IsUseCompanyName","0");
+            }
+            map.put("Address",dataBean.getAddress_FullAddress());
+            map.put("Order_IsUrgent",switch1.isChecked());
+        }
+
+        tvPrice.setText("¥"+price+".00");
+        tvIntegral.setText("积分："+integer);
+        currencyDialog = new CurrencyDialog.Builder(ConfirmOrderActivity.this)
+                .setNegativeButton("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currencyDialog.dismiss();
+                    }
+                }).setPositiveButton("确认", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPresenter.submitOrder(map);
+                        currencyDialog.dismiss();
+                    }
+                })
+                .setMessage("确定要支付吗？")
+                .setCancelable(true)
+                .build();
+    }
+
+    private void initParam(OrderBean orderBean) {
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    CPSToast.showText(ConfirmOrderActivity.this,"选中");
                     map.put("Order_IsUrgent",true);
                 }else {
-                    CPSToast.showText(ConfirmOrderActivity.this,"没选中");
                     map.put("Order_IsUrgent",false);
                 }
             }
         });
+        String productAttrIds = "";
+        for (int i = 0; i < orderBean.getListGoods().size(); i++) {
+            if (i == orderBean.getListGoods().size()-1){
+                productAttrIds += orderBean.getListGoods().get(i).getGoods_ID() + "," + orderBean.getListGoods().get(i).getNumber();
+            }else {
+                productAttrIds += orderBean.getListGoods().get(i).getGoods_ID() + "," + orderBean.getListGoods().get(i).getNumber()+"|";
+            }
+        }
+        map.put("ProductAttrIds",productAttrIds);
+        map.put("RepairUser_ID",loginBean.getRepairUser_ID());
 
+
+        if (TextUtils.isEmpty(addressBean.getMobile())){
+
+        }else {
+            map.put("Mobile",addressBean.getMobile());
+        }
+
+        if (TextUtils.isEmpty(addressBean.getPersonName())){
+            map.put("IsUseCompanyName","1");
+        }else {
+            map.put("PersonName",addressBean.getPersonName());
+            map.put("IsUseCompanyName","0");
+        }
+        map.put("Address",addressBean.getDetailAddress());
+        map.put("Order_IsUrgent",switch1.isChecked());
     }
 
-    PayDialog payDialog;
 
     @OnClick({R.id.iv_back, R.id.select_coupon,R.id.tv_pay})
     public void onViewClicked(View view) {
@@ -159,6 +303,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 break;
             case R.id.select_coupon:
                 //跳转优惠券页面
+                MyCouponActivity.start(this);
                 break;
             case R.id.tv_pay:
                 //提交订单
@@ -168,42 +313,44 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                             public void onClick(View v) {
 //                                payDialog.select();
                                 //提交订单
-//                                map.put("Order_Remark",);
-//                                map.put("Order_Remark",);
-//                                map.put("Order_PayType",);
-//                                map.put("IsUseCompanyName",);
-//                                map.put("RepairUser_ID",);
-//                                map.put("PersonName",);
-//
-//                                map.put("PersonName",);
-//                                map.put("ProductAttrIds",);
-                                if (!TextUtils.isEmpty(couponId)){
-                                    map.put("Coupon_ID",couponId);
+                                if (!TextUtils.isEmpty(etDesc.getText().toString())) {
+                                    map.put("Order_Remark", etDesc.getText().toString());
                                 }
-
+                                map.put("Order_PayType",type);
+                                if (type == 0){
+                                    CPSToast.showText(ConfirmOrderActivity.this, "暂未不支持");
+                                }else if (type == 1){
+                                    CPSToast.showText(ConfirmOrderActivity.this, "暂未不支持");
+                                }else if (type == 2){
+                                    currencyDialog.show();
+                                }
                             }
                         })
                         .setAliListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 payDialog.select(0);
+                                type = 0;
                             }
                         })
                         .setCreditListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 payDialog.select(2);
+                                type = 2;
                             }
                         })
                         .setWXListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 payDialog.select(1);
+                                type = 1;
                             }
 
                         }).build();
-                payDialog.select(0);
                 payDialog.show();
+                payDialog.select(0);
+                type = 0;
                 break;
         }
     }
@@ -215,6 +362,30 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
 
     @Override
     public void submitSuccess() {
+        MyOrderActivity.start(this,1);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0){
+            if (resultCode == 2){
+                CouponBean couponBean = new Gson().fromJson(data.getStringExtra("coupon"),CouponBean.class);
+                couponId = couponBean.getCoupon_ID();
+
+                if (price >= couponBean.getCoupon_FullMoneyUse()){
+                    map.put("Coupon_ID",couponId);
+                    tvCoupon.setText("使用优惠券优惠"+couponBean.getCoupon_Money()+".00元");
+                }else {
+                    CPSToast.showText(this,"未满"+couponBean.getCoupon_FullMoneyUse()+"元");
+                    tvCoupon.setText("暂未优惠");
+                }
+
+            }else if (resultCode == 3){
+                //不使用优惠券
+                map.remove("Coupon_ID");
+                tvCoupon.setText("暂未优惠");
+            }
+        }
     }
 }

@@ -31,6 +31,11 @@ public class SpUtil {
     }
 
 
+    public static void removeObject(Context context, String key){
+        getSp(context).edit().remove(key).commit();
+    }
+
+
     /**
      * 存入字符串
      *
@@ -290,5 +295,7 @@ public class SpUtil {
         ois.close();
         return obj;
     }
+
+
 
 }

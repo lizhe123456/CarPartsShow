@@ -21,7 +21,7 @@ public class GoodsAdapter extends BaseAdapter<IntergralShopBean.IstIntegerGoods>
     protected void bindDataToItemView(BaseViewHolder holder, IntergralShopBean.IstIntegerGoods item, int position) {
         holder.setGlieuImage(R.id.iv_goods,item.getIntegerGoods_ImgPath());
         holder.setText(R.id.tv_goods_desc,item.getIntegerGoods_Name());
-        holder.setText(R.id.tv_price,item.getIntegerGoods_Integer()+"");
+        holder.setText(R.id.tv_price,"积分："+item.getIntegerGoods_Integer()+"");
 //        holder.setTextColor(R.id.tv_goods_state,R.color.tv_999);
 //        holder.setTextColor(R.id.tv_goods_state,R.color.red_login);
     }

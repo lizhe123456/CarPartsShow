@@ -58,4 +58,5 @@
     <dimen name="dm_113">113dp</dimen>
     <dimen name="dm_73">73dp</dimen>
     <dimen name="dm_55">55dp</dimen>
+    <dimen name="focus_view_size">100dp</dimen>
 </resources>
