@@ -3,11 +3,28 @@
  */
 package com.carpartsshow.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.YuvImage;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.util.Log;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class ImageUtil {
     private static final String TAG = "CameraExif";
@@ -195,5 +212,151 @@ public class ImageUtil {
             }
         }
         return bitmap;
+    }
+
+    /**
+     * drawable图片转成bitmap图片
+     * @param drawable
+     * @return
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable){
+        if(drawable == null){
+            return null;
+        }
+        if(drawable instanceof BitmapDrawable){
+            return ((BitmapDrawable)drawable).getBitmap();
+        }else{
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),
+                    drawable.getOpacity()!= PixelFormat.OPAQUE? Bitmap.Config.ARGB_8888: Bitmap.Config.RGB_565);
+            final Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        }
+    }
+
+    /**
+     * bitmap图片转成drawable图片
+     * @param bitmap
+     * @return
+     */
+    public static Drawable bitmapToDrawable(Bitmap bitmap){
+        return bitmapToDrawable(null,bitmap);
+    }
+    public static Drawable bitmapToDrawable(Resources res, Bitmap bitmap){
+        return bitmap == null ? null:new BitmapDrawable(res,bitmap);
+    }
+
+    /**
+     * bitmap图片转成byte数组
+     * @param bitmap
+     * @return
+     */
+    public static byte[] bitmapToByte(Bitmap bitmap){
+        if(bitmap == null){
+            return null;
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes = baos.toByteArray();
+        try {
+            baos.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return bytes;
+    }
+
+    /**
+     * byte数组转成bitmap图片
+     * @param bytes
+     * @return
+     */
+    public static Bitmap byteToBitmap(byte[] bytes){
+        if (bytes == null || bytes.length == 0) return null;
+        return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+    }
+
+    /**
+     * bitmap图片转成圆角bitmap图片
+     * @param bitmap
+     * @param pixels
+     * @return
+     */
+    public static Bitmap getRoundCornerBitmap(Bitmap bitmap,float pixels){
+        if (bitmap == null) return null;
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0,0,bitmap.getWidth(),bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(0xff424242);
+        canvas.drawRoundRect(rectF, pixels, pixels, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap,rect,rect,paint);
+        return output;
+    }
+
+    /**
+     * drawable图片转成圆角drawable图片
+     * @param drawable
+     * @param pixels
+     * @return
+     */
+    public static Drawable getRoundCornerDrawable(Drawable drawable, float pixels){
+        if(drawable == null) return null;
+        return new BitmapDrawable(null,getRoundCornerBitmap(drawableToBitmap(drawable),pixels));
+    }
+
+    //压缩图片大小
+    public static Bitmap compressImage(Bitmap image) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while ( baos.toByteArray().length / 1024>100) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+            options -= 10;//每次都减少10
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+        return bitmap;
+    }
+
+    public static Bitmap bytes2Bitmap(byte[] b) {
+        if (b.length != 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            return rotateToDegrees(compressImage(bitmap),90);
+
+        } else {
+            return null;
+        }
+    }
+
+    public static Bitmap runInPreviewFrame(byte[] data, Camera camera) {
+        ByteArrayOutputStream baos;
+        byte[] rawImage;
+        Bitmap bitmap;
+        //处理data
+        Camera.Size previewSize = camera.getParameters().getPreviewSize();//获取尺寸,格式转换的时候要用到
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;
+        YuvImage yuvimage = new YuvImage(
+                data,
+                ImageFormat.NV21,
+                previewSize.width,
+                previewSize.height,
+                null);
+        baos = new ByteArrayOutputStream();
+        yuvimage.compressToJpeg(new Rect(0, 0, previewSize.width, previewSize.height), 100, baos);// 80--JPG图片的质量[0-100],100最高
+        rawImage = baos.toByteArray();
+        //将rawImage转换成bitmap
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        bitmap = rotateToDegrees(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length, options),90);
+        return bitmapCrop(bitmap,bitmap.getWidth()/3,bitmap.getHeight()/9,bitmap.getWidth()/3, (int) ((bitmap.getHeight()*6.5)/9));
     }
 }

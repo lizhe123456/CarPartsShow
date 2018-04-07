@@ -216,5 +216,4 @@ public interface CPSApi {
     @POST("/api/User/DelCollection")
     Flowable<CPSResponse> delCollection(@Query("Cids") String cids);
 
-
 }

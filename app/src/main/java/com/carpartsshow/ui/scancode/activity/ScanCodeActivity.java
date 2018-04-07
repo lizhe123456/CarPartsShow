@@ -1,32 +1,21 @@
 package com.carpartsshow.ui.scancode.activity;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
-import android.graphics.Matrix;
-import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -37,20 +26,54 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.baidu.ocr.sdk.model.ResponseResult;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
+import com.carpartsshow.base.CommonSubscriber;
+import com.carpartsshow.model.http.bean.BaiduToken;
+import com.carpartsshow.model.http.bean.BaiduWord;
+import com.carpartsshow.ui.MainActivity;
+import com.carpartsshow.ui.scancode.RecognizeService;
+import com.carpartsshow.util.Base64Util;
+import com.carpartsshow.util.ImageUtil;
 import com.carpartsshow.util.ScreenUtils;
-import com.google.android.cameraview.AspectRatio;
-import com.google.android.cameraview.CameraView;
+import com.carpartsshow.widgets.BmpImageView;
+import com.carpartsshow.widgets.CPSToast;
+import com.google.gson.Gson;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
+import com.zhy.http.okhttp.OkHttpUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 /**
@@ -58,24 +81,25 @@ import butterknife.OnClick;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class ScanCodeActivity extends BaseActivity implements Camera.PreviewCallback,SurfaceHolder.Callback{
+public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Callback, Camera.PreviewCallback {
 
 
+    private static final int REQUEST_TAKE_PHOTO_PERMISSION = 3;
     @BindView(R.id.iv_scan_xian)
     ImageView ivScanXian;
     @BindView(R.id.iv_distinguish)
-    ImageView ivDistinguish;
+    BmpImageView ivDistinguish;
     @BindView(R.id.camera)
     SurfaceView surfaceView;
 
     private int pmHeight;
     private int pmWidth;
-    private int mPreviewHeight;
-    private int mPreviewWidth;
-    // 定义对象
-    private SurfaceHolder mSurfaceHolder = null;  // SurfaceHolder对象：(抽象接口)SurfaceView支持类
-    private Camera mCamera =null; // Camera对象，相机预览
-    private boolean bIfPreview;
+    private Camera camera;
+    private Camera.Parameters parameters;
+    private int num;
+    private Camera.AutoFocusCallback mAutoFocusCallback;
+    private BaiduToken token = null;
+    private SurfaceHolder surfaceHolder;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, ScanCodeActivity.class);
@@ -88,20 +112,30 @@ public class ScanCodeActivity extends BaseActivity implements Camera.PreviewCall
     }
 
     @Override
-    protected void init() {
-
-    }
-
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         //去除title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //去掉Activity上面的状态栏
-        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,
-                WindowManager.LayoutParams. FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    protected void init() {
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mAutoFocusCallback = new Camera.AutoFocusCallback() {
+            public void onAutoFocus(boolean success, Camera camera) {
+                if (success) {
+                    camera.cancelAutoFocus();// 只有加上了这一句，才会自动对焦
+//                    doAutoFocus();
+                }
+            }
+        };
+    }
+
 
     @Override
     protected void setData() {
@@ -111,103 +145,13 @@ public class ScanCodeActivity extends BaseActivity implements Camera.PreviewCall
         layoutParams.topMargin = (int) (pmHeight / (float) 7.5);
         layoutParams.bottomMargin = (int) (pmHeight / (float) 5.6);
         ivScanXian.setLayoutParams(layoutParams);
-//        ObjectAnimator animator = ObjectAnimator.ofFloat(ivScanXian,)
         TranslateAnimation translateAnimation = new TranslateAnimation((float) pmWidth * ((float) 2 / 3), (float) pmWidth * ((float) 1 / 3), ivScanXian.getY(), ivScanXian.getY());
         translateAnimation.setDuration(1000);
         translateAnimation.setRepeatMode(Animation.REVERSE);
         translateAnimation.setRepeatCount(Animation.INFINITE);
         ivScanXian.setAnimation(translateAnimation);
         ivScanXian.setVisibility(View.VISIBLE);
-//        cameraView.captureImage();
-        initSurfaceView();
-
     }
-
-    private void initSurfaceView() {
-        mSurfaceHolder = surfaceView.getHolder(); // 绑定SurfaceView，取得SurfaceHolder对象
-        mSurfaceHolder.addCallback(this); // SurfaceHolder加入回调接口
-        // mSurfaceHolder.setFixedSize(176, 144); // 预览大小設置
-        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);// 設置顯示器類型，setType必须设置
-    }
-
-    private void initCamera(){//surfaceChanged中调用
-           if (bIfPreview) {
-                mCamera.stopPreview();//stopCamera();
-           }
-           if(null != mCamera) {
-                try {
-                    mCamera.setPreviewCallback(this);
-                     /* Camera Service settings*/
-                     Camera.Parameters parameters = mCamera.getParameters();
-                     // parameters.setFlashMode("off"); // 无闪光灯
-                     parameters.setPictureFormat(PixelFormat.JPEG); //Sets the image format for picture 设定相片格式为JPEG，默认为NV21
-                     parameters.setPreviewFormat(PixelFormat.YCbCr_420_SP); //Sets the image format for preview picture，默认为NV21
-                     /*【ImageFormat】JPEG/NV16(YCrCb format，used for Video)/NV21(YCrCb format，used for Image)/RGB_565/YUY2/YU12*/
-
-                     // 【调试】获取caera支持的PictrueSize，看看能否设置？？
-                     List<Camera.Size> pictureSizes = mCamera.getParameters().getSupportedPictureSizes();
-                     List<Camera.Size> previewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-                     List<Integer> previewFormats = mCamera.getParameters().getSupportedPreviewFormats();
-                     List<Integer> previewFrameRates = mCamera.getParameters().getSupportedPreviewFrameRates();
-                     Log.i(TAG+"initCamera", "cyy support parameters is ");
-                     Camera.Size psize = null;
-                     for (int i = 0; i < pictureSizes.size(); i++)
-                         {
-                          psize = pictureSizes.get(i);
-                          Log.i(TAG+"initCamera", "PictrueSize,width: " + psize.width + " height" + psize.height);
-                         }
-                     for (int i = 0; i < previewSizes.size(); i++)
-                         {
-                          psize = previewSizes.get(i);
-                          Log.i(TAG+"initCamera", "PreviewSize,width: " + psize.width + " height" + psize.height);
-                         }
-                     Integer pf = null;
-                     for (int i = 0; i < previewFormats.size(); i++)
-                         {
-                          pf = previewFormats.get(i);
-                          Log.i(TAG+"initCamera", "previewformates:" + pf);
-                         }
-
-                     // 设置拍照和预览图片大小
-                     parameters.setPictureSize(640, 480); //指定拍照图片的大小
-                     parameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
-                     // 指定preview的大小
-                     //这两个属性 如果这两个属性设置的和真实手机的不一样时，就会报错
-
-                     // 横竖屏镜头自动调整
-                     if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                          parameters.set("orientation", "portrait"); //
-                          parameters.set("rotation", 90); // 镜头角度转90度（默认摄像头是横拍）
-                          mCamera.setDisplayOrientation(90); // 在2.2以上可以使用
-                         } else// 如果是横屏
-                     {
-                          parameters.set("orientation", "landscape"); //
-                          mCamera.setDisplayOrientation(0); // 在2.2以上可以使用
-                         }
-
-                     /* 视频流编码处理 */
-                     //添加对视频流处理函数
-
-                    // 设定配置参数并开启预览
-                     mCamera.setParameters(parameters); // 将Camera.Parameters设定予Camera
-                     mCamera.startPreview(); // 打开预览画面
-                     bIfPreview = true;
-
-                     // 【调试】设置后的图片大小和预览大小以及帧率
-                     Camera.Size csize = mCamera.getParameters().getPreviewSize();
-                     mPreviewHeight = csize.height; //
-                     mPreviewWidth = csize.width;
-                     Log.i(TAG+"initCamera", "after setting, previewSize:width: " + csize.width + " height: " + csize.height);
-                     csize = mCamera.getParameters().getPictureSize();
-                     Log.i(TAG+"initCamera", "after setting, pictruesize:width: " + csize.width + " height: " + csize.height);
-                     Log.i(TAG+"initCamera", "after setting, previewformate is " + mCamera.getParameters().getPreviewFormat());
-                     Log.i(TAG+"initCamera", "after setting, previewframetate is " + mCamera.getParameters().getPreviewFrameRate());
-                    } catch (Exception e) {
-                     e.printStackTrace();
-                    }
-               }
-    }
-
 
     @OnClick({R.id.iv_back})
     public void onViewClicked(View view) {
@@ -223,83 +167,257 @@ public class ScanCodeActivity extends BaseActivity implements Camera.PreviewCall
         super.onDestroy();
     }
 
+
     @Override
-    public void onPreviewFrame(byte[] data, Camera camera) {
-        Camera.Size size = camera.getParameters().getPreviewSize();
-        try{
-            YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
-            if(image!=null){
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                image.compressToJpeg(new Rect(0, 0, size.width, size.height), 80, stream);
-
-                Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
-                rotateMyBitmap(bmp);
-                ivDistinguish.setImageBitmap(bmp);
-                if (bmp != null){
-                    bmp.recycle();
-                    bmp = null;
-                }
-                System.gc();
-                //**********************
-                //因为图片会放生旋转，因此要对图片进行旋转到和手机在一个方向上
-
-                //**********************************
-                stream.close();
-            }
-
-        }catch(Exception ex){
-            Log.e("Sys","Error:"+ex.getMessage());
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        if (ContextCompat.checkSelfPermission(ScanCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //申请权限，REQUEST_TAKE_PHOTO_PERMISSION是自定义的常量
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_TAKE_PHOTO_PERMISSION);
+        } else {
+            //有权限，直接拍照
+            openCamera(surfaceHolder); // 开启相机
         }
+
     }
 
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        mCamera = Camera.open();// 开启摄像头（2.3版本后支持多摄像头,需传入参数）
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        releaseCamera();
+    }
+
+    private void openCamera(SurfaceHolder surfaceHolder) {
+        releaseCamera();
         try {
-            Log.i(TAG, "SurfaceHolder.Callback：surface Created");
-            mCamera.setPreviewDisplay(mSurfaceHolder);//set the surface to be used for live preview
-
-        } catch (Exception ex) {
-            if(null != mCamera)
-            {
-                mCamera.release();
-                mCamera = null;
+            camera = getCamera(Camera.CameraInfo.CAMERA_FACING_BACK); // 根据需求选择前/后置摄像头
+        } catch (Exception e) {
+            camera = null;
+//            if (AppContext.isDebugMode) {
+//                e.printStackTrace();
+//            }
+        }
+        if (camera != null) {
+            try {
+                camera.setPreviewCallback(this);
+                camera.setDisplayOrientation(90); // 此方法为官方提供的旋转显示部分的方法，并不会影响onPreviewFrame方法中的原始数据；
+                if (parameters == null) {
+                    parameters = camera.getParameters();
+                }
+                onFocus(new Point(pmWidth / 2, pmHeight / 2), mAutoFocusCallback);
+                parameters.setPreviewFormat(ImageFormat.NV21); // 常用格式：NV21 / YV12
+                parameters.setPreviewSize(1920, 1080); // 还可以设置很多相机的参数，但是建议先遍历当前相机是否支持该配置，不然可能会导致出错；
+                camera.setParameters(parameters);
+                camera.setPreviewDisplay(surfaceHolder);
+                camera.startPreview();
+                camera.cancelAutoFocus();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            Log.i(TAG+"initCamera", ex.getMessage());
+        }
+    }
+
+    /**
+     * 手动聚焦
+     *
+     * @param point 触屏坐标
+     */
+    protected boolean onFocus(Point point, Camera.AutoFocusCallback callback) {
+        if (camera == null) {
+            return false;
+        }
+
+        //不支持设置自定义聚焦，则使用自动聚焦，返回
+        if (Build.VERSION.SDK_INT >= 14) {
+
+            if (parameters.getMaxNumFocusAreas() <= 0) {
+                return focus(callback);
+            }
+            //定点对焦
+            List<Camera.Area> areas = new ArrayList<Camera.Area>();
+            int left = point.x - 300;
+            int top = point.y - 300;
+            int right = point.x + 300;
+            int bottom = point.y + 300;
+            left = left < -1000 ? -1000 : left;
+            top = top < -1000 ? -1000 : top;
+            right = right > 1000 ? 1000 : right;
+            bottom = bottom > 1000 ? 1000 : bottom;
+            areas.add(new Camera.Area(new Rect(left, top, right, bottom), 100));
+            parameters.setFocusAreas(areas);
+            try {
+                //本人使用的小米手机在设置聚焦区域的时候经常会出异常，看日志发现是框架层的字符串转int的时候出错了，
+                //目测是小米修改了框架层代码导致，在此try掉，对实际聚焦效果没影响
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+
+        return focus(callback);
+    }
+
+    private boolean focus(Camera.AutoFocusCallback callback) {
+        try {
+            camera.autoFocus(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+    @TargetApi(9)
+    private Camera getCamera(int cameraType) {
+        Camera camera = null;
+        try {
+            camera = Camera.open(cameraType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return camera; // returns null if camera is unavailable
+    }
+
+    private synchronized void releaseCamera() {
+        if (camera != null) {
+            try {
+                camera.setPreviewCallback(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                camera.stopPreview();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                camera.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            camera = null;
         }
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i(TAG, "SurfaceHolder.Callback：Surface Changed");
-        //mPreviewHeight = height;
-        //mPreviewWidth = width;
-        initCamera();
-    }
+    public void onPreviewFrame(byte[] bytes, Camera camera) {
+        if (num == 30) {
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i(TAG, "SurfaceHolder.Callback：Surface Destroyed");
-        if(null != mCamera)
-        {
-            mCamera.setPreviewCallback(null); //！！这个必须在前，不然退出出错
-            mCamera.stopPreview();
-//            bIfPreview = false;
-            mCamera.release();
-            mCamera = null;
+            if (token == null) {
+                getToken("",bytes);
+            }else {
+                recGeneral(token.getAccess_token(),bytes);
+            }
+        }
+        num = num + 1;
+        if (num == 31) {
+            num = 0;
         }
     }
 
+    public void recGeneral(final String token, final byte[] bytes) {
+        Flowable.create(new FlowableOnSubscribe<BaiduWord>() {
+            @Override
+            public void subscribe(final FlowableEmitter<BaiduWord> e) throws Exception {
+                Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera);
+                final String base64 = Base64Util.encode(ImageUtil.bitmapToByte(bitmap));
+                Map<String, String> map = new HashMap<>();
+                if (bitmap != null && !bitmap.isRecycled()){
+                    bitmap.recycle();
+                    bitmap = null;
+                    System.gc();
+                }
+                map.put("image", base64);
+                map.put("language_type", "ENG");
+                map.put("detect_direction", "true");
+                OkHttpUtils.post().url("https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic")
+                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                        .addParams("access_token", token).params(map).build().execute(new com.zhy.http.okhttp.callback.Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response, int id) throws Exception {
 
-    public Bitmap rotateMyBitmap(Bitmap bmp){
-        //*****旋转一下
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-        Bitmap bitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);
-        Bitmap nbmp2 = Bitmap.createBitmap(bmp, 0,0, bmp.getWidth(),  bmp.getHeight(), matrix, true);
-        //*******显示一下
-        return nbmp2;
+                        return new Gson().fromJson(response.body().toString(),ResponseResult.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        camera.stopPreview();
+                        CPSToast.showText(ScanCodeActivity.this,e.toString());
+                        finish();
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ResponseResult json = (ResponseResult) response;
+//                        e.onNext(json);
+                    }
+                });
+            }
+        },BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaiduWord>() {
+            @Override
+            public void accept(BaiduWord baiduWord) throws Exception {
+//                CPSToast.showText(ScanCodeActivity.this,baiduWord.getWords_result().get(0).getWords());
+            }
+        });
+
+    }
+
+    public void getToken(final String token, final byte[] bytes) {
+        Flowable.create(new FlowableOnSubscribe<BaiduToken>() {
+            @Override
+            public void subscribe(FlowableEmitter<BaiduToken> e) throws Exception {
+                OkHttpUtils.post().url("https://aip.baidubce.com/oauth/2.0/token")
+                        .addParams("grant_type", "client_credentials")
+                        .addParams("client_id", "CSQymvF6xklk2zwlzroOOrog")
+                        .addParams("client_secret", "mEUcnehPKgiFdWmNecE2CUBNrprfFakg")
+                        .build().execute(new com.zhy.http.okhttp.callback.Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response, int id) throws Exception {
+                        return new Gson().fromJson(response.body().string(), BaiduToken.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ScanCodeActivity.this.token = (BaiduToken) response;
+                    }
+                });
+            }
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaiduToken>() {
+
+            @Override
+            public void accept(BaiduToken baiduToken) throws Exception {
+                recGeneral(baiduToken.getAccess_token(),bytes);
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_TAKE_PHOTO_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //申请成功，可以拍照
+                openCamera(surfaceHolder);
+            } else {
+                CPSToast.showText(this,"相机权限未开启");
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }
