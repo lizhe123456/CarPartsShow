@@ -4,6 +4,7 @@ import com.carpartsshow.model.db.RealmHelper;
 import com.carpartsshow.model.http.HttpHelper;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CarFilterBean;
+import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
@@ -249,5 +250,10 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId, int page) {
         return httpHelper.fetchListSplitSeckillGoods(userId, page);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin) {
+        return httpHelper.fetchGetCarModelByVIN(vin);
     }
 }

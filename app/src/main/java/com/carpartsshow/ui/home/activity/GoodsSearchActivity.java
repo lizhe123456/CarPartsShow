@@ -109,6 +109,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         starter.putExtra("searchValue",searchValue);
         context.startActivity(starter);
     }
+
     @Override
     protected int setLayout() {
         return R.layout.activity_goods_search;

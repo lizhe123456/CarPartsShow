@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
@@ -28,12 +29,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.baidu.ocr.sdk.OCR;
+import com.baidu.ocr.sdk.OnResultListener;
+import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.GeneralBasicParams;
+import com.baidu.ocr.sdk.model.GeneralResult;
+import com.baidu.ocr.sdk.model.WordSimple;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
+import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.BaiduToken;
 import com.carpartsshow.model.http.bean.BaiduWord;
+import com.carpartsshow.model.http.bean.CarModelByVINBean;
+import com.carpartsshow.presenter.scancode.ScanCodePresenter;
+import com.carpartsshow.presenter.scancode.contract.ScanCodeContract;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.scancode.RecognizeService;
 import com.carpartsshow.util.Base64Util;
 import com.carpartsshow.util.FileUtil;
@@ -69,7 +79,7 @@ import okhttp3.Response;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Callback, Camera.PreviewCallback {
+public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements ScanCodeContract.View,SurfaceHolder.Callback, Camera.PreviewCallback ,RecognizeService.ServiceListener{
 
 
     private static final int REQUEST_TAKE_PHOTO_PERMISSION = 3;
@@ -111,6 +121,7 @@ public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Call
 
     @Override
     protected void init() {
+        super.init();
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -122,8 +133,25 @@ public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Call
                 }
             }
         };
+        OCR.getInstance().initAccessToken(new OnResultListener<AccessToken>() {
+            @Override
+            public void onResult(AccessToken result) {
+                // 调用成功，返回AccessToken对象
+                String token = result.getAccessToken();
+            }
+            @Override
+            public void onError(OCRError error) {
+                // 调用失败，返回OCRError子类SDKError对象
+            }
+        }, getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
+                ScanCodeActivity.this.finish();
+            }
+        },30000);
     }
-
 
     @Override
     protected void setData() {
@@ -294,106 +322,13 @@ public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Call
     public void onPreviewFrame(byte[] bytes, Camera camera) {
         if (num == 60) {
             Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera);
-            boolean flag = saveBitmapToSd(bitmap,FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath());
-            RecognizeService.recGeneral(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(),
-                    new RecognizeService.ServiceListener() {
-                        @Override
-                        public void onResult(String result) {
-                            BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
-                            CPSToast.showText(ScanCodeActivity.this,"skjhad");
-                        }
-            });
-//            if (token == null) {
-//                getToken("",bytes);
-//            }else {
-//                 recGeneral(token.getAccess_token(),bytes);
-//            }
+            boolean flag = saveBitmapToSd(bitmap, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath());
+            RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), this);
         }
         num = num + 1;
         if (num == 61) {
             num = 0;
         }
-    }
-
-    public void recGeneral(final String token, final byte[] bytes) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera);
-                final String base64 = Base64Util.encode(ImageUtil.bitmapToByte(bitmap));
-                Map<String, String> map = new HashMap<>();
-                if (bitmap != null && !bitmap.isRecycled()){
-                    bitmap.recycle();
-                    bitmap = null;
-                    System.gc();
-                }
-                map.put("image", base64);
-                map.put("language_type", "ENG");
-                map.put("detect_direction", "true");
-                OkHttpUtils.post().url("https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic")
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .addParams("access_token", token).params(map)
-                        .build().connTimeOut(3000).readTimeOut(2000).writeTimeOut(1000)
-                        .execute(new com.zhy.http.okhttp.callback.Callback() {
-                            @Override
-                            public Object parseNetworkResponse(Response response, int id) throws Exception {
-                                return response.body().string();
-                            }
-
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
-                                camera.stopPreview();
-                                CPSToast.showText(ScanCodeActivity.this,e.toString());
-                                finish();
-                            }
-
-                            @Override
-                            public void onResponse(Object response, int id) {
-                                String json = (String) response;
-                                CPSToast.showText(ScanCodeActivity.this,"sad");
-//                        e.onNext(json);
-                            }
-                        });
-
-            }
-        }.start();
-    }
-
-    public void getToken(final String token, final byte[] bytes) {
-        Flowable.create(new FlowableOnSubscribe<BaiduToken>() {
-            @Override
-            public void subscribe(FlowableEmitter<BaiduToken> e) throws Exception {
-                OkHttpUtils.post().url("https://aip.baidubce.com/oauth/2.0/token")
-                        .addParams("grant_type", "client_credentials")
-                        .addParams("client_id", "CSQymvF6xklk2zwlzroOOrog")
-                        .addParams("client_secret", "mEUcnehPKgiFdWmNecE2CUBNrprfFakg")
-                        .build().connTimeOut(3000).readTimeOut(2000).writeTimeOut(1000)
-                        .execute(new com.zhy.http.okhttp.callback.Callback() {
-                    @Override
-                    public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        return new Gson().fromJson(response.body().string(), BaiduToken.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ScanCodeActivity.this.token = (BaiduToken) response;
-                    }
-                });
-            }
-        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaiduToken>() {
-
-            @Override
-            public void accept(BaiduToken baiduToken) throws Exception {
-                recGeneral(baiduToken.getAccess_token(),bytes);
-            }
-        });
     }
 
     @Override
@@ -413,7 +348,12 @@ public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Call
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OkHttpUtils.getInstance().execute(null,null);
+
+    }
+
+    @Override
+    protected void initInject() {
+        getActivityComponent().inject(this);
     }
 
     public static boolean saveBitmapToSd(Bitmap bitmap, String filePath){
@@ -439,6 +379,41 @@ public class ScanCodeActivity extends BaseActivity implements SurfaceHolder.Call
             }
         }
         return true;
+    }
+
+    @Override
+    public void onResult(String result) {
+        try {
+            BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
+            mPresenter.getVinCode(beanResutl.getWords_result().get(0).getWords());
+        }catch (Exception e){
+
+        }
+
+    }
+
+    @Override
+    public void stateError() {
+
+    }
+
+    private int errornum;
+
+    @Override
+    public void showErrorMsg(String msg) {
+        super.showErrorMsg(msg);
+        if (errornum == 3){
+            this.finish();
+        }
+        errornum++;
+    }
+
+    @Override
+    public void showData(List<CarModelByVINBean> list) {
+        Intent intent = new Intent(this,GoodsSearchActivity.class);
+        intent.putExtra("carBrand",list.get(0).getDescribe());
+        startActivity(intent);
+        this.finish();
     }
 
 }

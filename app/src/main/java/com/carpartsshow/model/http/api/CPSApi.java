@@ -2,6 +2,7 @@ package com.carpartsshow.model.http.api;
 
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CarFilterBean;
+import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
@@ -222,4 +223,7 @@ public interface CPSApi {
     @GET("/api/Home/ListSplitSeckillGoods")
     Flowable<CPSResponse<List<SeckillGoodsBean>>> listSplitSeckillGoods(@Query("RepairUser_ID") String userId,@Query("PageIndex") int page);
 
+    //vin码扫描
+    @GET("/api/Home/GetCarModelByVIN")
+    Flowable<CPSResponse<List<CarModelByVINBean>>> getCarModelByVIN(@Query("VIN") String vin);
 }

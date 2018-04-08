@@ -23,6 +23,7 @@ import com.carpartsshow.ui.me.activity.MyIntegralActivity;
 import com.carpartsshow.ui.me.activity.NewsActivity;
 import com.carpartsshow.ui.me.activity.UpdateAddressActivity;
 import com.carpartsshow.ui.me.activity.UpdatePassActivity;
+import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 
@@ -80,4 +81,6 @@ public interface ActivityComponent {
     void inject(AllOrderActivity allOrderActivity);
 
     void inject(TimelimitActivity timelimitActivity);
+
+    void inject(ScanCodeActivity scanCodeActivity);
 }

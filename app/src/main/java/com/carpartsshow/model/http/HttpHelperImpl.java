@@ -4,6 +4,7 @@ import com.carpartsshow.app.App;
 import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CarFilterBean;
+import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
@@ -253,6 +254,11 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId, int page) {
         return cpsApi.listSplitSeckillGoods(userId, page);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin) {
+        return cpsApi.getCarModelByVIN(vin);
     }
 
 }

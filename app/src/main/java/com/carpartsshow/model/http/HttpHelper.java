@@ -2,6 +2,7 @@ package com.carpartsshow.model.http;
 
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CarFilterBean;
+import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.ConsumptionRecordBean;
@@ -116,5 +117,7 @@ public interface HttpHelper {
     Flowable<CPSResponse> fetchDelCollection(String orderId);
 
     Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId,int page);
+
+    Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin);
 
 }

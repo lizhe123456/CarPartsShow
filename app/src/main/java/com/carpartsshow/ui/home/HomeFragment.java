@@ -134,14 +134,14 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY <= 0) {
-                    rlTile.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));//AGB由相关工具获得，或者美工提供
-                } else if (scrollY > 0 && scrollY <= 180) {
-                    float scale = (float) scrollY / 180;
+                    rlTile.setBackgroundColor(Color.argb((int) 0, 0, 0, 0));//AGB由相关工具获得，或者美工提供
+                } else if (scrollY > 0 && scrollY <= 200) {
+                    float scale = (float) scrollY / 200;
                     float alpha = (255 * scale);
                     // 只是layout背景透明(仿知乎滑动效果)
-                    rlTile.setBackgroundColor(Color.argb((int) alpha, 227, 29, 26));
+                    rlTile.setBackgroundColor(Color.argb((int) alpha, 0, 0, 0));
                 } else {
-                    rlTile.setBackgroundColor(Color.argb((int) 255, 227, 29, 26));
+                    rlTile.setBackgroundColor(Color.argb((int) 255, 0, 0, 0));
                 }
             }
         });
