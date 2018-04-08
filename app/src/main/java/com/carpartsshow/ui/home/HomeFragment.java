@@ -1,6 +1,7 @@
 package com.carpartsshow.ui.home;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
@@ -128,21 +129,22 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvDataItem.setNestedScrollingEnabled(false);
         rvCradItem.setNestedScrollingEnabled(false);
         rvGoodsItem.setNestedScrollingEnabled(false);
-//        nestedScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY <= 0) {
-//                    rlTile.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));//AGB由相关工具获得，或者美工提供
-//                } else if (scrollY > 0 && scrollY <= 180) {
-//                    float scale = (float) scrollY / 180;
-//                    float alpha = (255 * scale);
-//                    // 只是layout背景透明(仿知乎滑动效果)
-//                    rlTile.setBackgroundColor(Color.argb((int) alpha, 227, 29, 26));
-//                } else {
-//                    rlTile.setBackgroundColor(Color.argb((int) 255, 227, 29, 26));
-//                }
-//            }
-//        });
+
+        nestedScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY <= 0) {
+                    rlTile.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));//AGB由相关工具获得，或者美工提供
+                } else if (scrollY > 0 && scrollY <= 180) {
+                    float scale = (float) scrollY / 180;
+                    float alpha = (255 * scale);
+                    // 只是layout背景透明(仿知乎滑动效果)
+                    rlTile.setBackgroundColor(Color.argb((int) alpha, 227, 29, 26));
+                } else {
+                    rlTile.setBackgroundColor(Color.argb((int) 255, 227, 29, 26));
+                }
+            }
+        });
     }
 
     @Override
