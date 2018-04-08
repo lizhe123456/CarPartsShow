@@ -76,7 +76,7 @@ public class CollectionAdapter extends BaseAdapter<CollectionBean.CollectionList
     public void allSelect(boolean flag) {
         List<CollectionBean.CollectionListProductBean> list = getDataSource();
         for (int i = 0; i < list.size(); i++) {
-            if (!flag) {
+            if (flag) {
                 list.get(i).setSelect(true);
             }else {
                 list.get(i).setSelect(false);

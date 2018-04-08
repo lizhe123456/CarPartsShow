@@ -9,7 +9,9 @@ import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.me.contract.CouponContract;
 import com.carpartsshow.util.RxUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,4 +52,8 @@ public class CouponPresenter extends BasePresenterImpl<CouponContract.View> impl
                 })
         );
     }
+
+
+
+
 }

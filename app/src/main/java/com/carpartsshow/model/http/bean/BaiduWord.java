@@ -15,6 +15,8 @@ public class BaiduWord {
      * words_result : [{"words":" TSINGTAO"},{"words":"青島睥酒"}]
      */
 
+
+
     private long log_id;
     private int words_result_num;
     private List<WordsResultBean> words_result;

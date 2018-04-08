@@ -18,6 +18,8 @@ import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -77,7 +79,7 @@ public interface HttpHelper {
 
     Flowable<CPSResponse<HomePageBean>> getHomePageData(String userId, int size, int page);
 
-    Flowable<CPSResponse> seckillGoodsDetail(String userId, String seckillId);
+    Flowable<CPSResponse<SeckillGoodsDetail>> seckillGoodsDetail(String userId, String seckillId);
 
     Flowable<CPSResponse<GoodsDetailBean>> goodsDetail(String userId, String goodsId);
 
@@ -112,5 +114,7 @@ public interface HttpHelper {
     Flowable<CPSResponse> fetchCancelOrder(String orderId);
 
     Flowable<CPSResponse> fetchDelCollection(String orderId);
+
+    Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId,int page);
 
 }

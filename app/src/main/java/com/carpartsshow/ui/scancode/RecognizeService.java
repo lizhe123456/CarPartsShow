@@ -119,7 +119,6 @@ public class RecognizeService {
                 }
                 listener.onResult(result.getJsonRes());
             }
-
             @Override
             public void onError(OCRError error) {
                 listener.onResult(error.getMessage());

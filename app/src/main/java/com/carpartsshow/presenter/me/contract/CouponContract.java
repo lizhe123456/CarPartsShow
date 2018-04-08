@@ -15,10 +15,14 @@ public interface CouponContract {
         void showContent(List<CouponBean> couponBean);
 
         void loadMore(List<CouponBean> couponBean);
+
+
     }
 
     interface Presenter extends BasePresenter<View> {
         void getCoupon(String userId,int type);
+
+
     }
 
 }

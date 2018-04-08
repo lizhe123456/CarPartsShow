@@ -29,6 +29,16 @@ public class OrderBean implements Serializable {
     private List<ListReceiptAddressBean> ListReceiptAddress;
     private List<GoodsBean> ListGoods;
     private List<String> listProductAttrId;
+    private List<Warehouse> warehouses;
+
+
+    public List<Warehouse> getWarehouses() {
+        return warehouses;
+    }
+
+    public void setWarehouses(List<Warehouse> warehouses) {
+        this.warehouses = warehouses;
+    }
 
     public Object getCoupon() {
         return Coupon;
@@ -580,6 +590,43 @@ public class OrderBean implements Serializable {
 
         public void setGoods_Type(int Goods_Type) {
             this.Goods_Type = Goods_Type;
+        }
+    }
+
+    public static class Warehouse{
+
+        /**
+         * Id : 18
+         * Code : 10006
+         * Name : 常州中天凤凰仓库
+         */
+
+        private int Id;
+        private String Code;
+        private String Name;
+
+        public int getId() {
+            return Id;
+        }
+
+        public void setId(int Id) {
+            this.Id = Id;
+        }
+
+        public String getCode() {
+            return Code;
+        }
+
+        public void setCode(String Code) {
+            this.Code = Code;
+        }
+
+        public String getName() {
+            return Name;
+        }
+
+        public void setName(String Name) {
+            this.Name = Name;
         }
     }
 }

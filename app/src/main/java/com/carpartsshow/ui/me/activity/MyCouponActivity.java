@@ -22,6 +22,7 @@ import com.carpartsshow.presenter.me.CouponPresenter;
 import com.carpartsshow.presenter.me.contract.CouponContract;
 import com.carpartsshow.ui.me.adapter.CouponAdapter;
 import com.carpartsshow.util.SpUtil;
+import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -137,6 +138,8 @@ public class MyCouponActivity extends MvpActivity<CouponPresenter> implements Co
         mAdapter.addMoreDataSet(couponBean);
         refresh.finishLoadmore();
     }
+
+
 
 
     @OnClick(R.id.iv_back)

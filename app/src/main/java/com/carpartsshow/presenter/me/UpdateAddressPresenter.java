@@ -26,6 +26,7 @@ public class UpdateAddressPresenter extends BasePresenterImpl<UpdateAddressContr
 
     @Override
     public void updateAddress(String userId, String provice, String city, String region, String detailAddress) {
+        mView.loading("保存中..");
         Map<String,Object> map = new HashMap<>();
         map.put("RepairUser_ID",userId);
         map.put("RepairUser_Provice",provice);
@@ -39,7 +40,7 @@ public class UpdateAddressPresenter extends BasePresenterImpl<UpdateAddressContr
                     @Override
                     public void onNext(CPSResponse cpsResponse) {
                         super.onNext(cpsResponse);
-                        mView.state();
+                        mView.state(cpsResponse.getMessage());
                     }
                 })
         );
@@ -81,6 +82,7 @@ public class UpdateAddressPresenter extends BasePresenterImpl<UpdateAddressContr
 
     @Override
     public void getAreaList() {
+        mView.loading("加载中..");
         addSubscribe(dataManager.fetchAddressInfo()
                         .compose(RxUtil.<CPSResponse<AddressBean>>rxSchedulerHelper())
                         .compose(RxUtil.<AddressBean>handle())

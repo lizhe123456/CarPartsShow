@@ -1,5 +1,7 @@
 package com.carpartsshow.ui.home.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -101,6 +103,12 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     public boolean isBrandShow;
     public boolean isCarShow;
 
+
+    public static void start(Context context,String searchValue) {
+        Intent starter = new Intent(context, GoodsSearchActivity.class);
+        starter.putExtra("searchValue",searchValue);
+        context.startActivity(starter);
+    }
     @Override
     protected int setLayout() {
         return R.layout.activity_goods_search;

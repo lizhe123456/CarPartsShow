@@ -25,6 +25,7 @@ public class MePresenter extends BasePresenterImpl<MeContract.View> implements M
 
     @Override
     public void getUserInfo(String userId) {
+        mView.loading("加载中..");
         addSubscribe(dataManager.fetchGetUserInfo(userId)
                 .compose(RxUtil.<CPSResponse<UserInfoBean>>rxSchedulerHelper())
                 .compose(RxUtil.<UserInfoBean>handle())

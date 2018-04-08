@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.app.App;
 import com.carpartsshow.base.MvpFragment;
+import com.carpartsshow.eventbus.HomePageBean;
 import com.carpartsshow.model.http.bean.ClassificationBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.model.http.bean.GoodsListBean;
@@ -21,6 +22,10 @@ import com.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.carpartsshow.util.SpUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -67,12 +72,14 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     @Override
     protected void initInject() {
         getFragmentComponent().inject(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void setData() {
         LoginBean loginBean = SpUtil.getObject(getContext(), "user");
         mPresenter.getClassification(loginBean.getRepairUser_ID(),0);
+//        page = getArguments().getInt("page");
     }
 
 
@@ -211,5 +218,32 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
             return fragments.size();
         }
 
+    }
+
+    @Subscribe
+    public void selectFragment(HomePageBean homePageBean){
+        switch (homePageBean.getPage()){
+            case 1 :
+                selectedModels();
+                page = 0;
+                viewPager.setCurrentItem(0);
+                break;
+            case 2 :
+                selectedClassify();
+                page = 1;
+                viewPager.setCurrentItem(1);
+                break;
+            case 3 :
+                page = 2;
+                selectedBrand();
+                viewPager.setCurrentItem(2);
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

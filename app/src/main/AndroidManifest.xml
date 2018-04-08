@@ -96,6 +96,8 @@
             android:launchMode="singleTop"/>
         <activity android:name=".ui.scancode.activity.ScanCodeActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.home.activity.TimelimitActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

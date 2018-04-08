@@ -1,5 +1,6 @@
 package com.carpartsshow.model.http;
 
+import com.carpartsshow.app.App;
 import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CarFilterBean;
@@ -19,9 +20,12 @@ import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
+import com.carpartsshow.util.SpUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +116,8 @@ public class HttpHelperImpl implements HttpHelper{
 
     @Override
     public Flowable<CPSResponse<IntergralShopBean>> fetchSplitShopIndex(String searchValue, int page, int size) {
-        return cpsApi.splitShopIndex(searchValue, page, size);
+        LoginBean loginBean = SpUtil.getObject(App.getInstance().getmContext(),"user");
+        return cpsApi.splitShopIndex(loginBean.getRepairUser_ID(),searchValue, page, size);
     }
 
     @Override
@@ -155,7 +160,7 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
-    public Flowable<CPSResponse> seckillGoodsDetail(String userId, String seckillId) {
+    public Flowable<CPSResponse<SeckillGoodsDetail>> seckillGoodsDetail(String userId, String seckillId) {
         return cpsApi.seckillGoodsDetail(userId, seckillId);
     }
 
@@ -241,7 +246,13 @@ public class HttpHelperImpl implements HttpHelper{
 
     @Override
     public Flowable<CPSResponse> fetchDelCollection(String orderId) {
-        return cpsApi.delCollection(orderId);
+        LoginBean loginBean = SpUtil.getObject(App.getInstance().getmContext(),"user");
+        return cpsApi.delCollection(loginBean.getRepairUser_ID(),orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId, int page) {
+        return cpsApi.listSplitSeckillGoods(userId, page);
     }
 
 }

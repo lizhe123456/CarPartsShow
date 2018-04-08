@@ -2,6 +2,7 @@ package com.carpartsshow.ui.shopping.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
@@ -36,6 +39,7 @@ import com.carpartsshow.widgets.CPSToast;
 import com.carpartsshow.widgets.CurrencyDialog;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -83,6 +87,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     CurrencyDialog currencyDialog;
     OrderBean.ListReceiptAddressBean addressBean;
     OrderBean orderBean;
+    private String warehouseCode;
 
     public static void start(Context context, String json,int type) {
         Intent starter = new Intent(context, ConfirmOrderActivity.class);
@@ -295,7 +300,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     }
 
 
-    @OnClick({R.id.iv_back, R.id.select_coupon,R.id.tv_pay})
+    @OnClick({R.id.iv_back, R.id.select_coupon,R.id.tv_pay,R.id.warehouse})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -315,6 +320,9 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                                 //提交订单
                                 if (!TextUtils.isEmpty(etDesc.getText().toString())) {
                                     map.put("Order_Remark", etDesc.getText().toString());
+                                }
+                                if (!TextUtils.isEmpty(warehouseCode)){
+                                    map.put("WarehouseCode",warehouseCode);
                                 }
                                 map.put("Order_PayType",type);
                                 if (type == 0){
@@ -352,9 +360,27 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 payDialog.select(0);
                 type = 0;
                 break;
+            case R.id.warehouse:
+                mPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                        warehouseCode = orderBean.getWarehouses().get(options1).getCode();
+                        mPickerView.dismiss();
+                    }
+                }).setTitleText("仓库选择")
+                        .setCyclic(false, false, false)
+                        .setDividerColor(R.color.tv_ccc)
+                        .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                        .setContentTextSize(20)
+                        .build();
+                mPickerView.setPicker(orderBean.getWarehouses());//三级选择器
+                mPickerView.show();
+                break;
         }
     }
 
+
+    private OptionsPickerView mPickerView;
     @Override
     public void stateError() {
 

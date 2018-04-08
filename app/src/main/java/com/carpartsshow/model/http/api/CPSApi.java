@@ -18,6 +18,8 @@ import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -99,7 +101,7 @@ public interface CPSApi {
 
     //积分商城首页
     @GET("/api/IntegerShop/Index")
-    Flowable<CPSResponse<IntergralShopBean>> splitShopIndex(@Query("SearchValue") String searchValue, @Query("PageIndex") int page, @Query("PageSize") int size);
+    Flowable<CPSResponse<IntergralShopBean>> splitShopIndex(@Query("RepairUser_ID") String userId,@Query("SearchValue") String searchValue, @Query("PageIndex") int page, @Query("PageSize") int size);
 
     //我的积分越换记录
     @GET("/api/IntegerShop/SplitExchangeRecord")
@@ -161,8 +163,8 @@ public interface CPSApi {
 
     //秒杀商品详情
     @GET("/api/Home/SeckillGoodsDetail")
-    Flowable<CPSResponse> seckillGoodsDetail(@Query("RepairUser_ID") String userId,
-                                             @Query("Seckill_ID") String seckillId);
+    Flowable<CPSResponse<SeckillGoodsDetail>> seckillGoodsDetail(@Query("RepairUser_ID") String userId,
+                                                                 @Query("Seckill_ID") String seckillId);
 
     //返回商品详情
     @GET("/api/Home/GoodsDetail")
@@ -213,7 +215,11 @@ public interface CPSApi {
     @GET("/api/User/CancelOrder")
     Flowable<CPSResponse> cancelOrder(@Query("Order_ID") String orderId);
 
-    @POST("/api/User/DelCollection")
-    Flowable<CPSResponse> delCollection(@Query("Cids") String cids);
+    @GET("/api/User/DelCollection")
+    Flowable<CPSResponse> delCollection(@Query("RepairUser_ID") String userId,@Query("Cids") String cids);
+
+    //秒杀商品
+    @GET("/api/Home/ListSplitSeckillGoods")
+    Flowable<CPSResponse<List<SeckillGoodsBean>>> listSplitSeckillGoods(@Query("RepairUser_ID") String userId,@Query("PageIndex") int page);
 
 }

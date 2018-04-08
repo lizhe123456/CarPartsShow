@@ -82,7 +82,7 @@ public class GoodsFragment extends MvpFragment<AddCarPresenter> implements AddCa
             @Override
             public void onClick(View view, Object item, int position) {
                 GoodsListBean.ListGoodsBean listGoodsBean = (GoodsListBean.ListGoodsBean) item;
-                GoodsDetailsActivity.newInstance(getContext(),listGoodsBean.getGoods_ID(),0);
+                GoodsDetailsActivity.newInstance(getContext(),listGoodsBean.getGoods_ID(),0,"");
             }
         });
     }

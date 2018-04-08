@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.presenter.home.GoodsDetailsPresenter;
 import com.carpartsshow.presenter.home.contract.GoodsDetailsContract;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
@@ -26,6 +29,7 @@ import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.tencent.smtt.sdk.WebView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,19 +51,29 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
 
     private String gid;
     private int goodsType;
+    private String url;
     private GoodsDetailBean goodsDetailBean;
     private LoginBean loginBean;
     private boolean isCollections;
     private View contentView;
+    private String sid;
+    private SeckillGoodsDetail seckillGoodsDetail;
 
-    public static void newInstance(Context context, String gid,int goodsType) {
+    public static void newInstance(Context context, String gid,int goodsType,String url) {
         Intent intent = new Intent();
         intent.putExtra("gid", gid);
         intent.putExtra("gType", goodsType);
+        intent.putExtra("url",url);
         intent.setClass(context, GoodsDetailsActivity.class);
         context.startActivity(intent);
     }
 
+    public static void newInstance(Context context, String sid) {
+        Intent intent = new Intent();
+        intent.putExtra("sid", sid);
+        intent.setClass(context, GoodsDetailsActivity.class);
+        context.startActivity(intent);
+    }
     @Override
     protected int setLayout() {
         return R.layout.activity_goods_details;
@@ -77,8 +91,16 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
         gid = getIntent().getStringExtra("gid");
         loginBean = SpUtil.getObject(this,"user");
         goodsType = getIntent().getIntExtra("gType",0);
+        sid = getIntent().getStringExtra("sid");
         LoginBean loginBean = SpUtil.getObject(this, "user");
-        mPresenter.getGoods(loginBean.getRepairUser_ID(), gid);
+        url = getIntent().getStringExtra("url");
+        if (!TextUtils.isEmpty(gid)){
+            mPresenter.getGoods(loginBean.getRepairUser_ID(), gid);
+        }else if (!TextUtils.isEmpty(sid)){
+            mPresenter.seckillGoodsDetail(loginBean.getRepairUser_ID(), sid);
+        } else {
+            wvX5.loadUrl(url);
+        }
         wvX5.setOnWebViewListener(new X5WebView.OnWebViewListener() {
             @Override
             public void onProgressChange(WebView view) {
@@ -115,10 +137,12 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
             case R.id.tv_collection:
                 //收藏
                 if (isCollections){
+                    String pids = goodsDetailBean.getVGoods().getGoods_ID() + "," + goodsDetailBean.getVGoods();
                     mPresenter.delCollections(goodsDetailBean.getVGoods().getGoods_ID());
                     isCollections = false;
                 }else {
-                    mPresenter.collections(loginBean.getRepairUser_ID(),goodsDetailBean.getVGoods().getGoods_ID());
+                    String pids = goodsDetailBean.getVGoods().getGoods_ID() + "," + goodsDetailBean.getVGoods();
+                    mPresenter.collections(loginBean.getRepairUser_ID(),pids);
                     isCollections = true;
                 }
 
@@ -172,6 +196,23 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
     public void showToOrder(OrderBean orderBean) {
         String json = new Gson().toJson(orderBean);
         ConfirmOrderActivity.start(this,json,0);
+    }
+
+    @Override
+    public void showSeckillGoods(SeckillGoodsDetail seckillGoodsDetail) {
+//        this.seckillGoodsDetail = seckillGoodsDetail;
+//        wvX5.loadUrl(seckillGoodsDetail.get());
+//        tvNum.setText(seckillGoodsDetail.getCarCount()+"");
+//        if (seckillGoodsDetail.isIsCollection()){
+//            Drawable nav_up = getResources().getDrawable(R.drawable.like_select);
+//            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+//            tvCollection.setCompoundDrawables(null, nav_up, null, null);
+//        }else {
+//            Drawable nav_up = getResources().getDrawable(R.drawable.like_normal);
+//            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+//            tvCollection.setCompoundDrawables(null, nav_up,null , null);
+//        }
+//        isCollections = seckillGoodsDetail.isIsCollection();
     }
 
     private void show(List<GoodsDetailBean.ListServicePhoneBean> list){

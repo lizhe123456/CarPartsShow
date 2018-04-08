@@ -22,6 +22,7 @@ import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.me.adapter.GoodsAdapter;
 import com.carpartsshow.util.SpUtil;
+import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -51,7 +52,7 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
     private String textMsg;
     private String userId;
     private String type;
-
+    private String value;
     public static void start(Context context) {
         Intent starter = new Intent(context, IntegralGoodsActivity.class);
         context.startActivity(starter);
@@ -89,7 +90,7 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     textMsg = etSearch.getText().toString().trim();
-                    mPresenter.getGoodsInfo(1,textMsg,userId,"");
+                    mPresenter.getGoodsInfo(1,textMsg,userId,type);
                     return true;
                 }
                 return false;
@@ -118,26 +119,12 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
                 }
             }
         });
-        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    if (TextUtils.isEmpty(type)){
-                        mPresenter.getGoodsInfo(2,etSearch.getText().toString().trim(),userId,"");
-                    }else {
-                        mPresenter.getGoodsInfo(2,etSearch.getText().toString().trim(),userId,type);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
 
         mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, Object item, int position) {
                 IntergralShopBean.IstIntegerGoods goods = (IntergralShopBean.IstIntegerGoods) item;
-                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this,goods.getIntegerGoods_ID(),2);
+                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this,"",2,goods.getUrl());
             }
         });
     }
@@ -160,11 +147,17 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
     public void showContent(List<IntergralShopBean.IstIntegerGoods> list) {
         mAdapter.addFirstDataSet(list);
         refresh.finishRefresh();
+        if (list.size() == 0){
+            CPSToast.showText(this,"暂无更多");
+        }
     }
 
     @Override
     public void loadMore(List<IntergralShopBean.IstIntegerGoods> list) {
         mAdapter.addMoreDataSet(list);
         refresh.finishLoadmore();
+        if (list.size() == 0){
+            CPSToast.showText(this,"暂无更多");
+        }
     }
 }

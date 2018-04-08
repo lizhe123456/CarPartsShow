@@ -20,6 +20,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -45,6 +48,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     private boolean isEdit;
     private boolean isAllSelect;
+    private LoginBean loginBean;
 
     @Override
     protected int setLayout() {
@@ -59,7 +63,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     protected void setData() {
-        final LoginBean loginBean = SpUtil.getObject(this,"user");
+        loginBean = SpUtil.getObject(this,"user");
         mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
         mAdapter = new CollectionAdapter(this);
         StaggeredGridLayoutManager linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
@@ -117,14 +121,44 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                     allSelect.setCompoundDrawablePadding(8);
                     isAllSelect = false;
                     mAdapter.allSelect(isAllSelect);
-
                 }
                 break;
             case R.id.tv_delete:
-                CPSToast.showText(this,"  ");
+                String pids = "";
+                List<CollectionBean.CollectionListProductBean> list = new ArrayList<>();
+                for (int i = 0; i < mAdapter.getDataSource().size(); i++) {
+                    if (mAdapter.getDataSource().get(i).isSelect()){
+                        list.add(mAdapter.getDataSource().get(i));
+                    }
+
+                }
+                for (CollectionBean.CollectionListProductBean coll : list) {
+                    if (list.size() == 1) {
+                        pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type();
+                    }else {
+                        pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type()+"|";
+                    }
+                }
+                mPresenter.delCollections(pids);
                 break;
             case R.id.tv_add:
-                CPSToast.showText(this,"  ");
+                //加入购物车
+                String cids = "";
+                List<CollectionBean.CollectionListProductBean> list1 = new ArrayList<>();
+                for (int i = 0; i < mAdapter.getDataSource().size(); i++) {
+                    if (mAdapter.getDataSource().get(i).isSelect()){
+                        list1.add(mAdapter.getDataSource().get(i));
+                    }
+
+                }
+                for (CollectionBean.CollectionListProductBean coll : list1) {
+                    if (list1.size() == 1) {
+                        cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type();
+                    }else {
+                        cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type()+"|";
+                    }
+                }
+                mPresenter.plus(loginBean.getRepairUser_ID(),cids,0);
                 break;
         }
     }
@@ -144,5 +178,11 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
     public void loadMore(CollectionBean couponBean) {
         refresh.finishLoadmore();
         mAdapter.addMoreDataSet(couponBean.getCollectionListProduct());
+    }
+
+    @Override
+    public void state(String msg) {
+        CPSToast.showText(this,msg);
+        mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
     }
 }

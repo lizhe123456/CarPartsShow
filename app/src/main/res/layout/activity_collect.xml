@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_title"
-        android:layout_marginBottom="@dimen/dm_50">
+        android:paddingBottom="@dimen/dm_50">
         <include layout="@layout/refresh_view_more"/>
     </LinearLayout>
     <LinearLayout

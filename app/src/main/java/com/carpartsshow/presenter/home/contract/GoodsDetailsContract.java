@@ -4,6 +4,7 @@ import com.carpartsshow.base.BasePresenter;
 import com.carpartsshow.base.BaseView;
 import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 
 /**
  * Created by lizhe on 2018/3/30.
@@ -17,6 +18,8 @@ public interface GoodsDetailsContract {
         void state(String msg);
 
         void showToOrder(OrderBean orderBean);
+
+        void showSeckillGoods(SeckillGoodsDetail seckillGoodsDetail);
 
     }
 
@@ -34,6 +37,9 @@ public interface GoodsDetailsContract {
 
         //加入购物车
         void plus(String userId,String productId,int productType);
+
+        //
+        void seckillGoodsDetail(String userId,String seckillId);
 
     }
 }

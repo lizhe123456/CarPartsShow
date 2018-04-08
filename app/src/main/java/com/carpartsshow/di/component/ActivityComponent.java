@@ -11,6 +11,7 @@ import com.carpartsshow.ui.classify.activity.CarBrandDetailsActivity;
 import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.home.activity.MessageRecordActivity;
+import com.carpartsshow.ui.home.activity.TimelimitActivity;
 import com.carpartsshow.ui.me.activity.AllOrderActivity;
 import com.carpartsshow.ui.me.activity.FeedbackActivity;
 import com.carpartsshow.ui.me.activity.IntegralGoodsActivity;
@@ -77,4 +78,6 @@ public interface ActivityComponent {
     void inject(ConfirmOrderActivity confirmOrderActivity);
 
     void inject(AllOrderActivity allOrderActivity);
+
+    void inject(TimelimitActivity timelimitActivity);
 }

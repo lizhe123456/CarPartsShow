@@ -1,6 +1,8 @@
 package com.carpartsshow.ui.me.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,11 +12,15 @@ import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.base.adapter.BaseViewHolder;
 import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.presenter.me.UpdateAddressPresenter;
 import com.carpartsshow.presenter.me.contract.UpdateAddressContract;
 import com.carpartsshow.ui.me.adapter.bean.CityBean;
 import com.carpartsshow.util.SpUtil;
+import com.carpartsshow.view.AddressDialog;
 import com.carpartsshow.view.ZlCustomDialog;
+import com.carpartsshow.widgets.CPSToast;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -35,14 +41,16 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     EditText tvAdd;
     List<CityBean> list;
 
-    String p;
-    String c;
-    String a;
     String add;
     //省编码
     String pCode;
     //市编码
     String cCode;
+    String aCode;
+
+    private boolean isFrist = true;
+    private boolean isRun = false;
+    private UserInfoBean.CurrentRepairUserBean currentRepairUser;
 
     @Override
     protected int setLayout() {
@@ -57,16 +65,15 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
 
     @Override
     protected void setData() {
-        LoginBean loginBean = SpUtil.getObject(this,"user");
-
-        p = loginBean.getRepairUser_Provice();
-        c = loginBean.getRepairUser_City();
-        a = loginBean.getRepairUser_Region();
-        add = loginBean.getRepairUser_DetailAddress();
-        tvAddS.setText(p);
-        tvAddA.setText(a);
-        tvAddC.setText(c);
+        currentRepairUser = (UserInfoBean.CurrentRepairUserBean) getIntent().getSerializableExtra("userInfo");
+        pCode = currentRepairUser.getRepairUser_Provice();
+        cCode = currentRepairUser.getRepairUser_City();
+        aCode = currentRepairUser.getRepairUser_Region();
+        add = currentRepairUser.getRepairUser_DetailAddress();
+        mPresenter.getAreaList();
+        isRun = true;
         tvAdd.setText(add);
+        tvAdd.setSelection(add.length());
     }
 
 
@@ -79,6 +86,13 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                 this.finish();
                 break;
             case R.id.tv_save:
+                LoginBean loginBean = SpUtil.getObject(this,"user");
+                String address = tvAdd.getText().toString().trim();
+                if (TextUtils.isEmpty(address)){
+                    CPSToast.showText(this,"详细地址不能为空");
+                }else {
+                    mPresenter.updateAddress(loginBean.getRepairUser_ID(), pCode, cCode, aCode,address);
+                }
                 break;
             case R.id.tv_add_s:
                 mPresenter.getAreaList();
@@ -88,7 +102,6 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                 break;
             case R.id.tv_add_a:
                 mPresenter.getAreaList(cCode,2);
-                ZlCustomDialog dialog2 = new ZlCustomDialog(this);
                 break;
         }
 
@@ -100,8 +113,10 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     }
 
     @Override
-    public void state() {
-
+    public void state(String msg) {
+        CPSToast.showText(this,msg);
+        setResult(2);
+        finish();
     }
 
     @Override
@@ -111,30 +126,130 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     }
 
     @Override
-    public void setP(List<AddressBean.ResultdataBean> addressBean) {
-        for (int i = 0; i < addressBean.size(); i++) {
-            if (p.equals(addressBean.get(i).getAreaName())){
-                addressBean.get(i).setSelect(true);
-                break;
+    public void setP(final List<AddressBean.ResultdataBean> addressBean) {
+        if (isFrist) {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (addressBean.get(i).getAreaId().equals(pCode)) {
+                    tvAddS.setText(addressBean.get(i).getAreaName());
+                    pCode = addressBean.get(i).getAreaId();
+                    mPresenter.getAreaList(pCode,1);
+                }
             }
+        }else {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (pCode.equals(addressBean.get(i).getAreaId())) {
+                    addressBean.get(i).setSelect(true);
+                    break;
+                }
+            }
+            final AddressDialog dialog = new AddressDialog(this);
+            final ListAdapter listAdapter = new ListAdapter(this);
+            dialog.show(listAdapter, addressBean);
+            listAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+                @Override
+                public void onClick(View view, Object item, int position) {
+                    for (int i = 0; i < addressBean.size(); i++) {
+                        addressBean.get(i).setSelect(false);
+                    }
+                    addressBean.get(position).setSelect(true);
+                    listAdapter.addFirstDataSet(addressBean);
+                    AddressBean.ResultdataBean resultdataBean = (AddressBean.ResultdataBean) item;
+                    tvAddS.setText(resultdataBean.getAreaName());
+                    mPresenter.getAreaList(resultdataBean.getAreaId(),1);
+                    loading("加载中..");
+                    isRun = true;
+                    pCode = resultdataBean.getAreaId();
+                    dialog.dismiss();
+                }
+            });
         }
-        ZlCustomDialog dialog = new ZlCustomDialog(this);
-        ListAdapter listAdapter = new ListAdapter(this);
-        dialog.show(listAdapter,addressBean);
     }
 
     @Override
-    public void setC(List<AddressBean.ResultdataBean> addressBean) {
-        ZlCustomDialog dialog = new ZlCustomDialog(this);
-        ListAdapter listAdapter = new ListAdapter(this);
-        dialog.show(listAdapter,addressBean);
+    public void setC(final List<AddressBean.ResultdataBean> addressBean) {
+        if (isFrist) {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (addressBean.get(i).getAreaId().equals(cCode)) {
+                    tvAddC.setText(addressBean.get(i).getAreaName());
+                    cCode = addressBean.get(i).getAreaId();
+                    mPresenter.getAreaList(cCode,2);
+                }
+            }
+        }else if (isRun){
+            tvAddC.setText(addressBean.get(0).getAreaName());
+            mPresenter.getAreaList(addressBean.get(0).getAreaId(),2);
+            cCode = addressBean.get(0).getAreaId();
+            loading("加载中");
+        } else {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (cCode.equals(addressBean.get(i).getAreaId())) {
+                    addressBean.get(i).setSelect(true);
+                    break;
+                }
+            }
+            final AddressDialog dialog = new AddressDialog(this);
+            final ListAdapter listAdapter = new ListAdapter(this);
+            dialog.show(listAdapter, addressBean);
+            listAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+                @Override
+                public void onClick(View view, Object item, int position) {
+                    for (int i = 0; i < addressBean.size(); i++) {
+                        addressBean.get(i).setSelect(false);
+                    }
+                    addressBean.get(position).setSelect(true);
+                    listAdapter.addFirstDataSet(addressBean);
+                    AddressBean.ResultdataBean resultdataBean = (AddressBean.ResultdataBean) item;
+                    tvAddC.setText(resultdataBean.getAreaName());
+                    mPresenter.getAreaList(resultdataBean.getAreaId(),2);
+                    isRun = true;
+                    cCode = resultdataBean.getAreaId();
+                    loading("加载中");
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
     @Override
-    public void setA(List<AddressBean.ResultdataBean> addressBean) {
-        ZlCustomDialog dialog = new ZlCustomDialog(this);
-        ListAdapter listAdapter = new ListAdapter(this);
-        dialog.show(listAdapter,addressBean);
+    public void setA(final List<AddressBean.ResultdataBean> addressBean) {
+        if (isFrist) {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (addressBean.get(i).getAreaId().equals(aCode)) {
+                    tvAddA.setText(addressBean.get(i).getAreaName());
+                    aCode = addressBean.get(i).getAreaId();
+                    isFrist = false;
+                }
+            }
+        }else if (isRun){
+            tvAddA.setText(addressBean.get(0).getAreaName());
+            aCode = addressBean.get(0).getAreaId();
+            unLoading();
+            isRun = false;
+        }else {
+            for (int i = 0; i < addressBean.size(); i++) {
+                if (aCode.equals(addressBean.get(i).getAreaId())) {
+                    addressBean.get(i).setSelect(true);
+                    break;
+                }
+            }
+            final AddressDialog dialog = new AddressDialog(this);
+            final ListAdapter listAdapter = new ListAdapter(this);
+            dialog.show(listAdapter, addressBean);
+            listAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+                @Override
+                public void onClick(View view, Object item, int position) {
+                    for (int i = 0; i < addressBean.size(); i++) {
+                        addressBean.get(i).setSelect(false);
+                    }
+                    addressBean.get(position).setSelect(true);
+                    listAdapter.addFirstDataSet(addressBean);
+                    AddressBean.ResultdataBean resultdataBean = (AddressBean.ResultdataBean) item;
+                    tvAddA.setText(resultdataBean.getAreaName());
+                    aCode = resultdataBean.getAreaId();
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
 

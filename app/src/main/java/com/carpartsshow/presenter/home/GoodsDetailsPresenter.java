@@ -5,6 +5,7 @@ import com.carpartsshow.base.CommonSubscriber;
 import com.carpartsshow.model.DataManager;
 import com.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.carpartsshow.model.http.bean.OrderBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.home.contract.GoodsDetailsContract;
 import com.carpartsshow.util.RxUtil;
@@ -56,6 +57,21 @@ public class GoodsDetailsPresenter extends BasePresenterImpl<GoodsDetailsContrac
                     public void onNext(CPSResponse cpsResponse) {
                         super.onNext(cpsResponse);
                         mView.state(cpsResponse.getMessage());
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void seckillGoodsDetail(String userId, String seckillId) {
+        addSubscribe(dataManager.seckillGoodsDetail(userId, seckillId)
+                .compose(RxUtil.<CPSResponse<SeckillGoodsDetail>>rxSchedulerHelper())
+                .compose(RxUtil.<SeckillGoodsDetail>handle())
+                .subscribeWith(new CommonSubscriber<SeckillGoodsDetail>(mView){
+                    @Override
+                    public void onNext(SeckillGoodsDetail seckillGoodsDetail) {
+                        super.onNext(seckillGoodsDetail);
+                        mView.showSeckillGoods(seckillGoodsDetail);
                     }
                 })
         );

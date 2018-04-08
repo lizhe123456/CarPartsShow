@@ -19,15 +19,10 @@ import com.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
-import com.carpartsshow.util.JsonUtil;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -150,15 +145,9 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
                 break;
             case R.id.tv_collection:
                 String pis = "";
-                int num1 = 0;
                 for (ShopCarBean.ListCarProductBean listCarProductBean:mAdapter.getDataSource()) {
                     if (listCarProductBean.isSelected()){
-                        if (num1 == 0) {
-                            pis += listCarProductBean.getProduct_ID();
-                        }else {
-                            pis += "," + listCarProductBean.getProduct_ID();
-                        }
-                        num1++;
+                        pis += listCarProductBean.getProduct_ID()+","+listCarProductBean.getProduct_Type()+"|";
                     }
                 }
                 if (!TextUtils.isEmpty(pis)){

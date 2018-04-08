@@ -20,6 +20,8 @@ import com.carpartsshow.model.http.bean.NewTypeBean;
 import com.carpartsshow.model.http.bean.NewsListBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsBean;
+import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
@@ -155,7 +157,7 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse> seckillGoodsDetail(String userId, String seckillId) {
+    public Flowable<CPSResponse<SeckillGoodsDetail>> seckillGoodsDetail(String userId, String seckillId) {
         return httpHelper.seckillGoodsDetail(userId, seckillId);
     }
 
@@ -242,5 +244,10 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse> fetchDelCollection(String orderId) {
         return httpHelper.fetchDelCollection(orderId);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId, int page) {
+        return httpHelper.fetchListSplitSeckillGoods(userId, page);
     }
 }

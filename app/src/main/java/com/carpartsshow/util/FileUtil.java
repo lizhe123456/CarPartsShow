@@ -29,6 +29,11 @@ public class FileUtil {
         }).start();
     }
 
+    public static File getSaveFile(Context context) {
+        File file = new File(context.getFilesDir(), "pic.jpg");
+        return file;
+    }
+
     /**
      * 往文件写错误信息
      * @param filePath

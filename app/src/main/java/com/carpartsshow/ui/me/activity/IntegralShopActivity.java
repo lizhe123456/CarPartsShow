@@ -1,5 +1,6 @@
 package com.carpartsshow.ui.me.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,11 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
     SmartRefreshLayout refresh;
 
     private IntegralShopAdapter mAdapter;
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, IntegralShopActivity.class);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int setLayout() {

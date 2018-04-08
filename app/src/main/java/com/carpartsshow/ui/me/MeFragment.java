@@ -213,8 +213,9 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_gongsi:
-                intent.setClass(getContext(), UpdateAddressActivity.class);
-                startActivity(intent);
+                Intent starter = new Intent(getContext(), UpdateAddressActivity.class);
+                starter.putExtra("userInfo",userInfoBean.getCurrentRepairUser());
+                startActivityForResult(starter,1);
                 break;
             case R.id.money:
                 //信用使用记录
@@ -270,4 +271,9 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.getUserInfo(userId);
+    }
 }

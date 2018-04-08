@@ -29,7 +29,12 @@ public class HomeCategoryAdapter extends BaseAdapter<HomePageBean.ListFirstCateg
         params.width = width;//设置当前控件布局的高度
         linearLayout.setLayoutParams(params);//将设置好的布局参数应用到控件中
         holder.setText(R.id.tv_categorg_name,item.getName());
-        holder.setGlieuImage(R.id.iv_img,item.getCategory_ImgPath());
+        if (item.getResId() == 0){
+            holder.setGlieuImage(R.id.iv_img,item.getCategory_ImgPath());
+        }else {
+            holder.setImageResource(R.id.iv_img,item.getResId());
+        }
+
     }
 
     @Override

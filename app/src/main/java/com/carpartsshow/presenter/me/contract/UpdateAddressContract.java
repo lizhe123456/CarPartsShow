@@ -13,7 +13,7 @@ import java.util.List;
 public interface UpdateAddressContract {
 
     interface View extends BaseView{
-        void state();
+        void state(String msg);
 
         void showAddress(List<AddressBean.ResultdataBean> addressBean);
 

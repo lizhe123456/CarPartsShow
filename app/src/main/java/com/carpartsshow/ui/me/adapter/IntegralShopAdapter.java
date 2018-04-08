@@ -73,7 +73,7 @@ public class IntegralShopAdapter extends BaseAdapter<IntergralShopBean> {
                 @Override
                 public void onClick(View view, Object item, int position) {
                     IntergralShopBean.IstIntegerGoods intergralShopBean = (IntergralShopBean.IstIntegerGoods) item;
-                    GoodsDetailsActivity.newInstance(getContext(),intergralShopBean.getIntegerGoods_ID(),2);
+                    GoodsDetailsActivity.newInstance(getContext(),"",2,intergralShopBean.getUrl());
                 }
             });
         }

@@ -213,6 +213,15 @@ public class IntergralShopBean implements Serializable{
         private boolean IntegerGoods_IsOn;
         private String Company_ID;
         private String Floor_ID;
+        private String Url;
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
 
         public String getIntegerGoods_ID() {
             return IntegerGoods_ID;

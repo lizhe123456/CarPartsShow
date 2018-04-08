@@ -26,17 +26,42 @@
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
                 android:scrollbars="none" />
+
             <LinearLayout
                 android:id="@+id/ll_money"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
                 <RelativeLayout
+                    android:id="@+id/rl_warehouse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:padding="@dimen/dm_15">
+                    <TextView
+                        android:id="@+id/warehouse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="请选择仓库"
+                        android:textColor="@color/tv_000"
+                        android:textSize="@dimen/dm_15" />
+
+                    <TextView
+                        android:id="@+id/select_warehouse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:drawablePadding="@dimen/dm_5"
+                        android:drawableRight="@drawable/address_more"
+                        android:textColor="@color/tv_999"
+                        android:textSize="@dimen/dm_15" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/dm_15"
+                    android:layout_marginTop="@dimen/dm_10">
 
                     <TextView
                         android:id="@+id/coupon"

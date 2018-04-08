@@ -8,6 +8,9 @@ import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.me.contract.CollectionContract;
 import com.carpartsshow.util.RxUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 /**
@@ -42,6 +45,40 @@ public class CollectionPresenter extends BasePresenterImpl<CollectionContract.Vi
                             mView.loadMore(collectionBean);
                         }
                         page++;
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void delCollections(String cids) {
+        addSubscribe(dataManager.fetchDelCollection(cids)
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.state(cpsResponse.getMessage());
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void plus(String userId, String productId, int productType) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("Product_ID",productId);
+        map.put("Product_Type",productType);
+        map.put("RepairUser_ID",userId);
+        addSubscribe(dataManager.fetchAddCar(map)
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.state(cpsResponse.getMessage());
                     }
                 })
         );

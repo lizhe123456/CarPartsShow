@@ -18,9 +18,17 @@ public interface CollectionContract {
         void showData(CollectionBean collectionBean);
 
         void loadMore(CollectionBean couponBean);
+
+        void state(String msg);
     }
 
     interface Presenter extends BasePresenter<View> {
         void getCollectionList(String userId, int type);
+
+        //取消收藏
+        void delCollections(String cids);
+
+        //加入购物车
+        void plus(String userId,String productId,int productType);
     }
 }

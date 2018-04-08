@@ -26,7 +26,7 @@ public class HomePageBean implements Serializable {
     private List<ListFirstCategoryBean> ListFirstCategory;
     private List<ListSeckillGoodsBean> ListSeckillGoods;
     private List<ListCradBean> ListCrad;
-    private List<?> ListCardImg;
+    private List<ListCardImg> ListCardImg;
     private List<ListDateItemBean> ListDateItem;
     private List<SpecialOfferBean> specialOfferBeans;
     private TimeLimit timeLimit;
@@ -120,11 +120,11 @@ public class HomePageBean implements Serializable {
         this.ListCrad = ListCrad;
     }
 
-    public List<?> getListCardImg() {
+    public List<ListCardImg> getListCardImg() {
         return ListCardImg;
     }
 
-    public void setListCardImg(List<?> ListCardImg) {
+    public void setListCardImg(List<ListCardImg> ListCardImg) {
         this.ListCardImg = ListCardImg;
     }
 
@@ -327,6 +327,15 @@ public class HomePageBean implements Serializable {
         private String Banner_WxAppImgPath;
         private String Banner_PcLikUrl;
         private int Banner_Sort;
+        private String Url;
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
 
         public String getBanner_ID() {
             return Banner_ID;
@@ -489,6 +498,15 @@ public class HomePageBean implements Serializable {
         private String Notice_Content;
         private int Notice_Sort;
         private String Category;
+        private String Url;
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
 
         public String getNotice_ID() {
             return Notice_ID;
@@ -619,6 +637,28 @@ public class HomePageBean implements Serializable {
         private String Category_ChooseOn;
         private String Category_ChooseOff;
         private String Category_FirstImgPath;
+        private int resId;
+
+        public ListFirstCategoryBean(int resId, String resName) {
+            this.resId = resId;
+            this.Name = resName;
+        }
+
+        public boolean isGoodsCategory() {
+            return IsGoodsCategory;
+        }
+
+        public void setGoodsCategory(boolean goodsCategory) {
+            IsGoodsCategory = goodsCategory;
+        }
+
+        public int getResId() {
+            return resId;
+        }
+
+        public void setResId(int resId) {
+            this.resId = resId;
+        }
 
         public int getID() {
             return ID;
@@ -805,6 +845,16 @@ public class HomePageBean implements Serializable {
         private boolean Seckill_IsOn;
         private String Company_ID;
         private String Card_ID;
+        private String Url;
+
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
 
         public String getSeckill_ID() {
             return Seckill_ID;
@@ -1230,6 +1280,63 @@ public class HomePageBean implements Serializable {
 
         public void setModifyUserName(String ModifyUserName) {
             this.ModifyUserName = ModifyUserName;
+        }
+    }
+
+    public static class ListCardImg{
+
+        /**
+         * Id : beda5b42-b44c-402c-a683-ac71d567ca23
+         * Title : 火花塞
+         * ImgUrl : http://zpk.jscxqp.com//Resource/PhotoFile/fc271b35-5de8-4537-8363-13a78391d69f.jpg
+         * Search : 火花塞
+         * Sort : 2
+         */
+
+        private String Id;
+        private String Title;
+        private String ImgUrl;
+        private String Search;
+        private int Sort;
+
+        public String getId() {
+            return Id;
+        }
+
+        public void setId(String Id) {
+            this.Id = Id;
+        }
+
+        public String getTitle() {
+            return Title;
+        }
+
+        public void setTitle(String Title) {
+            this.Title = Title;
+        }
+
+        public String getImgUrl() {
+            return ImgUrl;
+        }
+
+        public void setImgUrl(String ImgUrl) {
+            this.ImgUrl = ImgUrl;
+        }
+
+        public String getSearch() {
+            return Search;
+        }
+
+        public void setSearch(String Search) {
+            this.Search = Search;
+        }
+
+        public int getSort() {
+            return Sort;
+        }
+
+        public void setSort(int Sort) {
+            this.Sort = Sort;
         }
     }
 }

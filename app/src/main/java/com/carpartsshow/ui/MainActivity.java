@@ -1,21 +1,31 @@
 package com.carpartsshow.ui;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
+import com.carpartsshow.eventbus.HomePageBean;
 import com.carpartsshow.ui.classify.ClassifyFragment;
 import com.carpartsshow.ui.home.HomeFragment;
 import com.carpartsshow.ui.me.MeFragment;
 import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -56,8 +66,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setImmersionStateMode(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected void init() {
         fragmentManager = getSupportFragmentManager();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -91,6 +108,27 @@ public class MainActivity extends BaseActivity {
         }
         selectNavigation();
         setContentFragment(tag);
+    }
+
+    @Subscribe
+    public void selectFragment(HomePageBean homePageBean){
+        switch (homePageBean.getPage()){
+            case 1 :
+                tag = CLASSIFY;
+                selectNavigation();
+                setContentFragment(tag);
+                break;
+            case 2 :
+                tag = CLASSIFY;
+                selectNavigation();
+                setContentFragment(tag);
+                break;
+            case 3 :
+                tag = CLASSIFY;
+                selectNavigation();
+                setContentFragment(tag);
+                break;
+        }
     }
 
     //通过转入参数改变navigation颜色
@@ -183,4 +221,32 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 兼容状态栏透明（沉浸式）
+     * @param activity
+     */
+    public static void setImmersionStateMode(Activity activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT != Build.VERSION_CODES.LOLLIPOP) {
+            // 透明状态栏
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // 透明导航栏
+            // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    // | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+    }
 }
