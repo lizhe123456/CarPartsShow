@@ -1,5 +1,7 @@
 package com.carpartsshow.ui.me.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,6 +32,13 @@ public class CreditMoneyActivity extends BaseActivity {
     private List<View> mViewList;
     private List<String> mTitleList;
     private List<Fragment> fragments;
+    private int page;
+
+    public static void start(Context context,int page) {
+        Intent starter = new Intent(context, CreditMoneyActivity.class);
+        starter.putExtra("page",page);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int setLayout() {
@@ -47,6 +56,7 @@ public class CreditMoneyActivity extends BaseActivity {
     }
 
     private void initData() {
+        page = getIntent().getIntExtra("page",0);
         mViewList = new ArrayList<>();
         fragments = new ArrayList<>();
         fragments.add(new ConsumptionRecordFragment());
@@ -81,6 +91,7 @@ public class CreditMoneyActivity extends BaseActivity {
         tabLayout.setTabsFromPagerAdapter(mAdapter);//给Tabs设置适配器
 //        reflex(tabLayout);
         reduceMarginsInTabs(tabLayout,20);
+        viewPager.setCurrentItem(page);
     }
 
 

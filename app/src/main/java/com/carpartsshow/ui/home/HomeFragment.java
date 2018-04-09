@@ -21,6 +21,7 @@ import android.widget.ViewFlipper;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.base.adapter.BaseAdapter;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.HomePageBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.home.HomePagePresenter;
@@ -39,7 +40,10 @@ import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.CountdownTextView;
 import com.carpartsshow.widgets.GlideImageLoader;
+import com.carpartsshow.widgets.MyNestedScrollView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -86,7 +90,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @BindView(R.id.ll_notice)
     LinearLayout linearLayoutNotice;
     @BindView(R.id.nested_scroll_view)
-    NestedScrollView nestedScrollView;
+    MyNestedScrollView nestedScrollView;
     @BindView(R.id.rl_title)
     RelativeLayout rlTile;
     @BindView(R.id.ll_title)
@@ -111,7 +115,6 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     protected void setData() {
         loginBean = SpUtil.getObject(getContext(), "user");
-        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -129,14 +132,13 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvDataItem.setNestedScrollingEnabled(false);
         rvCradItem.setNestedScrollingEnabled(false);
         rvGoodsItem.setNestedScrollingEnabled(false);
-
-        nestedScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        nestedScrollView.addScrollViewListener(new MyNestedScrollView.ScrollViewListener() {
             @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY <= 0) {
+            public void onScrollChanged(MyNestedScrollView myNestedScrollView, int x, int y, int oldx, int oldy) {
+                if (y <= 0) {
                     rlTile.setBackgroundColor(Color.argb((int) 0, 0, 0, 0));//AGB由相关工具获得，或者美工提供
-                } else if (scrollY > 0 && scrollY <= 200) {
-                    float scale = (float) scrollY / 200;
+                } else if (y > 0 && y <= 200) {
+                    float scale = (float) y / 200;
                     float alpha = (255 * scale);
                     // 只是layout背景透明(仿知乎滑动效果)
                     rlTile.setBackgroundColor(Color.argb((int) alpha, 0, 0, 0));
@@ -145,11 +147,24 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                 }
             }
         });
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refresh.finishRefresh(3000);
+                mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
+            }
+        });
     }
 
     @Override
     public void stateError() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
     }
 
     @Override
@@ -182,6 +197,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             specialOfferBean.setCategory(homePageBean.getPoopNar().get(i).getCategory());
             specialOfferBean.setCompany_ID(homePageBean.getPoopNar().get(i).getCompany_ID());
             specialOfferBean.setUrl(homePageBean.getOfferNar().get(i).getBanner_WxLinkUrl());
+            specialOfferBean.setCarCount(homePageBean.getOfferNar().get(i).getCarCount());
+            specialOfferBean.setCollection(homePageBean.getOfferNar().get(i).isCollection());
             specialOfferBeans.add(specialOfferBean);
         }
 
@@ -194,6 +211,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             specialOfferBean.setCategory(homePageBean.getOfferNar().get(i).getCategory());
             specialOfferBean.setCompany_ID(homePageBean.getOfferNar().get(i).getCompany_ID());
             specialOfferBean.setUrl(homePageBean.getOfferNar().get(i).getBanner_WxLinkUrl());
+            specialOfferBean.setCarCount(homePageBean.getOfferNar().get(i).getCarCount());
+            specialOfferBean.setCollection(homePageBean.getOfferNar().get(i).isCollection());
             specialOfferBeans.add(specialOfferBean);
         }
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
@@ -207,7 +226,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             @Override
             public void onClick(View view, Object item, int position) {
                 HomePageBean.SpecialOfferBean listSeckillGoodsBean = (HomePageBean.SpecialOfferBean) item;
-                GoodsDetailsActivity.newInstance(getContext(), "", 0, listSeckillGoodsBean.getUrl());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(),listSeckillGoodsBean.isCollection(),listSeckillGoodsBean.getCarCount());
+                GoodsDetailsActivity.newInstance(getContext(), goodsDetailToBean);
             }
         });
     }
@@ -251,7 +271,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             @Override
             public void onClick(View view, Object item, int position) {
                 HomePageBean.ListSeckillGoodsBean listSeckillGoodsBean = (HomePageBean.ListSeckillGoodsBean) item;
-                GoodsDetailsActivity.newInstance(getContext(), "", 0, listSeckillGoodsBean.getUrl());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(),listSeckillGoodsBean.isCollection(),listSeckillGoodsBean.getCarCount());
+                GoodsDetailsActivity.newInstance(getContext(), goodsDetailToBean);
             }
         });
     }

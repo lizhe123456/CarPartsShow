@@ -16,6 +16,9 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.GoodsDetailBean;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
+import com.carpartsshow.model.http.bean.HomePageBean;
+import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
@@ -51,29 +54,35 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
 
     private String gid;
     private int goodsType;
-    private String url;
     private GoodsDetailBean goodsDetailBean;
     private LoginBean loginBean;
     private boolean isCollections;
     private View contentView;
-    private String sid;
-    private SeckillGoodsDetail seckillGoodsDetail;
+    private GoodsDetailToBean specialOfferBean;
+    private IntergralShopBean.IstIntegerGoods istIntegerGoods;
 
-    public static void newInstance(Context context, String gid,int goodsType,String url) {
+    public static void newInstance(Context context, String gid,int goodsType) {
         Intent intent = new Intent();
         intent.putExtra("gid", gid);
         intent.putExtra("gType", goodsType);
-        intent.putExtra("url",url);
         intent.setClass(context, GoodsDetailsActivity.class);
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context, String sid) {
+    public static void newInstance(Context context, GoodsDetailToBean goodsDetailToBean) {
         Intent intent = new Intent();
-        intent.putExtra("sid", sid);
+        intent.putExtra("goodsDetailToBean", goodsDetailToBean);
         intent.setClass(context, GoodsDetailsActivity.class);
         context.startActivity(intent);
     }
+    public static void newInstance(Context context, IntergralShopBean.IstIntegerGoods istIntegerGoods) {
+        Intent intent = new Intent();
+        intent.putExtra("istIntegerGoods", istIntegerGoods);
+        intent.setClass(context, GoodsDetailsActivity.class);
+        context.startActivity(intent);
+    }
+
+
     @Override
     protected int setLayout() {
         return R.layout.activity_goods_details;
@@ -91,16 +100,40 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
         gid = getIntent().getStringExtra("gid");
         loginBean = SpUtil.getObject(this,"user");
         goodsType = getIntent().getIntExtra("gType",0);
-        sid = getIntent().getStringExtra("sid");
         LoginBean loginBean = SpUtil.getObject(this, "user");
-        url = getIntent().getStringExtra("url");
+        specialOfferBean = (GoodsDetailToBean) getIntent().getSerializableExtra("goodsDetailToBean");
+        istIntegerGoods = (IntergralShopBean.IstIntegerGoods) getIntent().getSerializableExtra("istIntegerGoods");
         if (!TextUtils.isEmpty(gid)){
             mPresenter.getGoods(loginBean.getRepairUser_ID(), gid);
-        }else if (!TextUtils.isEmpty(sid)){
-            mPresenter.seckillGoodsDetail(loginBean.getRepairUser_ID(), sid);
-        } else {
-            wvX5.loadUrl(url);
+
+        }else if (specialOfferBean != null){
+            wvX5.loadUrl(specialOfferBean.getUrl());
+            tvNum.setText(specialOfferBean.getCount()+"");
+            if (specialOfferBean.isCollection()){
+                Drawable nav_up = getResources().getDrawable(R.drawable.like_select);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                tvCollection.setCompoundDrawables(null, nav_up, null, null);
+            }else {
+                Drawable nav_up = getResources().getDrawable(R.drawable.like_normal);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                tvCollection.setCompoundDrawables(null, nav_up,null , null);
+            }
+            isCollections = specialOfferBean.isCollection();
+        }else if (istIntegerGoods != null){
+            wvX5.loadUrl(istIntegerGoods.getUrl());
+            tvNum.setText(istIntegerGoods.getCarCount()+"");
+            if (istIntegerGoods.isCollection()){
+                Drawable nav_up = getResources().getDrawable(R.drawable.like_select);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                tvCollection.setCompoundDrawables(null, nav_up, null, null);
+            }else {
+                Drawable nav_up = getResources().getDrawable(R.drawable.like_normal);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                tvCollection.setCompoundDrawables(null, nav_up,null , null);
+            }
+            isCollections = istIntegerGoods.isCollection();
         }
+
         wvX5.setOnWebViewListener(new X5WebView.OnWebViewListener() {
             @Override
             public void onProgressChange(WebView view) {
@@ -132,28 +165,65 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                 break;
             case R.id.tv_service:
                 //客服
-                show(goodsDetailBean.getListServicePhone());
+                if (goodsDetailBean != null) {
+                    show(goodsDetailBean.getListServicePhone());
+                }
                 break;
             case R.id.tv_collection:
                 //收藏
-                if (isCollections){
-                    String pids = goodsDetailBean.getVGoods().getGoods_ID() + "," + goodsDetailBean.getVGoods();
-                    mPresenter.delCollections(goodsDetailBean.getVGoods().getGoods_ID());
-                    isCollections = false;
-                }else {
-                    String pids = goodsDetailBean.getVGoods().getGoods_ID() + "," + goodsDetailBean.getVGoods();
-                    mPresenter.collections(loginBean.getRepairUser_ID(),pids);
-                    isCollections = true;
-                }
+                if (goodsDetailBean != null) {
+                    String pids = goodsDetailBean.getVGoods().getGoods_ID()+",0"+"|";
+                    if (isCollections) {
+                        mPresenter.delCollections(pids);
+                        isCollections = false;
+                    } else {
+                        mPresenter.collections(loginBean.getRepairUser_ID(), pids);
+                        isCollections = true;
+                    }
 
+                }else if (specialOfferBean != null){
+                    String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
+                    String pids = pid[pid.length-1]+",0"+"|";
+                    if (isCollections) {
+                        mPresenter.delCollections(pids);
+                        isCollections = false;
+                    } else {
+                        mPresenter.collections(loginBean.getRepairUser_ID(),pids);
+                        isCollections = true;
+                    }
+                }else if (istIntegerGoods != null){
+                    if (isCollections){
+                        mPresenter.delCollections(istIntegerGoods.getIntegerGoods_ID()+",2|");
+                        isCollections = false;
+                    }else {
+                        mPresenter.collections(loginBean.getRepairUser_ID(),istIntegerGoods.getIntegerGoods_ID()+",2|");
+                        isCollections = true;
+                    }
+                }
                 break;
             case R.id.tv_pay:
                 //支付
-                mPresenter.generateOrder(loginBean.getRepairUser_ID(),goodsDetailBean.getVGoods().getGoods_ID()+",1|");
+                if (goodsDetailBean != null) {
+                    mPresenter.generateOrder(loginBean.getRepairUser_ID(), goodsDetailBean.getVGoods().getGoods_ID() + ",1|");
+                }else if (specialOfferBean != null){
+                    String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
+                    mPresenter.generateOrder(loginBean.getRepairUser_ID(), pid[pid.length-1] + ",1|");
+                }else if (istIntegerGoods != null){
+                    mPresenter.generateOrder(loginBean.getRepairUser_ID(), istIntegerGoods.getIntegerGoods_ID() + ",1|");
+                } else {
+
+                }
                 break;
             case R.id.tv_join_car:
                 //加入购物车
-                mPresenter.plus(loginBean.getRepairUser_ID(),goodsDetailBean.getVGoods().getGoods_ID(),goodsType);
+                if (goodsDetailBean != null) {
+                    mPresenter.plus(loginBean.getRepairUser_ID(), goodsDetailBean.getVGoods().getGoods_ID(), goodsType);
+                }else if (specialOfferBean != null){
+                    String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
+                    mPresenter.plus(loginBean.getRepairUser_ID(), pid[pid.length-1],0);
+                }else if (istIntegerGoods != null){
+                    mPresenter.plus(loginBean.getRepairUser_ID(), istIntegerGoods.getIntegerGoods_ID(),2);
+                }
                 break;
         }
     }
@@ -200,19 +270,6 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
 
     @Override
     public void showSeckillGoods(SeckillGoodsDetail seckillGoodsDetail) {
-//        this.seckillGoodsDetail = seckillGoodsDetail;
-//        wvX5.loadUrl(seckillGoodsDetail.get());
-//        tvNum.setText(seckillGoodsDetail.getCarCount()+"");
-//        if (seckillGoodsDetail.isIsCollection()){
-//            Drawable nav_up = getResources().getDrawable(R.drawable.like_select);
-//            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-//            tvCollection.setCompoundDrawables(null, nav_up, null, null);
-//        }else {
-//            Drawable nav_up = getResources().getDrawable(R.drawable.like_normal);
-//            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-//            tvCollection.setCompoundDrawables(null, nav_up,null , null);
-//        }
-//        isCollections = seckillGoodsDetail.isIsCollection();
     }
 
     private void show(List<GoodsDetailBean.ListServicePhoneBean> list){

@@ -52,6 +52,15 @@ public class LoginBean implements Serializable {
     private String RepairUser_Region;
     private String RepairUser_DetailAddress;
     private String RepairUser_CreditMoney;
+    private String RepairUser_CreditBeOverMoney;
+
+    public String getRepairUser_CreditBeOverMoney() {
+        return RepairUser_CreditBeOverMoney;
+    }
+
+    public void setRepairUser_CreditBeOverMoney(String repairUser_CreditBeOverMoney) {
+        RepairUser_CreditBeOverMoney = repairUser_CreditBeOverMoney;
+    }
 
     public String getRepairUser_CreditMoney() {
         return RepairUser_CreditMoney;

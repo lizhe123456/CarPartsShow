@@ -85,7 +85,7 @@ public class BrandFragment extends BaseFragment {
         Collections.sort(mListBrandBeans,new BrandComparator());
         listView.setAdapter(mAdapter);
         View view = new View(getContext());
-        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
+        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, DensityUtils.dip2px(getContext(),60)));
         listView.addFooterView(view);
         //设置右侧触摸监听
         rightSide.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {

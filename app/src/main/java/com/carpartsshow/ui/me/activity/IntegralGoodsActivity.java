@@ -14,6 +14,7 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.me.IntegralGoodsPresenter;
@@ -124,7 +125,9 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
             @Override
             public void onClick(View view, Object item, int position) {
                 IntergralShopBean.IstIntegerGoods goods = (IntergralShopBean.IstIntegerGoods) item;
-                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this,"",2,goods.getUrl());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(goods.getUrl(),goods.isCollection(),goods.getCarCount());
+                goodsDetailToBean.setType(1);
+                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this, goodsDetailToBean);
             }
         });
     }

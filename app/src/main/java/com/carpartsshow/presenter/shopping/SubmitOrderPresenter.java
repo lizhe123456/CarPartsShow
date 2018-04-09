@@ -6,9 +6,7 @@ import com.carpartsshow.model.DataManager;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.shopping.contract.SubmitOrderContract;
 import com.carpartsshow.util.RxUtil;
-
 import java.util.Map;
-
 import javax.inject.Inject;
 
 /**

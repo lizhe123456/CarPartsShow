@@ -16,6 +16,7 @@ import com.carpartsshow.ui.classify.adapter.CarBrandAdapterV2;
 import com.carpartsshow.ui.classify.adapter.CarBrandDetailsAdapter;
 import com.carpartsshow.ui.classify.adapter.brand.CarBrandComparator;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.carpartsshow.util.DensityUtils;
 import com.carpartsshow.util.PinyinUtils;
 import com.carpartsshow.view.SideBar;
 import com.carpartsshow.widgets.AnimatedExpandableListView;
@@ -123,7 +124,7 @@ public class CarBrandFragment extends BaseFragment {
         });
 
         View view = new View(getContext());
-        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
+        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, DensityUtils.dip2px(getContext(),60)));
         expandableListView.addFooterView(view);
     }
 

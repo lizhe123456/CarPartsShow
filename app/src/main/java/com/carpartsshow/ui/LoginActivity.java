@@ -1,5 +1,6 @@
 package com.carpartsshow.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,11 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     private String pass;
     private String mobile;
 
+    public static void start(Context context) {
+        Intent starter = new Intent(context, LoginActivity.class);
+        context.startActivity(starter);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -81,8 +87,10 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
 
     @Override
     protected void setData() {
-        pass = SpUtil.getString(this,"pass");
-        mobile = SpUtil.getString(this,"username");
+        if (SpUtil.getBoolean(this,"isRemember",false)) {
+            pass = SpUtil.getString(this,"pass");
+            mobile = SpUtil.getString(this,"username");
+        }
         if (!TextUtils.isEmpty(pass) && !TextUtils.isEmpty(mobile)){
             etPhone.setText(mobile);
             etPhone.setSelection(etPhone.getText().length());
@@ -126,10 +134,12 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
                 startActivity(intent1);
                 break;
             case R.id.switch_login_mode:
-                this.finish();
                 Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.setClass(this,FingerprintLoginActivity.class);
                 startActivity(intent);
+                this.finish();
+                overridePendingTransition(0, 0);
                 break;
             case R.id.tv_login:
                 pass = etPassword.getText().toString().trim();
@@ -167,9 +177,10 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     public void loginState(LoginBean loginBean) {
         if(isRemember){
-            SpUtil.putString(this,"username",mobile);
-            SpUtil.putString(this,"pass",pass);
+            SpUtil.putBoolean(this,"isRemember",true);
         }
+        SpUtil.putString(this,"username",mobile);
+        SpUtil.putString(this,"pass",pass);
         SpUtil.putObject(this,"user",loginBean);
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

@@ -8,10 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.CollectionBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.presenter.me.CollectionPresenter;
 import com.carpartsshow.presenter.me.contract.CollectionContract;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.me.adapter.CollectionAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
@@ -79,6 +81,13 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                CollectionBean.CollectionListProductBean collectionBean = (CollectionBean.CollectionListProductBean) item;
+                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
             }
         });
     }
@@ -158,7 +167,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                         cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type()+"|";
                     }
                 }
-                mPresenter.plus(loginBean.getRepairUser_ID(),cids,0);
+                mPresenter.plus(loginBean.getRepairUser_ID(),cids);
                 break;
         }
     }

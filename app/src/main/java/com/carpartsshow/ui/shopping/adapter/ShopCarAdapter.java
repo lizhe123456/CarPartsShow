@@ -44,6 +44,14 @@ public class ShopCarAdapter extends BaseAdapter<ShopCarBean.ListCarProductBean>{
 
         holder.setGlieuImage(R.id.goods_img,item.getImagePath());
 
+        holder.setOnClickListener(R.id.goods_img, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickRequestListener != null)
+                    onClickRequestListener.goodsDetails(item);
+            }
+        });
+
         if (item.isSelected()) {
             holder.setImageResource(R.id.iv_select, R.drawable.round_btn_selected);
         }else {
@@ -152,5 +160,7 @@ public class ShopCarAdapter extends BaseAdapter<ShopCarBean.ListCarProductBean>{
         void updateTotal(String money, String integral, String num);
 
         void isAll(boolean isAll);
+
+        void goodsDetails(ShopCarBean.ListCarProductBean item);
     }
 }

@@ -254,6 +254,24 @@ public class HomePageBean implements Serializable {
         private String Category;
         private int Banner_Sort;
         private String Company_ID;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public String getBanner_ID() {
             return Banner_ID;
@@ -320,7 +338,7 @@ public class HomePageBean implements Serializable {
         }
     }
 
-    public static class SpecialOfferBean {
+    public static class SpecialOfferBean implements Serializable{
         private String Banner_ID;
         private String Category;
         private String Company_ID;
@@ -328,6 +346,24 @@ public class HomePageBean implements Serializable {
         private String Banner_PcLikUrl;
         private int Banner_Sort;
         private String Url;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public String getUrl() {
             return Url;
@@ -406,6 +442,24 @@ public class HomePageBean implements Serializable {
         private String Category;
         private int Banner_Sort;
         private String Company_ID;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public String getBanner_ID() {
             return Banner_ID;
@@ -846,7 +900,25 @@ public class HomePageBean implements Serializable {
         private String Company_ID;
         private String Card_ID;
         private String Url;
+        private boolean IsCollection;
+        private int CarCount;
 
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public String getUrl() {
             return Url;

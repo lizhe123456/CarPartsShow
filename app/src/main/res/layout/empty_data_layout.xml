@@ -16,4 +16,18 @@
         android:textColor="@color/tv_999"
         android:text="没有可用的优惠券哟~"
         android:layout_marginTop="@dimen/dm_15"/>
+    <TextView
+        android:id="@+id/tv_to_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="@dimen/dm_38"
+        android:layout_marginLeft="@dimen/dm_38"
+        android:padding="@dimen/dm_10"
+        android:background="@drawable/shape_login"
+        android:layout_below="@+id/ll_input"
+        android:text="去首页逛逛"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:gravity="center"/>
 </LinearLayout>

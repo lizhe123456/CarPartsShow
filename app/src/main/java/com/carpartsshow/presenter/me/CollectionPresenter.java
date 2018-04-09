@@ -66,12 +66,8 @@ public class CollectionPresenter extends BasePresenterImpl<CollectionContract.Vi
     }
 
     @Override
-    public void plus(String userId, String productId, int productType) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("Product_ID",productId);
-        map.put("Product_Type",productType);
-        map.put("RepairUser_ID",userId);
-        addSubscribe(dataManager.fetchAddCar(map)
+    public void plus(String userId, String productId) {
+        addSubscribe(dataManager.fetchAddCar(userId,productId)
                 .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
                 .compose(RxUtil.handleState())
                 .subscribeWith(new CommonSubscriber<CPSResponse>(mView){

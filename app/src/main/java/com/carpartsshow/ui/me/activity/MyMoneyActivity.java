@@ -1,6 +1,7 @@
 package com.carpartsshow.ui.me.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import com.carpartsshow.R;
@@ -11,6 +12,7 @@ import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.NoMarginsTextView;
 import com.carpartsshow.widgets.CPSToast;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,6 +27,12 @@ public class MyMoneyActivity extends BaseActivity {
     @BindView(R.id.tv_price_z)
     NoMarginsTextView tvPriceZ;
 
+    public static void start(Context context,String json) {
+        Intent starter = new Intent(context, MyMoneyActivity.class);
+        starter.putExtra("userInfo",json);
+        context.startActivity(starter);
+    }
+
     @Override
     protected int setLayout() {
         return R.layout.activity_my_money;
@@ -37,8 +45,8 @@ public class MyMoneyActivity extends BaseActivity {
 
     @Override
     protected void setData() {
-        UserInfoBean userInfoBean = (UserInfoBean) getIntent().getSerializableExtra("userInfo");
-        tvPrice.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CostMoney()+"");
+        UserInfoBean userInfoBean = new Gson().fromJson(getIntent().getStringExtra("userInfo"),UserInfoBean.class);
+        tvPrice.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditBeOverMoney()+"");
         tvPriceZ.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditMoney()+"");
     }
 

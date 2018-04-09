@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.carpartsshow.di.module.ActivityModule;
 import com.carpartsshow.di.scope.ActivityScope;
+import com.carpartsshow.ui.FingerprintLoginActivity;
 import com.carpartsshow.ui.ForgetPassActivity;
 import com.carpartsshow.ui.LoginActivity;
 import com.carpartsshow.ui.NewPassActivity;
@@ -83,4 +84,6 @@ public interface ActivityComponent {
     void inject(TimelimitActivity timelimitActivity);
 
     void inject(ScanCodeActivity scanCodeActivity);
+
+    void inject(FingerprintLoginActivity fingerprintLoginActivity);
 }

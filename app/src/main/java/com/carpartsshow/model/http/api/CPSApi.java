@@ -78,7 +78,7 @@ public interface CPSApi {
     @GET("/api/User/SplitIntegerRecord")
     Flowable<CPSResponse<IntergralBean>> splitIntegerRecord(@Query("RepairUser_ID") String userId,
                                                             @Query("PageIndex") int page,
-                                                            @Query("pageSize") int size);
+                                                            @Query("PageSize") int size);
 
     //用户信息
     @GET("/api/User/GetUserInfo")
@@ -131,6 +131,9 @@ public interface CPSApi {
     //购物车加一
     @POST("/api/User/AddCar")
     Flowable<CPSResponse> addCar(@Body Map<String, Object> params);
+
+    @GET("/api/User/AppendCar")
+    Flowable<CPSResponse> addCar(@Query("RepairUser_ID") String userId,@Query("Pids") String pid);
 
     //购物车减一
     @POST("/api/User/SubCar")
@@ -189,7 +192,7 @@ public interface CPSApi {
     Flowable<CPSResponse<GoodsListBean>> listSplitGoods(@QueryMap Map<String, Object> map);
 
     //消息记录
-    @POST("/api/User/SplitUserMsg")
+    @GET("/api/User/SplitUserMsg")
     Flowable<CPSResponse<List<MsgBean>>> splitUserMsg(@Query("RepairUser_ID") String userId, @Query("PageIndex") int page);
 
     //提交提单
@@ -226,4 +229,8 @@ public interface CPSApi {
     //vin码扫描
     @GET("/api/Home/GetCarModelByVIN")
     Flowable<CPSResponse<List<CarModelByVINBean>>> getCarModelByVIN(@Query("VIN") String vin);
+
+    //退货
+    @GET("/api/User/SubmitRefundOrder")
+    Flowable<CPSResponse> submitRefundOrder(@Query("OrderId") String orederId, @Query("RepairUser_ID") String userId);
 }

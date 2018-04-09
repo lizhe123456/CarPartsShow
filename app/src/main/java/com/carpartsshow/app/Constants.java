@@ -14,4 +14,5 @@ public class Constants {
 
     public static final String CPS_URL = "http://api.jscxqp.com:80/swagger/docs/v1/";
     public static final String PATH_CACHE = FileUtil.getFileDir("Http") + "/caches";
+    public static boolean IS_REPAYMENT = true;
 }

@@ -66,14 +66,20 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     @Override
     protected void setData() {
         currentRepairUser = (UserInfoBean.CurrentRepairUserBean) getIntent().getSerializableExtra("userInfo");
-        pCode = currentRepairUser.getRepairUser_Provice();
-        cCode = currentRepairUser.getRepairUser_City();
-        aCode = currentRepairUser.getRepairUser_Region();
-        add = currentRepairUser.getRepairUser_DetailAddress();
-        mPresenter.getAreaList();
-        isRun = true;
-        tvAdd.setText(add);
-        tvAdd.setSelection(add.length());
+        if (currentRepairUser != null) {
+            if (currentRepairUser.getRepairUser_Provice()!=null && currentRepairUser.getRepairUser_City() != null && currentRepairUser.getRepairUser_Region() != null){
+                pCode = currentRepairUser.getRepairUser_Provice();
+                cCode = currentRepairUser.getRepairUser_City();
+                aCode = currentRepairUser.getRepairUser_Region();
+                add = currentRepairUser.getRepairUser_DetailAddress();
+                mPresenter.getAreaList();
+                isRun = true;
+                tvAdd.setText(add);
+                tvAdd.setSelection(add.length());
+            }else {
+
+            }
+        }
     }
 
 
@@ -98,10 +104,14 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                 mPresenter.getAreaList();
                 break;
             case R.id.tv_add_c:
-                mPresenter.getAreaList(pCode,1);
+                if (pCode != null) {
+                    mPresenter.getAreaList(pCode, 1);
+                }
                 break;
             case R.id.tv_add_a:
-                mPresenter.getAreaList(cCode,2);
+                if (cCode != null) {
+                    mPresenter.getAreaList(cCode, 2);
+                }
                 break;
         }
 

@@ -1,10 +1,14 @@
 package com.carpartsshow.ui.me.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +19,7 @@ import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.carpartsshow.ui.me.fragment.order.adapter.AllOrderAdapter;
+import com.carpartsshow.ui.me.fragment.order.base.OnOrderListenerAdapter;
 import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.util.SpUtil;
@@ -104,7 +109,7 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
             }
         });
 
-        mAdapter.setOnOrderListener(new OrderAdapter.OnOrderListener() {
+        mAdapter.setOnOrderListener(new OnOrderListenerAdapter() {
             @Override
             public void applyCustomerServiceClick(OrderListBean.DataBean item) {
 
@@ -118,12 +123,38 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
 
             @Override
             public void customerServicePhoneClick(OrderListBean.DataBean item) {
-
+                customerServicePhone();
             }
 
             @Override
             public void lookProgress(OrderListBean.DataBean item) {
 
+            }
+        });
+    }
+
+    Dialog bottomDialog;
+
+    //联系客服
+    protected void customerServicePhone() {
+        bottomDialog = new Dialog(this, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_normal, null);
+        TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
+        TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
+        TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
+        TextView tv_phone = contentView.findViewById(R.id.tv_phone);
+
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        layoutParams.width = getResources().getDisplayMetrics().widthPixels;
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.show();
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomDialog.cancel();
             }
         });
     }
@@ -138,5 +169,13 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
         this.finish();
     }
 
+    @Override
+    public void showEmpty() {
+        View view = vsEmpty.inflate();
+        ImageView imageView = view.findViewById(R.id.iv_empty);
+        TextView textView = view.findViewById(R.id.tv_empty_msg);
+        imageView.setImageResource(R.drawable.order_empty);
+        textView.setText("暂无更多订单~");
+    }
 
 }

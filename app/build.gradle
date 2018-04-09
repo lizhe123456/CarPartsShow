@@ -6,6 +6,15 @@ android {
 
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    signingConfigs {
+        config {
+            keyAlias 'ZhiPeiKu'
+            keyPassword '123456'
+            storeFile file('D:/zhipeiku.jks')
+            storePassword '123456'
+        }
+    }
+
     defaultConfig {
 
         applicationId "com.carpartsshow"
@@ -19,16 +28,41 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.config
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
         // ... and any other excludes go here
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        kuan {dimension "default"}
+        xiaomi {dimension "default"}
+        qh360 {dimension "default"}
+        baidu {dimension "default"}
+        wandoujia {dimension "default"}
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
@@ -65,7 +99,6 @@ dependencies {
     implementation files('libs/pinyin4j-2.5.0.jar')
     compile 'org.greenrobot:eventbus:3.0.0'
     implementation files('libs/ocr-sdk.jar')
-    implementation files('libs/license.jar')
     //图片压缩
     compile 'id.zelory:compressor:2.0.0'
     compile 'com.zhy:okhttputils:2.6.2'

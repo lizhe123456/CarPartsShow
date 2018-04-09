@@ -11,6 +11,7 @@ public class CarClassifyBean  implements Serializable{
     String type;
     String name;
     int cid;
+    String cType;
 
     public CarClassifyBean(String type, String name) {
         this.type = type;
@@ -21,6 +22,20 @@ public class CarClassifyBean  implements Serializable{
         this.type = type;
         this.name = name;
         this.cid = cid;
+    }
+
+    public CarClassifyBean(String type, String name, String cType) {
+        this.type = type;
+        this.name = name;
+        this.cType = cType;
+    }
+
+    public String getcType() {
+        return cType;
+    }
+
+    public void setcType(String cType) {
+        this.cType = cType;
     }
 
     public int getCid() {

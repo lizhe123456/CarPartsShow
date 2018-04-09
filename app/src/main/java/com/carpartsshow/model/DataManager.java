@@ -193,6 +193,11 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
+    public Flowable<CPSResponse> fetchAddCar(String userId,String pid) {
+        return httpHelper.fetchAddCar(userId, pid);
+    }
+
+    @Override
     public Flowable<CPSResponse> fetchSubCar(Map<String, Object> map) {
         return httpHelper.fetchSubCar(map);
     }
@@ -255,5 +260,10 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin) {
         return httpHelper.fetchGetCarModelByVIN(vin);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSubmitRefundOrder(String orederId, String userId) {
+        return httpHelper.fetchSubmitRefundOrder(orederId,userId);
     }
 }

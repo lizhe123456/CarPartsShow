@@ -1,5 +1,6 @@
 package com.carpartsshow.presenter.me;
 
+import com.carpartsshow.app.App;
 import com.carpartsshow.base.BasePresenterImpl;
 import com.carpartsshow.base.CommonSubscriber;
 import com.carpartsshow.model.DataManager;
@@ -10,6 +11,7 @@ import com.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.carpartsshow.util.RxUtil;
 import com.carpartsshow.util.SpUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -43,10 +45,30 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                         super.onNext(orderListBean);
                         if (loadType == 1){
                             mView.showData(orderListBean);
+                            if (orderListBean.getData().size() == 0){
+                                mView.showEmpty();
+                            }
                         }else {
                             mView.loadMore(orderListBean);
                         }
                         page++;
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void applyCustomerService(String orderId) {
+        LoginBean loginBean = SpUtil.getObject(App.getInstance().getmContext(),"user");
+        mView.loading("退货申请中..");
+        addSubscribe(dataManager.fetchSubmitRefundOrder(orderId,loginBean.getRepairUser_ID())
+                .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
+                .compose(RxUtil.handleState())
+                .subscribeWith(new CommonSubscriber<CPSResponse>(mView){
+                    @Override
+                    public void onNext(CPSResponse cpsResponse) {
+                        super.onNext(cpsResponse);
+                        mView.updateData(cpsResponse.getMessage());
                     }
                 })
         );
@@ -62,7 +84,7 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                     @Override
                     public void onNext(CPSResponse cpsResponse) {
                         super.onNext(cpsResponse);
-                        mView.updateData();
+                        mView.updateData(cpsResponse.getMessage());
                     }
                 })
         );
@@ -79,7 +101,7 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                     @Override
                     public void onNext(CPSResponse cpsResponse) {
                         super.onNext(cpsResponse);
-                        mView.updateData();
+                        mView.updateData(cpsResponse.getMessage());
                     }
                 })
         );
@@ -96,7 +118,7 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                     @Override
                     public void onNext(CPSResponse cpsResponse) {
                         super.onNext(cpsResponse);
-                        mView.updateData();
+                        mView.updateData(cpsResponse.getMessage());
                     }
                 })
         );

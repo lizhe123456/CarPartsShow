@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Flowable;
+import retrofit2.http.Query;
 
 /**
  * Created by Administrator on 2018/3/14.
@@ -94,6 +95,8 @@ public interface HttpHelper {
 
     Flowable<CPSResponse> fetchAddCar(Map<String, Object> map);
 
+    Flowable<CPSResponse> fetchAddCar(String userId,String pid);
+
     Flowable<CPSResponse> fetchSubCar(Map<String, Object> map);
 
     Flowable<CPSResponse> fetchAppendCollections(Map<String, Object> map);
@@ -119,5 +122,7 @@ public interface HttpHelper {
     Flowable<CPSResponse<List<SeckillGoodsBean>>> fetchListSplitSeckillGoods(String userId,int page);
 
     Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin);
+
+    Flowable<CPSResponse> fetchSubmitRefundOrder(String orederId, String userId);
 
 }

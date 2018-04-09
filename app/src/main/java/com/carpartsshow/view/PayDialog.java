@@ -28,6 +28,7 @@ public class PayDialog extends Dialog {
     private LinearLayout llCredit;
     private TextView tvPay;
     private Context context;
+    private boolean isCredit = true;
 
     private View.OnClickListener onWxClickListener;
     private View.OnClickListener onALiClickListener;
@@ -79,7 +80,9 @@ public class PayDialog extends Dialog {
             payDialog.llCredit.setOnClickListener(payDialog.onCreditClickListener);
         }
 
-
+        if (!isCredit){
+            payDialog.llCredit.setVisibility(View.GONE);
+        }
     }
 
     public void select(int type){
@@ -126,6 +129,11 @@ public class PayDialog extends Dialog {
 
         public Builder setAliListener(View.OnClickListener onALiClickListener) {
             mDialog.onALiClickListener = onALiClickListener;
+            return this;
+        }
+
+        public Builder setIsCredit(boolean flag){
+            mDialog.isCredit = flag;
             return this;
         }
 

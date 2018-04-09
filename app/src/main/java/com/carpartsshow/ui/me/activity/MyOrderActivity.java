@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
+import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.ui.me.fragment.order.OrderItem1Fragment;
 import com.carpartsshow.ui.me.fragment.order.OrderItem2Fragment;
 import com.carpartsshow.ui.me.fragment.order.OrderItem3Fragment;
@@ -39,9 +40,14 @@ public class MyOrderActivity extends BaseActivity {
 
     private int selectPage;
 
-    public static void start(Context context,int page) {
+    public static void start(Context context, int page) {
         Intent starter = new Intent(context, MyOrderActivity.class);
         starter.putExtra("page",page);
+        context.startActivity(starter);
+    }
+    public static void start(Context context,UserInfoBean userInfoBean) {
+        Intent starter = new Intent(context, MyOrderActivity.class);
+        starter.putExtra("userInfo",userInfoBean);
         context.startActivity(starter);
     }
 

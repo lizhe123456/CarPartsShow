@@ -58,6 +58,7 @@ public class OrderListAdapter extends BaseAdapter {
             viewHolder.mImageView = convertView.findViewById(R.id.iv_icon);
             viewHolder.mTextView = convertView.findViewById(R.id.tv_title);
             viewHolder.mTextNum = convertView.findViewById(R.id.tv_num);
+            viewHolder.viewXian = convertView.findViewById(R.id.tv_xian);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -71,6 +72,11 @@ public class OrderListAdapter extends BaseAdapter {
         }else {
             viewHolder.mTextNum.setVisibility(View.GONE);
         }
+        if (position == list.size() -1){
+            viewHolder.viewXian.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.viewXian.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -78,5 +84,6 @@ public class OrderListAdapter extends BaseAdapter {
         ImageView mImageView;
         TextView mTextView;
         TextView mTextNum;
+        View viewXian;
     }
 }

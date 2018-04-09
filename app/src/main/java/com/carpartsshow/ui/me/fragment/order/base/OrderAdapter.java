@@ -9,6 +9,7 @@ import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.base.adapter.BaseViewHolder;
 import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.me.fragment.order.adapter.OrderGoodsAdapter;
 import com.carpartsshow.widgets.CurrencyDialog;
 
@@ -106,25 +107,15 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
                     @Override
                     public void onClick(View v) {
                         //联系客服
-
+                        if (onOrderListener != null)
+                            onOrderListener.customerServicePhoneClick(item);
                     }
                 });
-                holder.setText(R.id.tv_btn_3,"申请售后").setOnClickListener(R.id.tv_btn_3, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //申请售后
-
-                    }
-                });
+                holder.setVisible(R.id.tv_btn_3,false);
                 break;
             case 2 :
                 holder.setText(R.id.order_state,"待收货");
-                holder.setText(R.id.tv_btn_1,"申请售后").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //申请售后
-                    }
-                });
+                holder.setVisible(R.id.tv_btn_1,false);
                 holder.setText(R.id.tv_btn_2,"确认收货").setOnClickListener(R.id.tv_btn_2, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -152,12 +143,28 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
                 break;
             case 3 :
                 holder.setText(R.id.order_state,"已完成");
-                holder.setText(R.id.tv_btn_1,"申请售后").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
+                holder.setText(R.id.tv_btn_1,"申请退货").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //申请售后
-                        if (onOrderListener != null)
-                          onOrderListener.applyCustomerServiceClick(item);
+                        currencyDialog = new CurrencyDialog.Builder(getContext())
+                                .setMessage("确定要退货吗？")
+                                .setPositiveButton("确认", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (onOrderListener != null)
+                                            onOrderListener.applyCustomerServiceClick(item);
+                                        currencyDialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        currencyDialog.dismiss();
+                                    }
+                                }).build();
+                        currencyDialog.show();
+
                     }
                 });
                 holder.setText(R.id.tv_btn_2,"联系客服").setOnClickListener(R.id.tv_btn_2, new View.OnClickListener() {
@@ -177,7 +184,7 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
                 holder.setVisible(R.id.tv_btn_3,false);
                 break;
             case 5 :
-                holder.setText(R.id.order_state,"等待审核");
+                holder.setText(R.id.order_state,"退货申请中");
                 holder.setText(R.id.tv_btn_1,"联系客服").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -186,18 +193,11 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
                             onOrderListener.customerServicePhoneClick(item);
                     }
                 });
-                holder.setText(R.id.tv_btn_2,"查看进度").setOnClickListener(R.id.tv_btn_2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //查看进度
-                        if (onOrderListener != null)
-                            onOrderListener.lookProgress(item);
-                    }
-                });
+                holder.setVisible(R.id.tv_btn_2,false);
                 holder.setVisible(R.id.tv_btn_3,false);
                 break;
             case 6 :
-                holder.setText(R.id.order_state,"退款成功");
+                holder.setText(R.id.order_state,"退货成功");
                 holder.setText(R.id.tv_btn_1,"联系客服").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -210,7 +210,7 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
                 holder.setVisible(R.id.tv_btn_3,false);
                 break;
             case 7 :
-                holder.setText(R.id.order_state,"退款失败");
+                holder.setText(R.id.order_state,"退货失败");
                 holder.setText(R.id.tv_btn_1,"联系客服").setOnClickListener(R.id.tv_btn_1, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -231,6 +231,13 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
         goodsList.setLayoutManager(layoutManager);
         goodsList.setAdapter(adapter);
         adapter.addFirstDataSet(item.getDetail());
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                OrderListBean.DataBean.DetailBean detailBean = (OrderListBean.DataBean.DetailBean) item;
+                GoodsDetailsActivity.newInstance(getContext(),detailBean.getProduct_ID(),detailBean.getProduct_Type());
+            }
+        });
 
     }
 
@@ -240,19 +247,5 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
     }
 
 
-    public interface OnOrderListener{
-
-        //申请售后
-        void applyCustomerServiceClick(OrderListBean.DataBean item);
-
-        //付款
-        void payClick(OrderListBean.DataBean item);
-
-        //联系客服
-        void customerServicePhoneClick(OrderListBean.DataBean item);
-
-        //查看进度
-        void lookProgress(OrderListBean.DataBean item);
-    }
 
 }

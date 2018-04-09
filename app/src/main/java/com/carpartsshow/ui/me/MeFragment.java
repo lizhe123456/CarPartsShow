@@ -3,6 +3,7 @@ package com.carpartsshow.ui.me;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -34,10 +35,13 @@ import com.carpartsshow.ui.me.activity.UpdatePassActivity;
 import com.carpartsshow.ui.me.adapter.ItemAdapter;
 import com.carpartsshow.ui.me.adapter.OrderListAdapter;
 import com.carpartsshow.ui.me.adapter.bean.OrderItem;
+import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.util.StatusBarUtil;
 import com.carpartsshow.view.SlideGridView;
 import com.carpartsshow.view.SlideListView;
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +212,7 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
 
 
 
-    @OnClick({R.id.money, R.id.collection, R.id.coupon, R.id.integral,R.id.tv_gongsi,R.id.tv_exit_login,R.id.all_order})
+    @OnClick({R.id.ll_money, R.id.ll_collection, R.id.ll_coupon, R.id.ll_integral,R.id.tv_gongsi,R.id.tv_exit_login,R.id.all_order})
     public void onViewClicked(View view) {
         Intent intent = new Intent();
         switch (view.getId()) {
@@ -217,22 +221,19 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
                 starter.putExtra("userInfo",userInfoBean.getCurrentRepairUser());
                 startActivityForResult(starter,1);
                 break;
-            case R.id.money:
+            case R.id.ll_money:
                 //信用使用记录
-                Intent intent1 = new Intent();
-                intent1.setClass(getContext(),MyMoneyActivity.class);
-                intent1.putExtra("userInfo",userInfoBean);
-                startActivity(intent1);
+                MyMoneyActivity.start(getContext(),new Gson().toJson(userInfoBean));
                 break;
-            case R.id.collection:
+            case R.id.ll_collection:
                 intent.setClass(getContext(), MyCollectActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.coupon:
+            case R.id.ll_coupon:
                 intent.setClass(getContext(), MyCouponActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.integral:
+            case R.id.ll_integral:
                 intent.setClass(getContext(), MyIntegralActivity.class);
                 intent.putExtra("integer",userInfoBean.getCurrentRepairUser().getRepairUser_Integer()+"");
                 startActivity(intent);
@@ -254,7 +255,27 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
         TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
         TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
         TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
-        TextView tv_phone = contentView.findViewById(R.id.tv_phone);
+
+        if (userInfoBean != null && userInfoBean.getListServicePhone().size() > 0){
+            try {
+                tv_phone_1.setText(userInfoBean.getListServicePhone().get(0).getItemValue());
+                tv_phone_2.setText(userInfoBean.getListServicePhone().get(1).getItemValue());
+                tv_phone_1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScreenUtils.diallPhone(getContext(),userInfoBean.getListServicePhone().get(0).getItemValue());
+                    }
+                });
+                tv_phone_2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScreenUtils.diallPhone(getContext(),userInfoBean.getListServicePhone().get(1).getItemValue());
+                    }
+                });
+            }catch (IndexOutOfBoundsException e){
+
+            }
+        }
 
         bottomDialog.setContentView(contentView);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
@@ -272,8 +293,10 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onResume() {
+        super.onResume();
         mPresenter.getUserInfo(userId);
     }
+
+
 }

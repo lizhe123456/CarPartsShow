@@ -11,6 +11,8 @@ import com.carpartsshow.presenter.classify.CarFilterPresenter;
 import com.carpartsshow.presenter.classify.contract.CarFilterContract;
 import com.carpartsshow.ui.classify.adapter.CarBrandDetailsAdapter;
 import com.carpartsshow.widgets.AnimatedExpandableListView;
+import com.carpartsshow.widgets.CPSToast;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -79,7 +81,9 @@ public class CarBrandDetailsActivity extends MvpActivity<CarFilterPresenter> imp
         mAdapter.setOnItemListener(new CarBrandDetailsAdapter.OnItemListener() {
             @Override
             public void OnGroupItemClick(CarFilterBean.ListCXIBean listCXIBean) {
-
+                if (listCXIBean.getListCars().size() == 0){
+                    CPSToast.showText(CarBrandDetailsActivity.this,"暂未录入该车型");
+                }
             }
 
             @Override

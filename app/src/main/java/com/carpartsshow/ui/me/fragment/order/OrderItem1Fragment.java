@@ -4,6 +4,7 @@ import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.ui.MainActivity;
 import com.carpartsshow.ui.me.fragment.order.adapter.WaitOrderAdapter;
 import com.carpartsshow.ui.me.fragment.order.base.BaseOrderFragment;
+import com.carpartsshow.ui.me.fragment.order.base.OnOrderListenerAdapter;
 import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.google.gson.Gson;
@@ -20,13 +21,7 @@ public class OrderItem1Fragment extends BaseOrderFragment{
     @Override
     public OrderAdapter setAdapter() {
         mAdapter = new WaitOrderAdapter(getContext(),mPresenter);
-        mAdapter.setOnOrderListener(new OrderAdapter.OnOrderListener() {
-
-            @Override
-            public void applyCustomerServiceClick(OrderListBean.DataBean item) {
-
-            }
-
+        mAdapter.setOnOrderListener(new OnOrderListenerAdapter() {
             @Override
             public void payClick(OrderListBean.DataBean item) {
                 String json = new Gson().toJson(item);
@@ -37,11 +32,6 @@ public class OrderItem1Fragment extends BaseOrderFragment{
             public void customerServicePhoneClick(OrderListBean.DataBean item) {
                 //联系客服
                 customerServicePhone();
-            }
-
-            @Override
-            public void lookProgress(OrderListBean.DataBean item) {
-
             }
         });
         return mAdapter;

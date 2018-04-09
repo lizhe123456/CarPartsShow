@@ -14,5 +14,5 @@ public interface BaseView {
 
     void unLoading();
 
-    void showEmpty(String msg, int resId);
+    void showEmpty();
 }

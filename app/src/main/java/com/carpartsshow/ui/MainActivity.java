@@ -1,10 +1,12 @@
 package com.carpartsshow.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +48,11 @@ public class MainActivity extends BaseActivity {
 
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, MainActivity.class);
+        context.startActivity(starter);
+    }
 
     //首页
     private static final String HOME = "home";
@@ -125,6 +132,11 @@ public class MainActivity extends BaseActivity {
                 break;
             case 3 :
                 tag = CLASSIFY;
+                selectNavigation();
+                setContentFragment(tag);
+                break;
+            case 4:
+                tag = HOME;
                 selectNavigation();
                 setContentFragment(tag);
                 break;

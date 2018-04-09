@@ -3,6 +3,7 @@ package com.carpartsshow.presenter.me.contract;
 import com.carpartsshow.base.BasePresenter;
 import com.carpartsshow.base.BaseView;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.response.CPSResponse;
 
 import java.util.Map;
 
@@ -17,14 +18,14 @@ public interface MyOrderContract {
 
         void loadMore(OrderListBean orderListBean);
 
-        void updateData();
+        void updateData(String msg);
     }
 
     interface Presenter extends BasePresenter<View>{
         void getOrderList(String userId,int type,int loadType);
 
         //申请售后
-//        void applyCustomerService(String orderId);
+        void applyCustomerService(String orderId);
 
         //订单加急
         void orderUrgent(String orderId);

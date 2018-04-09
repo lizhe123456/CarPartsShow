@@ -72,14 +72,7 @@ public abstract class MvpActivity<T extends BasePresenter> extends BaseActivity 
     }
 
     @Override
-    public void showEmpty(String msg, int resId) {
-        if (vsEmpty != null) {
-            View view = vsEmpty.inflate();
-            ImageView imageView = view.findViewById(R.id.iv_empty);
-            TextView textView = view.findViewById(R.id.tv_empty_msg);
-            imageView.setImageResource(resId);
-            textView.setText(msg);
-        }
+    public void showEmpty() {
     }
 
 

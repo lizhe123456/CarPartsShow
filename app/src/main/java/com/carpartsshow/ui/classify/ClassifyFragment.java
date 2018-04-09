@@ -1,13 +1,22 @@
 package com.carpartsshow.ui.classify;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.carpartsshow.R;
 import com.carpartsshow.app.App;
 import com.carpartsshow.base.MvpFragment;
@@ -21,6 +30,7 @@ import com.carpartsshow.presenter.home.contract.GoodsSearchContract;
 import com.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarClassifyFragment;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.util.SpUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,8 +38,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by lizhe on 2018/3/12.
@@ -55,6 +68,8 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     View vBrand;
     @BindView(R.id.divider)
     View divider;
+    @BindView(R.id.et_search)
+    EditText etSearch;
 
     private CarClassifyFragment classification;
     private BrandFragment brand;
@@ -78,8 +93,21 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     @Override
     protected void setData() {
         LoginBean loginBean = SpUtil.getObject(getContext(), "user");
-        mPresenter.getClassification(loginBean.getRepairUser_ID(),0);
+        mPresenter.getClassification(loginBean.getRepairUser_ID(), 0);
 //        page = getArguments().getInt("page");
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Intent intent = new Intent();
+                    intent.setClass(getContext(), GoodsSearchActivity.class);
+                    intent.putExtra("searchValue", etSearch.getText().toString().trim());
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -117,7 +145,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
             @Override
             public void onPageSelected(int position) {
                 page = position;
-                switch (position){
+                switch (position) {
                     case 0:
                         selectedModels();
                         break;
@@ -145,7 +173,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     }
 
 
-    @OnClick({R.id.tv_models, R.id.tv_classify, R.id.tv_brand,R.id.iv_back, R.id.et_search})
+    @OnClick({R.id.tv_models, R.id.tv_classify, R.id.tv_brand})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_models:
@@ -157,15 +185,10 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
             case R.id.tv_brand:
                 viewPager.setCurrentItem(2);
                 break;
-            case R.id.iv_back:
-                App.getInstance().exitApp();
-                break;
-            case R.id.et_search:
-                break;
         }
     }
 
-    public void selectedBrand(){
+    public void selectedBrand() {
         vModels.setVisibility(View.INVISIBLE);
         vBrand.setVisibility(View.VISIBLE);
         vClassify.setVisibility(View.INVISIBLE);
@@ -177,7 +200,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
         tvClassify.setTextColor(Color.parseColor("#5D5F69"));
     }
 
-    private void selectedClassify(){
+    private void selectedClassify() {
         vModels.setVisibility(View.INVISIBLE);
         vBrand.setVisibility(View.INVISIBLE);
         vClassify.setVisibility(View.VISIBLE);
@@ -189,7 +212,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
         tvClassify.setTextColor(getResources().getColor(R.color.red_login));
     }
 
-    private void selectedModels(){
+    private void selectedModels() {
         vModels.setVisibility(View.VISIBLE);
         vBrand.setVisibility(View.INVISIBLE);
         vClassify.setVisibility(View.INVISIBLE);
@@ -201,8 +224,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
         tvClassify.setTextColor(Color.parseColor("#5D5F69"));
     }
 
-
-    public class FragmentAdapter extends FragmentPagerAdapter  {
+    public class FragmentAdapter extends FragmentPagerAdapter {
 
         public FragmentAdapter(FragmentManager fm) {
             super(fm);
@@ -221,19 +243,19 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     }
 
     @Subscribe
-    public void selectFragment(HomePageBean homePageBean){
-        switch (homePageBean.getPage()){
-            case 1 :
+    public void selectFragment(HomePageBean homePageBean) {
+        switch (homePageBean.getPage()) {
+            case 1:
                 selectedModels();
                 page = 0;
                 viewPager.setCurrentItem(0);
                 break;
-            case 2 :
+            case 2:
                 selectedClassify();
                 page = 1;
                 viewPager.setCurrentItem(1);
                 break;
-            case 3 :
+            case 3:
                 page = 2;
                 selectedBrand();
                 viewPager.setCurrentItem(2);
@@ -241,9 +263,4 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
-    }
 }

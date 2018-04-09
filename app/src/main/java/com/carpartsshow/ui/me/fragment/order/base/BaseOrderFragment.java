@@ -15,11 +15,17 @@ import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.base.adapter.BaseAdapter;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.presenter.me.contract.MyOrderContract;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.util.SpUtil;
+import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -45,6 +51,7 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
     ViewStub vsEmpty;
 
     protected OrderAdapter mAdapter;
+    protected OrderListBean orderBean;
 
 
     @Override
@@ -52,11 +59,10 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
 
     }
 
+
     @Override
     public void showData(OrderListBean orderListBean) {
-        if (null != orderListBean.getData() && orderListBean.getData().size() == 0){
-            showEmpty();
-        }
+        orderBean = orderListBean;
         mAdapter.addFirstDataSet(orderListBean.getData());
         refresh.finishRefresh();
 
@@ -95,6 +101,7 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
             @Override
             public void onClick(View view, Object item, int position) {
 //                OrderDetailsActivity.start(getContext());
+
             }
         });
 
@@ -124,31 +131,14 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
     public abstract int request();
 
     //申请售后
-    protected void applyCustomerService() {
+    protected void applyCustomerService(OrderListBean.DataBean dataBean) {
 //        mPresenter.applyCustomerServiceClick();
-    }
-
-    //订单加急
-    protected void orderUrgent() {
-    }
-
-    //确认收货
-    protected void receiptGoods() {
-
-    }
-
-    //取消订单
-    protected void cancelOrder() {
-
-    }
-
-    //付款
-    protected void pay() {
-
+        mPresenter.applyCustomerService(dataBean.getOrder_ID());
     }
 
     @Override
-    public void updateData() {
+    public void updateData(String msg) {
+        CPSToast.showText(getContext(),msg);
         refresh.autoRefresh(3000);
     }
 
@@ -183,6 +173,7 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
 
     }
 
+    @Override
     public void showEmpty() {
         View view = vsEmpty.inflate();
         ImageView imageView = view.findViewById(R.id.iv_empty);

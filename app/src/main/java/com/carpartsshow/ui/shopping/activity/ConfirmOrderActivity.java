@@ -38,6 +38,8 @@ import com.carpartsshow.view.ZlCustomDialog;
 import com.carpartsshow.widgets.CPSToast;
 import com.carpartsshow.widgets.CurrencyDialog;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,8 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     TextView tvIntegral;
     @BindView(R.id.coupon)
     TextView tvCouponTop;
+    @BindView(R.id.select_warehouse)
+    TextView tvSelectt;
 
 
 
@@ -88,6 +92,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     OrderBean.ListReceiptAddressBean addressBean;
     OrderBean orderBean;
     private String warehouseCode;
+    private OptionsPickerView mPickerView;
 
     public static void start(Context context, String json,int type) {
         Intent starter = new Intent(context, ConfirmOrderActivity.class);
@@ -300,7 +305,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     }
 
 
-    @OnClick({R.id.iv_back, R.id.select_coupon,R.id.tv_pay,R.id.warehouse})
+    @OnClick({R.id.iv_back, R.id.select_coupon,R.id.tv_pay,R.id.rl_warehouse})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -360,11 +365,12 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 payDialog.select(0);
                 type = 0;
                 break;
-            case R.id.warehouse:
+            case R.id.rl_warehouse:
                 mPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
                     @Override
                     public void onOptionsSelect(int options1, int options2, int options3, View v) {
                         warehouseCode = orderBean.getWarehouses().get(options1).getCode();
+                        tvSelectt.setText(orderBean.getWarehouses().get(options1).getName());
                         mPickerView.dismiss();
                     }
                 }).setTitleText("仓库选择")
@@ -373,14 +379,24 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                         .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                         .setContentTextSize(20)
                         .build();
-                mPickerView.setPicker(orderBean.getWarehouses());//三级选择器
-                mPickerView.show();
+                if (orderBean.getWarehouses() != null && orderBean.getWarehouses().size() > 0) {
+                    List<String> list = new ArrayList<>();
+                    for (OrderBean.Warehouse warehouse:orderBean.getWarehouses()) {
+                        list.add(warehouse.getName());
+                    }
+                    mPickerView.setPicker(list);
+                    //三级选择器
+                    mPickerView.show();
+                }else {
+                    CPSToast.showText(this,"没有可用仓库");
+                }
+
                 break;
         }
     }
 
 
-    private OptionsPickerView mPickerView;
+
     @Override
     public void stateError() {
 

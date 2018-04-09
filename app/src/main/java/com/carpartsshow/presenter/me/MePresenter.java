@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class MePresenter extends BasePresenterImpl<MeContract.View> implements MeContract.Presenter {
 
     DataManager dataManager;
-
+    private boolean isflag = true;
     @Inject
     public MePresenter(DataManager dataManager) {
         this.dataManager = dataManager;
@@ -25,7 +25,10 @@ public class MePresenter extends BasePresenterImpl<MeContract.View> implements M
 
     @Override
     public void getUserInfo(String userId) {
-        mView.loading("加载中..");
+        if (isflag) {
+            mView.loading("加载中..");
+            isflag = false;
+        }
         addSubscribe(dataManager.fetchGetUserInfo(userId)
                 .compose(RxUtil.<CPSResponse<UserInfoBean>>rxSchedulerHelper())
                 .compose(RxUtil.<UserInfoBean>handle())

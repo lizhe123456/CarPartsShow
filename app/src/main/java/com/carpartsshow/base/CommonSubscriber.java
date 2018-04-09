@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.carpartsshow.exception.ApiException;
 import com.carpartsshow.exception.SysException;
 import com.carpartsshow.util.LogUtil;
+import com.google.gson.JsonSyntaxException;
 
 import io.reactivex.subscribers.ResourceSubscriber;
 import retrofit2.HttpException;
@@ -62,7 +63,11 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
             mView.showErrorMsg("服务器异常，正在抢修中..");
         }else if (e instanceof SysException){
             mView.showErrorMsg(e.getMessage());
-        } else {
+        }else if (e instanceof JsonSyntaxException){
+
+        }else if (e instanceof IllegalStateException){
+
+        }else {
             mView.showErrorMsg("未知错误");
             LogUtil.d(e.toString());
         }

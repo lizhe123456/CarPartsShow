@@ -1,6 +1,7 @@
 package com.carpartsshow.model.http.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by lizhe on 2018/3/14.
@@ -21,7 +22,7 @@ public class UserInfoBean implements Serializable{
      * SaleOrder : 0
      */
 
-    private Object ListServicePhone;
+    private List<ListServicePhone> ListServicePhone;
     private CurrentRepairUserBean CurrentRepairUser;
     private int CollectionCount;
     private int CouponCount;
@@ -31,11 +32,11 @@ public class UserInfoBean implements Serializable{
     private int CompluteOrder;
     private int SaleOrder;
 
-    public Object getListServicePhone() {
+    public List<ListServicePhone> getListServicePhone() {
         return ListServicePhone;
     }
 
-    public void setListServicePhone(Object ListServicePhone) {
+    public void setListServicePhone(List<ListServicePhone> ListServicePhone) {
         this.ListServicePhone = ListServicePhone;
     }
 
@@ -376,6 +377,203 @@ public class UserInfoBean implements Serializable{
 
         public void setRepairUser_CreditDay(int RepairUser_CreditDay) {
             this.RepairUser_CreditDay = RepairUser_CreditDay;
+        }
+    }
+
+    public class ListServicePhone{
+
+        /**
+         * ItemDetailId : 2ea2b9c5-a8d8-4669-a372-070eac359b40
+         * ItemId : 2dae762a-72c7-496a-b9b9-63d3cce74bc6
+         * ParentId : 0
+         * ItemCode : null
+         * ItemName : 客服1
+         * ItemValue : 1588888888
+         * QuickQuery : null
+         * SimpleSpelling : kf1
+         * IsDefault : null
+         * SortCode : 0
+         * DeleteMark : 0
+         * EnabledMark : 1
+         * Description : null
+         * CreateDate : 2017-12-21T19:42:54.967
+         * CreateUserId : System
+         * CreateUserName : 超级管理员
+         * ModifyDate : null
+         * ModifyUserId : null
+         * ModifyUserName : null
+         */
+
+        private String ItemDetailId;
+        private String ItemId;
+        private String ParentId;
+        private Object ItemCode;
+        private String ItemName;
+        private String ItemValue;
+        private Object QuickQuery;
+        private String SimpleSpelling;
+        private Object IsDefault;
+        private int SortCode;
+        private int DeleteMark;
+        private int EnabledMark;
+        private Object Description;
+        private String CreateDate;
+        private String CreateUserId;
+        private String CreateUserName;
+        private Object ModifyDate;
+        private Object ModifyUserId;
+        private Object ModifyUserName;
+
+        public String getItemDetailId() {
+            return ItemDetailId;
+        }
+
+        public void setItemDetailId(String ItemDetailId) {
+            this.ItemDetailId = ItemDetailId;
+        }
+
+        public String getItemId() {
+            return ItemId;
+        }
+
+        public void setItemId(String ItemId) {
+            this.ItemId = ItemId;
+        }
+
+        public String getParentId() {
+            return ParentId;
+        }
+
+        public void setParentId(String ParentId) {
+            this.ParentId = ParentId;
+        }
+
+        public Object getItemCode() {
+            return ItemCode;
+        }
+
+        public void setItemCode(Object ItemCode) {
+            this.ItemCode = ItemCode;
+        }
+
+        public String getItemName() {
+            return ItemName;
+        }
+
+        public void setItemName(String ItemName) {
+            this.ItemName = ItemName;
+        }
+
+        public String getItemValue() {
+            return ItemValue;
+        }
+
+        public void setItemValue(String ItemValue) {
+            this.ItemValue = ItemValue;
+        }
+
+        public Object getQuickQuery() {
+            return QuickQuery;
+        }
+
+        public void setQuickQuery(Object QuickQuery) {
+            this.QuickQuery = QuickQuery;
+        }
+
+        public String getSimpleSpelling() {
+            return SimpleSpelling;
+        }
+
+        public void setSimpleSpelling(String SimpleSpelling) {
+            this.SimpleSpelling = SimpleSpelling;
+        }
+
+        public Object getIsDefault() {
+            return IsDefault;
+        }
+
+        public void setIsDefault(Object IsDefault) {
+            this.IsDefault = IsDefault;
+        }
+
+        public int getSortCode() {
+            return SortCode;
+        }
+
+        public void setSortCode(int SortCode) {
+            this.SortCode = SortCode;
+        }
+
+        public int getDeleteMark() {
+            return DeleteMark;
+        }
+
+        public void setDeleteMark(int DeleteMark) {
+            this.DeleteMark = DeleteMark;
+        }
+
+        public int getEnabledMark() {
+            return EnabledMark;
+        }
+
+        public void setEnabledMark(int EnabledMark) {
+            this.EnabledMark = EnabledMark;
+        }
+
+        public Object getDescription() {
+            return Description;
+        }
+
+        public void setDescription(Object Description) {
+            this.Description = Description;
+        }
+
+        public String getCreateDate() {
+            return CreateDate;
+        }
+
+        public void setCreateDate(String CreateDate) {
+            this.CreateDate = CreateDate;
+        }
+
+        public String getCreateUserId() {
+            return CreateUserId;
+        }
+
+        public void setCreateUserId(String CreateUserId) {
+            this.CreateUserId = CreateUserId;
+        }
+
+        public String getCreateUserName() {
+            return CreateUserName;
+        }
+
+        public void setCreateUserName(String CreateUserName) {
+            this.CreateUserName = CreateUserName;
+        }
+
+        public Object getModifyDate() {
+            return ModifyDate;
+        }
+
+        public void setModifyDate(Object ModifyDate) {
+            this.ModifyDate = ModifyDate;
+        }
+
+        public Object getModifyUserId() {
+            return ModifyUserId;
+        }
+
+        public void setModifyUserId(Object ModifyUserId) {
+            this.ModifyUserId = ModifyUserId;
+        }
+
+        public Object getModifyUserName() {
+            return ModifyUserName;
+        }
+
+        public void setModifyUserName(Object ModifyUserName) {
+            this.ModifyUserName = ModifyUserName;
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.SeckillGoodsBean;
 import com.carpartsshow.presenter.home.TimelimitPresenter;
@@ -66,7 +67,8 @@ public class TimelimitActivity extends MvpActivity<TimelimitPresenter> implement
             @Override
             public void onClick(View view, Object item, int position) {
                 SeckillGoodsBean listSeckillGoodsBean = (SeckillGoodsBean) item;
-                GoodsDetailsActivity.newInstance(TimelimitActivity.this,"",0,listSeckillGoodsBean.getUrl());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(),listSeckillGoodsBean.isIsCollection(),listSeckillGoodsBean.getCarCount());
+                GoodsDetailsActivity.newInstance(TimelimitActivity.this ,goodsDetailToBean);
             }
         });
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {

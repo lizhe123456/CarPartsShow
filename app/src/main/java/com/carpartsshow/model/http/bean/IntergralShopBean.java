@@ -188,7 +188,7 @@ public class IntergralShopBean implements Serializable{
         }
     }
 
-    public class IstIntegerGoods{
+    public class IstIntegerGoods implements Serializable{
 
         /**
          * IntegerGoods_ID : 432564ht5utyuty
@@ -214,6 +214,24 @@ public class IntergralShopBean implements Serializable{
         private String Company_ID;
         private String Floor_ID;
         private String Url;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public String getUrl() {
             return Url;

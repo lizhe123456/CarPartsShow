@@ -196,6 +196,11 @@ public class HttpHelperImpl implements HttpHelper{
     }
 
     @Override
+    public Flowable<CPSResponse> fetchAddCar(String userId,String pid) {
+        return cpsApi.addCar(userId, pid);
+    }
+
+    @Override
     public Flowable<CPSResponse> fetchSubCar(Map<String, Object> map) {
         return cpsApi.subCar(map);
     }
@@ -259,6 +264,11 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin) {
         return cpsApi.getCarModelByVIN(vin);
+    }
+
+    @Override
+    public Flowable<CPSResponse> fetchSubmitRefundOrder(String orederId, String userId) {
+        return cpsApi.submitRefundOrder(orederId,userId);
     }
 
 }

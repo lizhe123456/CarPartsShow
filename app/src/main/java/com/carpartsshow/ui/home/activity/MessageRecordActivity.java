@@ -3,6 +3,8 @@ package com.carpartsshow.ui.home.activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
@@ -11,6 +13,7 @@ import com.carpartsshow.model.http.bean.MsgBean;
 import com.carpartsshow.presenter.home.MessageRecordPresenter;
 import com.carpartsshow.presenter.home.contract.MessageRecordContract;
 import com.carpartsshow.ui.home.adapter.MessageRecordAdapter;
+import com.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.carpartsshow.util.SpUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
@@ -20,6 +23,9 @@ import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -100,4 +106,16 @@ public class MessageRecordActivity extends MvpActivity<MessageRecordPresenter> i
     public void onViewClicked() {
         this.finish();
     }
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.msg_empty);
+            textView.setText("这里什么都没有哦~");
+        }
+    }
+
 }

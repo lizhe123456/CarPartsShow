@@ -17,12 +17,17 @@ import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.ShopCarBean;
 import com.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
+import com.carpartsshow.ui.MainActivity;
+import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -253,5 +258,29 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
         tvAll.setCompoundDrawables(drawable, null, null, null);
     }
 
+    @Override
+    public void goodsDetails(ShopCarBean.ListCarProductBean item) {
+        GoodsDetailsActivity.newInstance(this,item.getProduct_ID(),item.getProduct_Type());
+    }
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            TextView textView1 = view.findViewById(R.id.tv_to_home);
+            imageView.setImageResource(R.drawable.shop_car_e);
+            textView.setText("购物车什么都没有");
+            textView1.setVisibility(View.VISIBLE);
+            textView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShoppingCartActivity.this.finish();
+                    EventBus.getDefault().post(new com.carpartsshow.eventbus.HomePageBean(4));
+                }
+            });
+        }
+    }
 
 }

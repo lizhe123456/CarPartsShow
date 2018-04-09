@@ -1,8 +1,10 @@
 package com.carpartsshow.ui.home.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carpartsshow.R;
 import com.carpartsshow.base.adapter.BaseAdapter;
@@ -32,6 +34,9 @@ public class SeckillGoodsAdapter extends BaseAdapter<HomePageBean.ListSeckillGoo
                 .setText(R.id.tv_price,item.getSeckill_Price()+"")
                 .setText(R.id.tv_old_price,"¥" + item.getSeckill_SuggestPrice()+"")
                 .setGlieuImage(R.id.iv_img,item.getSeckill_ImgPath());
+        TextView textView = holder.getView(R.id.tv_old_price);
+        textView.getPaint().setAntiAlias(true);//抗锯齿
+        textView.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG); //中划线
     }
 
     @Override

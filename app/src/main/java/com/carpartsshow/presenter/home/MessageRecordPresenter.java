@@ -38,6 +38,9 @@ public class MessageRecordPresenter extends BasePresenterImpl<MessageRecordContr
                     public void onNext(List<MsgBean> msgBeans) {
                         super.onNext(msgBeans);
                         if (type == 1){
+                            if (msgBeans.size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.loadFirst(msgBeans);
                         }else {
                             mView.loadMore(msgBeans);

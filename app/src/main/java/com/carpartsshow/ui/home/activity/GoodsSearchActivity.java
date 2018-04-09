@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.carpartsshow.R;
+import com.carpartsshow.app.Constants;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.eventbus.CarClassifyBean;
 import com.carpartsshow.eventbus.GoodsMoreBean;
@@ -30,6 +31,7 @@ import com.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.carpartsshow.ui.home.fragment.GoodsFragment;
+import com.carpartsshow.ui.me.activity.CreditMoneyActivity;
 import com.carpartsshow.util.SpUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,16 +94,16 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     private int cid;
     private LoginBean loginBean;
     private String searchValue;
+    private String step;
 
     //商品搜索请求参数map
     private Map<String , Object> map = new HashMap<>();
-    //ASC   desc
-    private String orderASC = "";
     private int page = 1;
 
     public boolean isClassifyShow;
     public boolean isBrandShow;
     public boolean isCarShow;
+    private String nLevelID;
 
 
     public static void start(Context context,String searchValue) {
@@ -123,16 +125,24 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     protected void setData() {
+        loginBean = SpUtil.getObject(getApplicationContext(),"user");
+        if (!loginBean.getRepairUser_CreditBeOverMoney().equals(loginBean.getRepairUser_CreditMoney())){
+            if (Constants.IS_REPAYMENT){
+                CreditMoneyActivity.start(this,1);
+                Constants.IS_REPAYMENT = false;
+            }
+        }
         EventBus.getDefault().register(this);
         latelBrand = getIntent().getStringExtra("brand") == null ? "" : getIntent().getStringExtra("brand");
         latelClassify = getIntent().getStringExtra("classify") == null ? "" : getIntent().getStringExtra("classify");
         cid = getIntent().getIntExtra("cid",-1) ;
         latelCarBrand = getIntent().getStringExtra("carBrand") ;
         searchValue = getIntent().getStringExtra("searchValue") == null ? "" : getIntent().getStringExtra("searchValue");
+        nLevelID = getIntent().getStringExtra("NLevelID") == null ? "" : getIntent().getStringExtra("NLevelID");
+        step = getIntent().getStringExtra("classifyStep");
         initLabel();
         fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
-        loginBean = SpUtil.getObject(getApplicationContext(),"user");
         mPresenter.getClassification(loginBean.getRepairUser_ID());
         map.put("RepairUser_ID",loginBean.getRepairUser_ID());
         map.put("PageIndex",page);
@@ -142,6 +152,12 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             map.put("CarID", cid);
         }
         map.put("SearchValue",searchValue);
+        if (!TextUtils.isEmpty(step)) {
+            map.put("Step", step);
+        }
+        if (!TextUtils.isEmpty(nLevelID)){
+            map.put("NLevelID",nLevelID);
+        }
         mPresenter.getGoodsSearch(map);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -156,6 +172,12 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     //初始化标签
@@ -211,12 +233,24 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 break;
             case R.id.tv_label_models_delete:
                 map.remove("CarID");
+                map.remove("NLevelID");
                 tvLabelModelsDelete.setVisibility(View.GONE);
                 updateDate(map);
                 break;
             case R.id.tv_zh:
                 //价格
-                map.put("","");
+                if (isAsc) {
+                    map.put("OrderASC", "ASC");
+                    isAsc = false;
+                }else {
+                    map.put("OrderASC", "desc");
+                    isAsc = true;
+                }
+                updateDate(map);
+                isCarShow = false;
+                isBrandShow = false;
+                isClassifyShow = false;
+                setContentFragment(FRAGMENT_TAG_GOODS);
                 break;
             case R.id.tv_classify:
                 //分类
@@ -263,6 +297,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 break;
         }
     }
+
+    boolean isAsc;
 
     @Override
     public void stateError() {
@@ -326,7 +362,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 break;
             case "classify":
                 latelClassify = carClassifyBean.getName();
+                step = carClassifyBean.getcType();
                 map.put("CategoryName",latelClassify);
+                map.put("Step",carClassifyBean.getcType());
                 tvLabelDelete.setVisibility(View.VISIBLE);
                 tvLabelDelete.setText(latelClassify);
                 updateDate(map);
@@ -339,6 +377,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 latelCarBrand = carClassifyBean.getName();
                 cid = carClassifyBean.getCid();
                 map.put("CarID", cid);
+                map.remove("NLevelID");
                 updateDate(map);
                 tvLabelModelsDelete.setText(latelCarBrand);
                 tvLabelModelsDelete.setVisibility(View.VISIBLE);

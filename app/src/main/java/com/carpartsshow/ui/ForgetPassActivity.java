@@ -1,8 +1,11 @@
 package com.carpartsshow.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -30,11 +33,11 @@ public class ForgetPassActivity extends MvpActivity<ForgetPassPresenter> impleme
     String mobile;
     String code;
 
+    private FingerprintManagerCompat managerCompat;
+    private FingerprintManager fingerprintManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StatusBarUtil.setStatusBarColor(this, R.color.white);
-        }
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         super.onCreate(savedInstanceState);
     }
 
@@ -50,7 +53,8 @@ public class ForgetPassActivity extends MvpActivity<ForgetPassPresenter> impleme
 
     @Override
     protected void setData() {
-
+        managerCompat = FingerprintManagerCompat.from(this);
+        fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
     }
 
     @OnClick({R.id.tv_code, R.id.tv_login, R.id.tv_xyb})

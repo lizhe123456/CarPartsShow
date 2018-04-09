@@ -10,9 +10,9 @@ public class SeckillGoodsBean {
     /**
      * Seckill_ID : 067bf736-98d8-4cf6-89c6-c4b856a28a74
      * Seckill_Name : 减震器后右防尘套 DB019
-     * Seckill_ImgPath : /Resource/PhotoFile/8c76f9bd-8154-4977-865c-9034a5ae19e9.png
+     * Seckill_ImgPath : http://zpk.jscxqp.com//Resource/PhotoFile/8c76f9bd-8154-4977-865c-9034a5ae19e9.png
      * Seckill_Stock : 200
-     * Seckill_LookCount : 79
+     * Seckill_LookCount : 137
      * Seckill_SourcePrice : 50
      * Seckill_SuggestPrice : 110
      * Seckill_Price : 80
@@ -26,6 +26,9 @@ public class SeckillGoodsBean {
      * Seckill_IsOn : true
      * Company_ID : 0465ad54-ef0a-401f-a4a8-1072fa544da2
      * Card_ID : ad5024a6-f9a5-4868-892c-a8b4cbaba19a
+     * Url : http://zpk.jscxqp.com/HomeWxZPK/SeckillGoodsDetailApp?RepairUser_ID=ddeqwdq&Seckill_ID=067bf736-98d8-4cf6-89c6-c4b856a28a74
+     * IsCollection : true
+     * CarCount : 8
      */
 
     private String Seckill_ID;
@@ -47,14 +50,8 @@ public class SeckillGoodsBean {
     private String Company_ID;
     private String Card_ID;
     private String Url;
-
-    public String getUrl() {
-        return Url;
-    }
-
-    public void setUrl(String url) {
-        Url = url;
-    }
+    private boolean IsCollection;
+    private int CarCount;
 
     public String getSeckill_ID() {
         return Seckill_ID;
@@ -198,5 +195,29 @@ public class SeckillGoodsBean {
 
     public void setCard_ID(String Card_ID) {
         this.Card_ID = Card_ID;
+    }
+
+    public String getUrl() {
+        return Url;
+    }
+
+    public void setUrl(String Url) {
+        this.Url = Url;
+    }
+
+    public boolean isIsCollection() {
+        return IsCollection;
+    }
+
+    public void setIsCollection(boolean IsCollection) {
+        this.IsCollection = IsCollection;
+    }
+
+    public int getCarCount() {
+        return CarCount;
+    }
+
+    public void setCarCount(int CarCount) {
+        this.CarCount = CarCount;
     }
 }

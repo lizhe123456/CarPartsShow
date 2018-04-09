@@ -14,6 +14,7 @@ import com.carpartsshow.eventbus.CarClassifyBean;
 import com.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.home.adapter.ClassifyGroupAdapter;
+import com.carpartsshow.util.DensityUtils;
 import com.carpartsshow.widgets.AnimatedExpandableListView;
 import com.carpartsshow.widgets.CPSToast;
 
@@ -88,11 +89,12 @@ public class CarClassifyFragment extends BaseFragment {
             @Override
             public void OnGroupItemClick(ClassificationItemBean classificationItemBean) {
                 if (getActivity() instanceof GoodsSearchActivity) {
-                    EventBus.getDefault().post(new CarClassifyBean("classify",classificationItemBean.getName()));
+                    EventBus.getDefault().post(new CarClassifyBean("classify",classificationItemBean.getName(),"1"));
                 }else {
                     Intent intent = new Intent();
                     intent.setClass(getContext(), GoodsSearchActivity.class);
                     intent.putExtra("classify", classificationItemBean.getName());
+                    intent.putExtra("classifyStep", "1");
                     startActivity(intent);
                 }
             }
@@ -100,17 +102,18 @@ public class CarClassifyFragment extends BaseFragment {
             @Override
             public void OnSubItemClick(ClassificationItemBean.ClassificationItem2Bean classificationItem2Bean) {
                 if (getActivity() instanceof GoodsSearchActivity) {
-                    EventBus.getDefault().post(new CarClassifyBean("classify",classificationItem2Bean.getName()));
+                    EventBus.getDefault().post(new CarClassifyBean("classify",classificationItem2Bean.getName(),"2"));
                 }else {
                     Intent intent = new Intent();
                     intent.setClass(getContext(), GoodsSearchActivity.class);
                     intent.putExtra("classify", classificationItem2Bean.getName());
+                    intent.putExtra("classifyStep", "2");
                     startActivity(intent);
                 }
             }
         });
         View view = new View(getContext());
-        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
+        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, DensityUtils.dip2px(getContext(),60)));
         expandableListView.addFooterView(view);
     }
 

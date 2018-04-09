@@ -29,15 +29,15 @@ public class OrderBean implements Serializable {
     private List<ListReceiptAddressBean> ListReceiptAddress;
     private List<GoodsBean> ListGoods;
     private List<String> listProductAttrId;
-    private List<Warehouse> warehouses;
+    private List<Warehouse> WarehouseList;
 
 
     public List<Warehouse> getWarehouses() {
-        return warehouses;
+        return WarehouseList;
     }
 
     public void setWarehouses(List<Warehouse> warehouses) {
-        this.warehouses = warehouses;
+        this.WarehouseList = warehouses;
     }
 
     public Object getCoupon() {

@@ -29,6 +29,6 @@ public interface CollectionContract {
         void delCollections(String cids);
 
         //加入购物车
-        void plus(String userId,String productId,int productType);
+        void plus(String userId,String productId);
     }
 }

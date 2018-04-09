@@ -98,6 +98,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     private Camera.AutoFocusCallback mAutoFocusCallback;
     private BaiduToken token = null;
     private SurfaceHolder surfaceHolder;
+    private Handler handler;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, ScanCodeActivity.class);
@@ -118,7 +119,14 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
     }
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
+            ScanCodeActivity.this.finish();
 
+        }
+    };
     @Override
     protected void init() {
         super.init();
@@ -144,14 +152,10 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 // 调用失败，返回OCRError子类SDKError对象
             }
         }, getApplicationContext());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
-                ScanCodeActivity.this.finish();
-            }
-        },30000);
+        handler = new Handler();
+        handler.postDelayed(runnable,30000);
     }
+
 
     @Override
     protected void setData() {
@@ -347,8 +351,8 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     @Override
     protected void onDestroy() {
+        handler.removeCallbacks(runnable);
         super.onDestroy();
-
     }
 
     @Override
@@ -386,6 +390,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         try {
             BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
             mPresenter.getVinCode(beanResutl.getWords_result().get(0).getWords());
+            CPSToast.showText(this,beanResutl.getWords_result().get(0).getWords());
         }catch (Exception e){
 
         }
@@ -411,7 +416,9 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     @Override
     public void showData(List<CarModelByVINBean> list) {
         Intent intent = new Intent(this,GoodsSearchActivity.class);
-        intent.putExtra("carBrand",list.get(0).getDescribe());
+        intent.putExtra("NLevelID",list.get(0).getNLevelID());
+        intent.putExtra("carBrand",list.get(0).getPP() +" " + list.get(0).getCX() +"--排量 " + list.get(0).getPL() + " " + list.get(0).getNK());
+        getIntent().getStringExtra("carBrand") ;
         startActivity(intent);
         this.finish();
     }
