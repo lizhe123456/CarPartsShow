@@ -8,6 +8,8 @@ import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.me.contract.IntergralContract;
 import com.carpartsshow.util.RxUtil;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -31,11 +33,11 @@ public class IntergralPresenter extends BasePresenterImpl<IntergralContract.View
             page = 1;
         }
         addSubscribe(dataManager.fetchSplitIntegerRecord(userId,page,size)
-                .compose(RxUtil.<CPSResponse<IntergralBean>>rxSchedulerHelper())
-                .compose(RxUtil.<IntergralBean>handle())
-                .subscribeWith(new CommonSubscriber<IntergralBean>(mView){
+                .compose(RxUtil.<CPSResponse<List<IntergralBean>>>rxSchedulerHelper())
+                .compose(RxUtil.<List<IntergralBean>>handle())
+                .subscribeWith(new CommonSubscriber<List<IntergralBean>>(mView){
                     @Override
-                    public void onNext(IntergralBean intergralBean) {
+                    public void onNext(List<IntergralBean> intergralBean) {
                         super.onNext(intergralBean);
                         if (type == 1){
                             mView.showContent(intergralBean);

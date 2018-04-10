@@ -1,21 +1,13 @@
 package com.carpartsshow.base;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.carpartsshow.app.App;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -27,7 +19,6 @@ import butterknife.Unbinder;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Activity mActivity;
-    protected final String TAG = this.getClass().getSimpleName();
     private Unbinder mUnbinder;
     protected View mView;
 
@@ -49,6 +40,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void init();
 
     protected abstract void setData();
+
+
 
 
     /**

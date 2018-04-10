@@ -76,6 +76,7 @@ public class MyCouponActivity extends MvpActivity<CouponPresenter> implements Co
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {

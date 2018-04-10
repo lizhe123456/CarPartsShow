@@ -24,6 +24,8 @@ import com.carpartsshow.ui.home.HomeFragment;
 import com.carpartsshow.ui.me.MeFragment;
 import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
+import com.carpartsshow.util.StatusBarUtil;
+import com.carpartsshow.util.SystemUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -75,6 +77,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setImmersionStateMode(this);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -102,9 +105,7 @@ public class MainActivity extends BaseActivity {
                 tag = CLASSIFY;
                 break;
             case R.id.tv_shopping_cart:
-                Intent intent = new Intent();
-                intent.setClass(this, ShoppingCartActivity.class);
-                startActivity(intent);
+                ShoppingCartActivity.start(this);
                 break;
             case R.id.tv_me:
                 tag = ME;
@@ -115,30 +116,16 @@ public class MainActivity extends BaseActivity {
         }
         selectNavigation();
         setContentFragment(tag);
+
     }
 
     @Subscribe
     public void selectFragment(HomePageBean homePageBean){
         switch (homePageBean.getPage()){
             case 1 :
-                tag = CLASSIFY;
-                selectNavigation();
-                setContentFragment(tag);
-                break;
             case 2 :
-                tag = CLASSIFY;
-                selectNavigation();
-                setContentFragment(tag);
-                break;
             case 3 :
-                tag = CLASSIFY;
-                selectNavigation();
-                setContentFragment(tag);
-                break;
-            case 4:
-                tag = HOME;
-                selectNavigation();
-                setContentFragment(tag);
+                tvClassify.performClick();
                 break;
         }
     }
@@ -149,36 +136,16 @@ public class MainActivity extends BaseActivity {
             case HOME :
                 tvHome.setSelected(true);
                 tvClassify.setSelected(false);
-//                tvScanCode.setSelected(false);
-                tvShoppingCart.setSelected(false);
                 tvMe.setSelected(false);
                 break;
             case CLASSIFY :
                 tvHome.setSelected(false);
                 tvClassify.setSelected(true);
-//                tvScanCode.setSelected(false);
-                tvShoppingCart.setSelected(false);
                 tvMe.setSelected(false);
-                break;
-            case SCANCODE :
-//                tvHome.setSelected(true);
-//                tvClassify.setSelected(false);
-//                tvScanCode.setSelected(false);
-//                tvShoppingCart.setSelected(false);
-//                tvMe.setSelected(false);
-                break;
-            case SHOPPINGCART :
-//                tvHome.setSelected(false);
-//                tvClassify.setSelected(false);
-////                tvScanCode.setSelected(false);
-//                tvShoppingCart.setSelected(true);
-//                tvMe.setSelected(false);
                 break;
             case ME :
                 tvHome.setSelected(false);
                 tvClassify.setSelected(false);
-//                tvScanCode.setSelected(false);
-                tvShoppingCart.setSelected(false);
                 tvMe.setSelected(true);
                 break;
         }
@@ -229,8 +196,6 @@ public class MainActivity extends BaseActivity {
         }
         ft.commit();
         currentFragmentTag = tag;
-        invalidateOptionsMenu();
-
     }
 
     @Override
@@ -247,6 +212,15 @@ public class MainActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT != Build.VERSION_CODES.LOLLIPOP) {
             // 透明状态栏
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   //去除半透明状态栏
+
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);  //一般配合fitsSystemWindows()使用, 或者在根部局加上属性android:fitsSystemWindows="true", 使根部局全屏显示
+
+                activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
+//            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             // 透明导航栏
             // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
@@ -257,8 +231,11 @@ public class MainActivity extends BaseActivity {
                     // | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
     }
+
+
 }

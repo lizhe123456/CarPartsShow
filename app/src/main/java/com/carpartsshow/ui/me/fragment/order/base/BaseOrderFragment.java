@@ -19,10 +19,12 @@ import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.model.http.response.CPSResponse;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.carpartsshow.ui.me.activity.AllOrderActivity;
 import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
@@ -142,17 +144,34 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
         refresh.autoRefresh(3000);
     }
 
-    Dialog bottomDialog;
-
     //联系客服
     protected void customerServicePhone() {
-        bottomDialog = new Dialog(getContext(), R.style.BottomDialog);
+        UserInfoBean userInfoBean = SpUtil.getObject(getContext(),"userInfo");
+        final Dialog bottomDialog = new Dialog(getContext(), R.style.BottomDialog);
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_content_normal, null);
         TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
-        TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
-        TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
-        TextView tv_phone = contentView.findViewById(R.id.tv_phone);
+        final TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
+        final TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
+        if (userInfoBean != null) {
+            try {
+                tv_phone_1.setText(userInfoBean.getListServicePhone().get(0).getItemValue());
+                tv_phone_2.setText(userInfoBean.getListServicePhone().get(1).getItemValue());
+            }catch (IndexOutOfBoundsException e){
 
+            }
+        }
+        tv_phone_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(getContext(),tv_phone_1.getText().toString().trim());
+            }
+        });
+        tv_phone_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(getContext(),tv_phone_2.getText().toString().trim());
+            }
+        });
         bottomDialog.setContentView(contentView);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         layoutParams.width = getResources().getDisplayMetrics().widthPixels;
@@ -166,11 +185,6 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
                 bottomDialog.cancel();
             }
         });
-    }
-
-    //查看进度
-    protected void lookProgress() {
-
     }
 
     @Override

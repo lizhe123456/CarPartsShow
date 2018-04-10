@@ -16,13 +16,17 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
+import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.carpartsshow.ui.me.fragment.order.adapter.AllOrderAdapter;
 import com.carpartsshow.ui.me.fragment.order.base.OnOrderListenerAdapter;
 import com.carpartsshow.ui.me.fragment.order.base.OrderAdapter;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
+import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.util.SpUtil;
+import com.carpartsshow.util.SystemUtil;
+import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -73,8 +77,9 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
     }
 
     @Override
-    public void updateData() {
+    public void updateData(String msg) {
         refresh.autoRefresh(3000);
+        CPSToast.showText(this,msg);
     }
 
     @Override
@@ -133,17 +138,34 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
         });
     }
 
-    Dialog bottomDialog;
-
     //联系客服
     protected void customerServicePhone() {
-        bottomDialog = new Dialog(this, R.style.BottomDialog);
+        UserInfoBean userInfoBean = SpUtil.getObject(this,"userInfo");
+        final Dialog bottomDialog = new Dialog(this, R.style.BottomDialog);
         View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_normal, null);
         TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
-        TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
-        TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
-        TextView tv_phone = contentView.findViewById(R.id.tv_phone);
+        final TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
+        final TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
+        if (userInfoBean != null) {
+            try {
+                tv_phone_1.setText(userInfoBean.getListServicePhone().get(0).getItemValue());
+                tv_phone_2.setText(userInfoBean.getListServicePhone().get(1).getItemValue());
+            }catch (IndexOutOfBoundsException e){
 
+            }
+        }
+        tv_phone_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(AllOrderActivity.this,tv_phone_1.getText().toString().trim());
+            }
+        });
+        tv_phone_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(AllOrderActivity.this,tv_phone_2.getText().toString().trim());
+            }
+        });
         bottomDialog.setContentView(contentView);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         layoutParams.width = getResources().getDisplayMetrics().widthPixels;

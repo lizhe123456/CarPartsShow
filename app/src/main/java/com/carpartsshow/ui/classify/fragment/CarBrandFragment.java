@@ -83,6 +83,7 @@ public class CarBrandFragment extends BaseFragment {
                 //该字母首次出现的位置
                 int position = mAdapter.getPositionForSection(s.charAt(0));
                 if (position != -1) {
+                    expandableListView.setSelectedGroup(position);
                 }
             }
         });

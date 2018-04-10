@@ -53,7 +53,16 @@ public class ClassificationItemBean implements Parcelable {
     private Object Category_ChooseOff;
     private String Category_FirstImgPath;
     private boolean UniversalParts;
+    private boolean isOpen;
     List<ClassificationItem2Bean> list;
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
 
     public ClassificationItemBean(Parcel in) {
         ID = in.readInt();

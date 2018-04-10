@@ -49,6 +49,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -115,6 +116,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     protected void setData() {
         loginBean = SpUtil.getObject(getContext(), "user");
+        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -164,7 +166,13 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
+//        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
+        Calendar calendar=Calendar.getInstance();  //获取当前时间，作为图标的名字
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        tvTime.setTime(23 - hour, 59 - minute, 59 - second);
+        tvTime.start();
     }
 
     @Override
@@ -233,20 +241,30 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     }
 
     private void initDataItem(List<HomePageBean.ListCardImg> listDateItem) {
-        ListDateItemAdapter adapter = new ListDateItemAdapter(getContext());
-        GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 2);
+        LinearLayoutManager linearLayoutManager=null;
+        ListDateItemAdapter adapter = null;
+        if (listDateItem.size() > 5){
+            linearLayoutManager = new GridLayoutManager(getContext(), 3);
+            adapter = new ListDateItemAdapter(getContext(),0);
+        }else if (listDateItem.size() == 5){
+            linearLayoutManager = new LinearLayoutManager(getContext());
+            adapter = new ListDateItemAdapter(getContext(),1);
+            List<List<HomePageBean.ListCardImg>> lists = new ArrayList<>();
+            lists.add(listDateItem);
+            lists.add(null);
+            lists.add(null);
+            lists.add(null);
+            lists.add(null);
+            adapter.setLists(lists);
+        }else {
+            adapter = new ListDateItemAdapter(getContext(),0);
+            linearLayoutManager = new GridLayoutManager(getContext(), 2);
+        }
         rvDataItem.setLayoutManager(linearLayoutManager);
         rvDataItem.setAdapter(adapter);
         rvDataItem.setVisibility(View.VISIBLE);
         adapter.addFirstDataSet(listDateItem);
         linearLayout.setVisibility(View.VISIBLE);
-        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, Object item, int position) {
-                HomePageBean.ListCardImg listCardImg = (HomePageBean.ListCardImg) item;
-                GoodsSearchActivity.start(getContext(), listCardImg.getSearch());
-            }
-        });
     }
 
     @Override
@@ -284,8 +302,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                 TimelimitActivity.start(getContext());
             }
         });
-        tvTime.setTime(9, 59, 59);
-        tvTime.start();
+
     }
 
     private void initListNotice(final List<HomePageBean.ListNoticeBean> listNotice) {

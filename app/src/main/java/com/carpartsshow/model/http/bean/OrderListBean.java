@@ -278,6 +278,15 @@ public class OrderListBean {
             private int OrderItem_Number;
             private int OrderItem_Money;
             private String Order_ID;
+            private String Url;
+
+            public String getUrl() {
+                return Url;
+            }
+
+            public void setUrl(String url) {
+                Url = url;
+            }
 
             public String getOrderItem_ID() {
                 return OrderItem_ID;

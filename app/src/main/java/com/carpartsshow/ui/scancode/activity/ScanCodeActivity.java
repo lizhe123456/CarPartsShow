@@ -3,6 +3,7 @@ package com.carpartsshow.ui.scancode.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +14,8 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
@@ -27,6 +30,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -38,21 +42,30 @@ import com.baidu.ocr.sdk.model.WordSimple;
 import com.carpartsshow.R;
 import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.base.MvpActivity;
+import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.BaiduToken;
 import com.carpartsshow.model.http.bean.BaiduWord;
 import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.presenter.scancode.ScanCodePresenter;
 import com.carpartsshow.presenter.scancode.contract.ScanCodeContract;
+import com.carpartsshow.ui.classify.adapter.CarBrandAdapter;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.carpartsshow.ui.me.adapter.AddressAdapter;
 import com.carpartsshow.ui.scancode.RecognizeService;
+import com.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
+import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.carpartsshow.util.Base64Util;
 import com.carpartsshow.util.FileUtil;
 import com.carpartsshow.util.ImageUtil;
 import com.carpartsshow.util.ScreenUtils;
+import com.carpartsshow.view.ScanCodeDialog;
+import com.carpartsshow.view.ZlCustomDialog;
 import com.carpartsshow.widgets.BmpImageView;
 import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,6 +74,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.BackpressureStrategy;
@@ -99,6 +114,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     private BaiduToken token = null;
     private SurfaceHolder surfaceHolder;
     private Handler handler;
+    BitmapThread bitmapThread;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, ScanCodeActivity.class);
@@ -119,14 +135,15 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
     }
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
-            ScanCodeActivity.this.finish();
+//    Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
+//            ScanCodeActivity.this.finish();
+//
+//        }
+//    };
 
-        }
-    };
     @Override
     protected void init() {
         super.init();
@@ -153,7 +170,9 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
             }
         }, getApplicationContext());
         handler = new Handler();
-        handler.postDelayed(runnable,30000);
+//        handler.postDelayed(runnable,30000);
+        bitmapThread = new BitmapThread();
+        bitmapThread.start();
     }
 
 
@@ -210,6 +229,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     private void openCamera(SurfaceHolder surfaceHolder) {
         releaseCamera();
+
         try {
             camera = getCamera(Camera.CameraInfo.CAMERA_FACING_BACK); // 根据需求选择前/后置摄像头
         } catch (Exception e) {
@@ -327,13 +347,43 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         if (num == 60) {
             Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera);
             boolean flag = saveBitmapToSd(bitmap, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath());
-            RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), this);
+//            RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), this);
+            if (bitmapThread != null) {
+                bitmapThread.handler.sendEmptyMessage(0);
+            }
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.isRecycled();
+                bitmap = null;
+            }
+
         }
         num = num + 1;
         if (num == 61) {
             num = 0;
         }
     }
+
+
+
+    class BitmapThread extends Thread {
+        public Handler handler;
+
+        @Override
+        public void run() {
+            super.run();
+            Looper.prepare();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), ScanCodeActivity.this);
+                }
+            };
+            Looper.loop();//loop()会调用到handler的handleMessage(Message msg)方法，所以，写在下面；
+        }
+    }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -351,7 +401,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     @Override
     protected void onDestroy() {
-        handler.removeCallbacks(runnable);
+//        handler.removeCallbacks(runnable);
         super.onDestroy();
     }
 
@@ -394,7 +444,6 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         }catch (Exception e){
 
         }
-
     }
 
     @Override
@@ -402,25 +451,35 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     }
 
-    private int errornum;
-
     @Override
     public void showErrorMsg(String msg) {
         super.showErrorMsg(msg);
-        if (errornum == 3){
-            this.finish();
-        }
-        errornum++;
     }
 
     @Override
-    public void showData(List<CarModelByVINBean> list) {
-        Intent intent = new Intent(this,GoodsSearchActivity.class);
-        intent.putExtra("NLevelID",list.get(0).getNLevelID());
-        intent.putExtra("carBrand",list.get(0).getPP() +" " + list.get(0).getCX() +"--排量 " + list.get(0).getPL() + " " + list.get(0).getNK());
-        getIntent().getStringExtra("carBrand") ;
-        startActivity(intent);
-        this.finish();
+    public void showData(final List<CarModelByVINBean> list) {
+        releaseCamera();
+        final ScanCodeDialog dialog = new ScanCodeDialog(ScanCodeActivity.this);
+        ScanCodeCarBrandAdapter scanCodeCarBrandAdapter = new ScanCodeCarBrandAdapter(ScanCodeActivity.this);
+        scanCodeCarBrandAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                CarModelByVINBean carModelByVINBean = (CarModelByVINBean) item;
+                Intent intent = new Intent(ScanCodeActivity.this,GoodsSearchActivity.class);
+                intent.putExtra("NLevelID",carModelByVINBean.getNLevelID());
+                intent.putExtra("carBrand",carModelByVINBean.getPP() +" " + carModelByVINBean.getCX() +"--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK());
+                startActivity(intent);
+                ScanCodeActivity.this.finish();
+            }
+        });
+        dialog.show(scanCodeCarBrandAdapter,list);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                openCamera(surfaceHolder);
+            }
+        });
     }
+
 
 }

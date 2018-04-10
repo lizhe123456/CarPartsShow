@@ -16,14 +16,16 @@
             android:layout_height="match_parent"
             android:src="@drawable/back_go"
             android:scaleType="center"/>
-        <include
-            android:layout_toRightOf="@+id/iv_back"
-            android:layout_toLeftOf="@+id/iv_record"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dm_10"
-            android:layout_marginBottom="@dimen/dm_10"
-            layout="@layout/search_layout"/>
+            <include
+                android:id="@+id/search_bar"
+                android:layout_toRightOf="@+id/iv_back"
+                android:layout_toLeftOf="@+id/iv_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dm_10"
+                android:layout_marginBottom="@dimen/dm_10"
+                layout="@layout/et_search_layout"/>
+
         <ImageView
             android:id="@+id/iv_record"
             android:layout_width="@dimen/dm_48"

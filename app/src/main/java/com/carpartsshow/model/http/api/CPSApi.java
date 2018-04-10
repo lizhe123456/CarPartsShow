@@ -76,7 +76,7 @@ public interface CPSApi {
 
     //积分记录
     @GET("/api/User/SplitIntegerRecord")
-    Flowable<CPSResponse<IntergralBean>> splitIntegerRecord(@Query("RepairUser_ID") String userId,
+    Flowable<CPSResponse<List<IntergralBean>>> splitIntegerRecord(@Query("RepairUser_ID") String userId,
                                                             @Query("PageIndex") int page,
                                                             @Query("PageSize") int size);
 

@@ -208,6 +208,7 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
         list.add(new OrderItem("已完成", R.drawable.complete, userInfoBean.getCompluteOrder()));
         list.add(new OrderItem("退货/售后", R.drawable.return_goods, userInfoBean.getSaleOrder()));
         orderListAdapter.addFristData(list);
+        SpUtil.getObject(getContext(),"userInfo");
     }
 
 
@@ -235,7 +236,11 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
                 break;
             case R.id.ll_integral:
                 intent.setClass(getContext(), MyIntegralActivity.class);
-                intent.putExtra("integer",userInfoBean.getCurrentRepairUser().getRepairUser_Integer()+"");
+                if (userInfoBean != null) {
+                    intent.putExtra("integer", userInfoBean.getCurrentRepairUser().getRepairUser_Integer() + "");
+                }else {
+                    intent.putExtra("integer", "0");
+                }
                 startActivity(intent);
                 break;
             case R.id.tv_exit_login:

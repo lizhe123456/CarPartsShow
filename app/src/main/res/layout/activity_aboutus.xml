@@ -61,6 +61,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dm_64"/>
     <TextView
+        android:id="@+id/tv_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

@@ -22,11 +22,11 @@ public class HomeCategoryAdapter extends BaseAdapter<HomePageBean.ListFirstCateg
 
     @Override
     protected void bindDataToItemView(BaseViewHolder holder, HomePageBean.ListFirstCategoryBean item, int position) {
-        int width = SystemUtil.getScreenWidth(getContext()) / 5;
+        int width = (SystemUtil.getScreenWidth(getContext())-5*14) / 5;
         LinearLayout linearLayout = holder.getView(R.id.ll_layout);
         FrameLayout.LayoutParams params= (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
         //获取当前控件的布局对象
-        params.width = width;//设置当前控件布局的高度
+        params.width = width;//设置当前控件布局的宽度
         linearLayout.setLayoutParams(params);//将设置好的布局参数应用到控件中
         holder.setText(R.id.tv_categorg_name,item.getName());
         if (item.getResId() == 0){

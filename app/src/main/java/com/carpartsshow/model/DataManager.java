@@ -89,7 +89,7 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse<IntergralBean>> fetchSplitIntegerRecord(String userId, int page, int size) {
+    public Flowable<CPSResponse<List<IntergralBean>>> fetchSplitIntegerRecord(String userId, int page, int size) {
         return httpHelper.fetchSplitIntegerRecord(userId, page, size);
     }
 

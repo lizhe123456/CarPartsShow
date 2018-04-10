@@ -223,18 +223,22 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 latelClassify = "";
                 map.put("CategoryName",latelClassify);
                 tvLabelDelete.setVisibility(View.GONE);
+                initLabel();
                 updateDate(map);
                 break;
             case R.id.tv_label_brand_delete:
                 latelBrand = "";
                 map.put("BrandName",latelBrand);
                 tvLabelBrandDelete.setVisibility(View.GONE);
+                initLabel();
                 updateDate(map);
                 break;
             case R.id.tv_label_models_delete:
+                latelCarBrand = "";
                 map.remove("CarID");
                 map.remove("NLevelID");
                 tvLabelModelsDelete.setVisibility(View.GONE);
+                initLabel();
                 updateDate(map);
                 break;
             case R.id.tv_zh:

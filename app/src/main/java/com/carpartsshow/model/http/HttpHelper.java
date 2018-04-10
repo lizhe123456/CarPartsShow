@@ -53,7 +53,7 @@ public interface HttpHelper {
 
     Flowable<CPSResponse<List<CouponBean>>> fetchUserCoupon(String userId, int page, int size, int isUse);
 
-    Flowable<CPSResponse<IntergralBean>> fetchSplitIntegerRecord(String userId, int page, int size);
+    Flowable<CPSResponse<List<IntergralBean>>> fetchSplitIntegerRecord(String userId, int page, int size);
 
     Flowable<CPSResponse<UserInfoBean>> fetchGetUserInfo(String userId);
 

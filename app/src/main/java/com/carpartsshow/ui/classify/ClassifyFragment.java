@@ -78,6 +78,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
 
     private int page = 0;
+    private LoginBean loginBean;
 
     @Override
     protected int setLayout() {
@@ -92,7 +93,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
     @Override
     protected void setData() {
-        LoginBean loginBean = SpUtil.getObject(getContext(), "user");
+        loginBean = SpUtil.getObject(getContext(), "user");
         mPresenter.getClassification(loginBean.getRepairUser_ID(), 0);
 //        page = getArguments().getInt("page");
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -109,7 +110,6 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
             }
         });
     }
-
 
     @Override
     public void stateError() {

@@ -46,8 +46,10 @@ public class MyMoneyActivity extends BaseActivity {
     @Override
     protected void setData() {
         UserInfoBean userInfoBean = new Gson().fromJson(getIntent().getStringExtra("userInfo"),UserInfoBean.class);
-        tvPrice.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditBeOverMoney()+"");
-        tvPriceZ.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditMoney()+"");
+        if (userInfoBean != null) {
+            tvPrice.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditBeOverMoney() + "");
+            tvPriceZ.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditMoney() + "");
+        }
     }
 
 

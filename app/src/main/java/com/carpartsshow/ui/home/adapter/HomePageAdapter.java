@@ -123,12 +123,12 @@ public class HomePageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             recyclerView.setAdapter(adapter);
 //            adapter.addFirstDataSet(list);
         }else if (getItemViewType(position) == 6){
-            List<HomePageBean.ListDateItemBean> list = (List<HomePageBean.ListDateItemBean>) mData.get(position);
-            RecyclerView recyclerView = holder.getView(R.id.recyclerView);
-            ListDateItemAdapter adapter = new ListDateItemAdapter(mContext);
-            recyclerView.setAdapter(adapter);
-            View view = LayoutInflater.from(mContext).inflate(R.layout.img_layout,null);
-            adapter.addHeaderView(view);
+//            List<HomePageBean.ListDateItemBean> list = (List<HomePageBean.ListDateItemBean>) mData.get(position);
+//            RecyclerView recyclerView = holder.getView(R.id.recyclerView);
+////            ListDateItemAdapter adapter = new ListDateItemAdapter(mContext);
+//            recyclerView.setAdapter(adapter);
+//            View view = LayoutInflater.from(mContext).inflate(R.layout.img_layout,null);
+//            adapter.addHeaderView(view);
         }
     }
 

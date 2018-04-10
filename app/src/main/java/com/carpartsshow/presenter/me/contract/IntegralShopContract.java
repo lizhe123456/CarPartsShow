@@ -17,7 +17,7 @@ public interface IntegralShopContract {
     }
 
     interface Presenter extends BasePresenter<View>{
-        void getIntegralShop(int type);
+        void getIntegralShop(String searchValue,int type);
     }
 
 }

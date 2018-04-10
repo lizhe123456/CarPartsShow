@@ -143,6 +143,7 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                     tvAddS.setText(addressBean.get(i).getAreaName());
                     pCode = addressBean.get(i).getAreaId();
                     mPresenter.getAreaList(pCode,1);
+                    break;
                 }
             }
         }else {
@@ -183,6 +184,7 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                     tvAddC.setText(addressBean.get(i).getAreaName());
                     cCode = addressBean.get(i).getAreaId();
                     mPresenter.getAreaList(cCode,2);
+                    break;
                 }
             }
         }else if (isRun){
@@ -228,6 +230,7 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                     tvAddA.setText(addressBean.get(i).getAreaName());
                     aCode = addressBean.get(i).getAreaId();
                     isFrist = false;
+                    break;
                 }
             }
         }else if (isRun){
@@ -285,7 +288,5 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
             return R.layout.city_item;
         }
     }
-
-
 
 }

@@ -12,45 +12,66 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_title"
-        app:srlDragRate="1"
+        android:layout_marginBottom="@dimen/dm_60"
         app:srlEnableLoadmore="true"
-        app:srlEnablePureScrollMode="true"
-        android:layout_marginBottom="@dimen/dm_60">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        app:srlDragRate="1">
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never" />
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+            <ViewStub
+                android:id="@+id/vs_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout="@layout/empty_data_layout" />
+        </RelativeLayout>
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_0.5"
-        android:orientation="horizontal"
-        android:layout_above="@+id/ll_bottom">
+        android:layout_above="@+id/ll_bottom"
+        android:orientation="horizontal">
+
         <View
             android:layout_width="0dp"
+            android:layout_height="@dimen/dm_0.5"
             android:layout_weight="3"
-            android:layout_height="@dimen/dm_0.5"
-            android:background="@color/slide_line"/>
+            android:background="@color/slide_line" />
+
         <View
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/dm_0.5"
-            android:background="@color/red_login"/>
+            android:layout_weight="1"
+            android:background="@color/red_login" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_59"
         android:layout_alignParentBottom="true"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
+
         <TextView
             android:id="@+id/tv_all"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/round_btn_normal"
             android:drawablePadding="@dimen/dm_8"
             android:gravity="center_vertical"
@@ -58,45 +79,49 @@
             android:text="全选"
             android:textColor="@color/tv_000"
             android:textSize="@dimen/dm_16" />
+
         <LinearLayout
             android:id="@+id/ll_show"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="match_parent"
+            android:layout_weight="2"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/hj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="right"
                 android:layout_marginTop="@dimen/dm_5"
                 android:paddingRight="@dimen/dm_11"
                 android:text="合计"
                 android:textColor="@color/red_login"
-                android:textSize="@dimen/dm_12"
-                android:layout_gravity="right"/>
+                android:textSize="@dimen/dm_12" />
+
             <TextView
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/hj"
+                android:layout_gravity="right"
                 android:paddingRight="@dimen/dm_11"
                 android:text="¥0.00"
                 android:textColor="@color/red_login"
-                android:textSize="@dimen/dm_13"
-                android:layout_gravity="right"/>
+                android:textSize="@dimen/dm_13" />
+
             <TextView
                 android:id="@+id/tv_integral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/tv_price"
+                android:layout_gravity="right"
                 android:paddingRight="@dimen/dm_11"
                 android:text="0"
                 android:textColor="@color/red_login"
-                android:textSize="@dimen/dm_13"
-                android:layout_gravity="right"/>
+                android:textSize="@dimen/dm_13" />
 
         </LinearLayout>
 
@@ -109,28 +134,30 @@
             android:gravity="center"
             android:text="结算(0)"
             android:textColor="@color/white"
-            android:textSize="@dimen/dm_15"/>
+            android:textSize="@dimen/dm_15" />
+
         <TextView
             android:id="@+id/tv_collection"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/slide_line"
+            android:gravity="center"
             android:text="移入收藏夹"
             android:textColor="@color/red_login"
             android:textSize="@dimen/dm_15"
-            android:gravity="center"
-            android:background="@color/slide_line"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/tv_delete"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/red_login"
+            android:gravity="center"
             android:text="删除"
             android:textColor="@color/white"
             android:textSize="@dimen/dm_15"
-            android:gravity="center"
-            android:background="@color/red_login"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 </RelativeLayout>

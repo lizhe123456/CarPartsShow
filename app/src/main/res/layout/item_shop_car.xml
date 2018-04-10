@@ -95,5 +95,6 @@
         android:layout_marginLeft="@dimen/dm_8"
         android:textColor="@color/red_login"
         android:textSize="@dimen/dm_16"
-        android:layout_marginTop="@dimen/dm_5"/>
+        android:layout_marginTop="@dimen/dm_5"
+        android:text="¥19.00"/>
 </RelativeLayout>

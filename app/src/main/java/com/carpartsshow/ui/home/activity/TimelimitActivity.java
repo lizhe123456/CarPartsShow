@@ -20,6 +20,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.Calendar;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -99,6 +101,17 @@ public class TimelimitActivity extends MvpActivity<TimelimitPresenter> implement
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Calendar calendar=Calendar.getInstance();  //获取当前时间，作为图标的名字
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        tvTime.setTime(23 - hour, 59 - minute , 59 - second );
+        tvTime.start();
+    }
 
     @Override
     public void stateError() {

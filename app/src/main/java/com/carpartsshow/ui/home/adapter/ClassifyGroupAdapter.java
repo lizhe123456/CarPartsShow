@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,10 +31,12 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
     private LayoutInflater mInflater;
     private OnOpenListener onOpenListener;
     private OnItemListener onGroupItemListener;
+    private List<Integer> checkPositionlist;
 
     public ClassifyGroupAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
+        checkPositionlist = new ArrayList<>();
     }
 
     public void setOnOpenListener(OnOpenListener onOpenListener) {
@@ -93,7 +97,7 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
 
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        GroupItemViewHolder holder;
+        final GroupItemViewHolder holder;
         if (convertView == null) {
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.item_classify, null);
@@ -104,10 +108,20 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
         }
         holder.tvGroupName.setText(getClassificationItemBeans().get(groupPosition).getName());
         GlideuUtil.loadImageView(context,getClassificationItemBeans().get(groupPosition).getCategory_ImgPath(), holder.ivImg);
+        holder.ivItemGo.setTag(new Integer(groupPosition));
         holder.ivItemGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onOpenListener.open(groupPosition);
+                if (getClassificationItemBeans().get(groupPosition).isOpen()) {
+//                    dropDown(v);
+                    onOpenListener.open(groupPosition,getClassificationItemBeans().get(groupPosition).isOpen());
+                    getClassificationItemBeans().get(groupPosition).setOpen(false);
+                }else {
+//                    rotateOnYCoordinate(v);
+                    onOpenListener.open(groupPosition,getClassificationItemBeans().get(groupPosition).isOpen());
+                    getClassificationItemBeans().get(groupPosition).setOpen(true);
+                }
+
             }
         });
         holder.groupLayout.setOnClickListener(new View.OnClickListener() {
@@ -178,25 +192,24 @@ public class ClassifyGroupAdapter extends AnimatedExpandableListView.AnimatedExp
 
     //旋转动画
     private void rotateOnYCoordinate(View view) {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "Rotation", 0f, 90f,90f);
-        objectAnimator.setDuration(500);
-        objectAnimator.setInterpolator(new AccelerateInterpolator()); // 设置插入器
-        objectAnimator.reverse();
-        objectAnimator.start();
+        Animation anim =new RotateAnimation(0f, 90f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setFillAfter(true); // 设置保持动画最后的状态
+        anim.setDuration(300); // 设置动画时间
+        anim.setInterpolator(new AccelerateInterpolator()); // 设置插入器
+        view.startAnimation(anim);
     }
 
     //还远旋转动画
     private void dropDown(View view) {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "Rotation", 90f, 0f,0f);
-        objectAnimator.setDuration(500);
-        objectAnimator.setInterpolator(new AccelerateInterpolator());
-        objectAnimator.reverse();
-        objectAnimator.start();
-
+        Animation anim =new RotateAnimation(90f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setFillAfter(true); // 设置保持动画最后的状态
+        anim.setDuration(300); // 设置动画时间
+        anim.setInterpolator(new AccelerateInterpolator()); // 设置插入器
+        view.startAnimation(anim);
     }
 
     public interface OnOpenListener{
-        void open(int groupPosition);
+        void open(int groupPosition,boolean isOpen);
     }
 
     public interface OnItemListener{

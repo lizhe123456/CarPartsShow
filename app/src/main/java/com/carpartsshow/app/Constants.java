@@ -10,7 +10,7 @@ import com.carpartsshow.util.FileUtil;
 public class Constants {
 
     //正式关闭日志
-    public static final boolean IS_DEBUG = true;
+    public static final boolean IS_DEBUG = false;
 
     public static final String CPS_URL = "http://api.jscxqp.com:80/swagger/docs/v1/";
     public static final String PATH_CACHE = FileUtil.getFileDir("Http") + "/caches";

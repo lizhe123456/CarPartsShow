@@ -7,9 +7,11 @@ import android.view.View;
 import com.carpartsshow.R;
 import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.base.adapter.BaseViewHolder;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.presenter.me.MyOrderPresenter;
 import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.carpartsshow.ui.me.activity.IntegralGoodsActivity;
 import com.carpartsshow.ui.me.fragment.order.adapter.OrderGoodsAdapter;
 import com.carpartsshow.widgets.CurrencyDialog;
 
@@ -234,8 +236,18 @@ public abstract class OrderAdapter extends BaseAdapter<OrderListBean.DataBean> {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(View view, Object item, int position) {
+
                 OrderListBean.DataBean.DetailBean detailBean = (OrderListBean.DataBean.DetailBean) item;
-                GoodsDetailsActivity.newInstance(getContext(),detailBean.getProduct_ID(),detailBean.getProduct_Type());
+                if (detailBean.getProduct_Type() == 0) {
+                    GoodsDetailsActivity.newInstance(getContext(), detailBean.getProduct_ID(), detailBean.getProduct_Type());
+                }else if (detailBean.getProduct_Type() == 1){
+                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(detailBean.getUrl(),false,0);
+                    GoodsDetailsActivity.newInstance(getContext() ,goodsDetailToBean);
+                }else if (detailBean.getProduct_Type() == 2){
+                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(detailBean.getUrl(),false,0);
+                    goodsDetailToBean.setType(1);
+                    GoodsDetailsActivity.newInstance(getContext(), goodsDetailToBean);
+                }
             }
         });
 

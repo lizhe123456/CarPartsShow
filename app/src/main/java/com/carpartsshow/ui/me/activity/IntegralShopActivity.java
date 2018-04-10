@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.carpartsshow.R;
@@ -12,7 +16,9 @@ import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.presenter.me.IntegralShopPresenter;
 import com.carpartsshow.presenter.me.contract.IntegralShopContract;
+import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.carpartsshow.ui.me.adapter.IntegralShopAdapter;
+import com.carpartsshow.widgets.CPSToast;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -29,14 +35,14 @@ import butterknife.OnClick;
 public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> implements IntegralShopContract.View {
 
     @BindView(R.id.et_search)
-    TextView etSearch;
+    EditText etSearch;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
 
     private IntegralShopAdapter mAdapter;
-
+    private String searchValue;
     public static void start(Context context) {
         Intent starter = new Intent(context, IntegralShopActivity.class);
         context.startActivity(starter);
@@ -54,7 +60,8 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
 
     @Override
     protected void setData() {
-        mPresenter.getIntegralShop(1);
+        searchValue = etSearch.getText().toString().trim();
+        mPresenter.getIntegralShop(searchValue,1);
         mAdapter = new IntegralShopAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -64,7 +71,7 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 refresh.finishLoadmore(3000);
-                mPresenter.getIntegralShop(2);
+                mPresenter.getIntegralShop(searchValue,2);
             }
         });
 
@@ -72,7 +79,21 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refresh.finishRefresh(3000);
-                mPresenter.getIntegralShop(1);
+                mPresenter.getIntegralShop(searchValue,1);
+            }
+        });
+
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchValue = etSearch.getText().toString().trim();
+                    mPresenter.getIntegralShop(searchValue,1);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -103,6 +124,9 @@ public class IntegralShopActivity extends MvpActivity<IntegralShopPresenter> imp
 
     @Override
     public void showCentent(IntergralShopBean shopBean) {
+        if (shopBean.getIstIntegerGoods().size() == 0){
+            CPSToast.showText(this,"暂无更多..");
+        }
         mAdapter.addFirstDataSet(shopBean);
         refresh.finishRefresh();
     }

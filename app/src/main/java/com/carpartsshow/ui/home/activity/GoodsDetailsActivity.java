@@ -22,10 +22,13 @@ import com.carpartsshow.model.http.bean.IntergralShopBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
 import com.carpartsshow.model.http.bean.SeckillGoodsDetail;
+import com.carpartsshow.model.http.bean.UserInfoBean;
 import com.carpartsshow.presenter.home.GoodsDetailsPresenter;
 import com.carpartsshow.presenter.home.contract.GoodsDetailsContract;
+import com.carpartsshow.ui.me.activity.AllOrderActivity;
 import com.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
+import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.X5WebView;
 import com.carpartsshow.widgets.CPSToast;
@@ -164,10 +167,7 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                 ShoppingCartActivity.start(this);
                 break;
             case R.id.tv_service:
-                //客服
-                if (goodsDetailBean != null) {
-                    show(goodsDetailBean.getListServicePhone());
-                }
+                customerServicePhone();
                 break;
             case R.id.tv_collection:
                 //收藏
@@ -183,7 +183,7 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
 
                 }else if (specialOfferBean != null){
                     String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
-                    String pids = pid[pid.length-1]+",0"+"|";
+                    String pids = pid[pid.length-1]+",1"+"|";
                     if (isCollections) {
                         mPresenter.delCollections(pids);
                         isCollections = false;
@@ -220,7 +220,7 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                     mPresenter.plus(loginBean.getRepairUser_ID(), goodsDetailBean.getVGoods().getGoods_ID(), goodsType);
                 }else if (specialOfferBean != null){
                     String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
-                    mPresenter.plus(loginBean.getRepairUser_ID(), pid[pid.length-1],0);
+                    mPresenter.plus(loginBean.getRepairUser_ID(), pid[pid.length-1],1);
                 }else if (istIntegerGoods != null){
                     mPresenter.plus(loginBean.getRepairUser_ID(), istIntegerGoods.getIntegerGoods_ID(),2);
                 }
@@ -272,18 +272,34 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
     public void showSeckillGoods(SeckillGoodsDetail seckillGoodsDetail) {
     }
 
-    private void show(List<GoodsDetailBean.ListServicePhoneBean> list){
-        contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_normal, null);
-        TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
-        TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
-        TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
-        try{
-            tv_phone_1.setText(list.get(0).getItemValue());
-            tv_phone_2.setText(list.get(1).getItemValue());
-        }catch (Exception e){
-
-        }
+    //联系客服
+    protected void customerServicePhone() {
+        UserInfoBean userInfoBean = SpUtil.getObject(this,"userInfo");
         final Dialog bottomDialog = new Dialog(this, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_normal, null);
+        TextView tv_cancel = contentView.findViewById(R.id.tv_cancel);
+        final TextView tv_phone_2 = contentView.findViewById(R.id.tv_phone_2);
+        final TextView tv_phone_1 = contentView.findViewById(R.id.tv_phone_1);
+        if (userInfoBean != null) {
+            try {
+                tv_phone_1.setText(userInfoBean.getListServicePhone().get(0).getItemValue());
+                tv_phone_2.setText(userInfoBean.getListServicePhone().get(1).getItemValue());
+            }catch (IndexOutOfBoundsException e){
+
+            }
+        }
+        tv_phone_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(GoodsDetailsActivity.this,tv_phone_1.getText().toString().trim());
+            }
+        });
+        tv_phone_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScreenUtils.diallPhone(GoodsDetailsActivity.this,tv_phone_2.getText().toString().trim());
+            }
+        });
         bottomDialog.setContentView(contentView);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         layoutParams.width = getResources().getDisplayMetrics().widthPixels;

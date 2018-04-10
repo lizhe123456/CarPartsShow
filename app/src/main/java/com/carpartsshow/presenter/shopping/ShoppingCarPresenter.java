@@ -40,6 +40,9 @@ public class ShoppingCarPresenter extends BasePresenterImpl<ShoppingCarContract.
                     public void onNext(ShopCarBean shopCarBean) {
                         super.onNext(shopCarBean);
                         if (type == 1){
+                            if (shopCarBean.getListCarProduct().size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.showContent(shopCarBean);
                         }else {
                             mView.loadMore(shopCarBean);

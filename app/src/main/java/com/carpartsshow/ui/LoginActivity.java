@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -70,6 +72,12 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     protected void initInject() {
         getActivityComponent().inject(this);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.transparent));
+        super.onCreate(savedInstanceState, persistentState);
     }
 
     @Override

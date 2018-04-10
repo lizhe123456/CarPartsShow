@@ -94,7 +94,7 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
                                    //支付宝
                                    payDialog.dismiss();
                                    CPSToast.showText(getContext(),"暂不支持");
-                               }else if (type == 2){
+                               }else if (type == 1){
                                    //微信
                                    payDialog.dismiss();
                                    CPSToast.showText(getContext(),"暂不支持");

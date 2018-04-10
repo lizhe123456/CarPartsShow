@@ -59,7 +59,7 @@ public class CarClassifyFragment extends BaseFragment {
         list =  bundle.getParcelableArrayList("list");
 
     }
-    boolean flag;
+
     @Override
     protected void setData() {
         mAdapter = new ClassifyGroupAdapter(getContext());
@@ -67,12 +67,10 @@ public class CarClassifyFragment extends BaseFragment {
         mAdapter.loadData(list);
         mAdapter.setOnOpenListener(new ClassifyGroupAdapter.OnOpenListener() {
             @Override
-            public void open(int groupPosition) {
-                if (flag) {
-                    flag = false;
+            public void open(int groupPosition,boolean isOpen) {
+                if (isOpen) {
                     expandableListView.collapseGroupWithAnimation(groupPosition);
                 }else {
-                    flag = true;
                     expandableListView.expandGroupWithAnimation(groupPosition);
                 }
             }

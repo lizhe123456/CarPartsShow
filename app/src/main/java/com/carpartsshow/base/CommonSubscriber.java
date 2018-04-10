@@ -2,10 +2,17 @@ package com.carpartsshow.base;
 
 import android.text.TextUtils;
 
+import com.carpartsshow.app.App;
 import com.carpartsshow.exception.ApiException;
 import com.carpartsshow.exception.SysException;
+import com.carpartsshow.util.DensityUtils;
 import com.carpartsshow.util.LogUtil;
+import com.carpartsshow.util.ScreenUtils;
+import com.carpartsshow.util.SystemUtil;
 import com.google.gson.JsonSyntaxException;
+
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import io.reactivex.subscribers.ResourceSubscriber;
 import retrofit2.HttpException;
@@ -60,12 +67,20 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
         } else if (e instanceof ApiException) {
             mView.showErrorMsg(e.toString());
         } else if (e instanceof HttpException) {
-            mView.showErrorMsg("服务器异常，正在抢修中..");
+            if (SystemUtil.isNetworkConnected(App.getInstance().getmContext())) {
+                mView.showErrorMsg("服务器异常，正在抢修中..");
+            }else {
+                mView.showErrorMsg("网络已断开，请检查网络连接..");
+            }
         }else if (e instanceof SysException){
             mView.showErrorMsg(e.getMessage());
         }else if (e instanceof JsonSyntaxException){
 
         }else if (e instanceof IllegalStateException){
+
+        }else if (e instanceof SocketTimeoutException){
+            mView.showErrorMsg("网络不给力，请重试..");
+        }else if (e instanceof UnknownHostException){
 
         }else {
             mView.showErrorMsg("未知错误");

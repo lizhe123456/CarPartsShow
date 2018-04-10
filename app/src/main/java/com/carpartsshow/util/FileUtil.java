@@ -25,6 +25,7 @@ public class FileUtil {
             @Override
             public void run() {
                 writeFile(getFileDir("Log")+"/crash.log", TimeUtils.getCurTimeString() + " : " + content, true);
+                App.getInstance().exitApp();
             }
         }).start();
     }

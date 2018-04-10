@@ -56,7 +56,9 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
     //分类
     @Override
     public void getClassification(String userId,int type) {
-        mView.loading("加载中..");
+        if (type == 0) {
+            mView.loading("加载中..");
+        }
         addSubscribe(dataManager.classification(userId)
                 .compose(RxUtil.<CPSResponse<ClassificationBean>>rxSchedulerHelper())
                 .compose(RxUtil.<ClassificationBean>handle())

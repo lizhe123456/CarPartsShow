@@ -1,5 +1,6 @@
 package com.carpartsshow.ui.shopping;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +27,9 @@ import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -63,13 +68,15 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
     TextView tvDelete;
     @BindView(R.id.ll_show)
     LinearLayout mLlShow;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     private ShopCarAdapter mAdapter;
     private LoginBean loginBean;
     private boolean isAll = false;
     private boolean isEdit = false;
 
-    public static void start(Context context) {
+    public static void start(Activity context) {
         Intent starter = new Intent(context, ShoppingCartActivity.class);
         context.startActivity(starter);
     }
@@ -89,13 +96,26 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
         tvMenu.setText("编辑");
         loginBean = SpUtil.getObject(getApplicationContext(), "user");
         mPresenter.getShoppingCarData(loginBean.getRepairUser_ID(), 1);
-
         mAdapter = new ShopCarAdapter(getApplicationContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnClickRequestListener(this);
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refresh.finishRefresh(3000);
+                mPresenter.getShoppingCarData(loginBean.getRepairUser_ID(), 1);
+            }
+        });
+        refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh.finishLoadmore(3000);
+                mPresenter.getShoppingCarData(loginBean.getRepairUser_ID(), 0);
+            }
+        });
     }
 
 
@@ -276,8 +296,8 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
             textView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShoppingCartActivity.this.finish();
-                    EventBus.getDefault().post(new com.carpartsshow.eventbus.HomePageBean(4));
+                    MainActivity.start(ShoppingCartActivity.this);
+//                    EventBus.getDefault().post(new com.carpartsshow.eventbus.HomePageBean(4));
                 }
             });
         }

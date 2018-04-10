@@ -26,11 +26,11 @@ public class IntegralShopPresenter extends BasePresenterImpl<IntegralShopContrac
     }
 
     @Override
-    public void getIntegralShop(final int type) {
+    public void getIntegralShop(String searchValue,final int type) {
         if (type == 1){
             page = 1;
         }
-        addSubscribe(dataManager.fetchSplitShopIndex("",page,size)
+        addSubscribe(dataManager.fetchSplitShopIndex(searchValue,page,size)
                 .compose(RxUtil.<CPSResponse<IntergralShopBean>>rxSchedulerHelper())
                 .compose(RxUtil.<IntergralShopBean>handle())
                 .subscribeWith(new CommonSubscriber<IntergralShopBean>(mView){

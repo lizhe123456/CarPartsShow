@@ -145,7 +145,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 address.setVisibility(View.GONE);
                 contacts.setText(addressBean.getPersonName());
                 phone.setText(addressBean.getMobile());
-                addressDesc.setText(addressBean.getDetailAddress());
+                addressDesc.setText(addressBean.getProvice()+" "+addressBean.getCity()+" "+addressBean.getRegion()+" "+addressBean.getDetailAddress());
             }
             llAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -258,6 +258,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                     public void onClick(View v) {
                         mPresenter.submitOrder(map);
                         currencyDialog.dismiss();
+
                     }
                 })
                 .setMessage("确定要支付吗？")
@@ -405,6 +406,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     @Override
     public void submitSuccess() {
         MyOrderActivity.start(this,1);
+        ConfirmOrderActivity.this.finish();
     }
 
     @Override

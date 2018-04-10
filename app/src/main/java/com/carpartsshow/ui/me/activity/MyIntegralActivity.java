@@ -1,12 +1,8 @@
 package com.carpartsshow.ui.me.activity;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.TextView;
-
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.model.http.bean.IntergralBean;
@@ -15,8 +11,9 @@ import com.carpartsshow.presenter.me.IntergralPresenter;
 import com.carpartsshow.presenter.me.contract.IntergralContract;
 import com.carpartsshow.ui.me.adapter.IntegralAdapter;
 import com.carpartsshow.util.SpUtil;
-import com.carpartsshow.util.StatusBarUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,7 +46,7 @@ public class MyIntegralActivity extends MvpActivity<IntergralPresenter> implemen
 
     @Override
     protected void setData() {
-        integral.setText(getIntent().getStringExtra("integer"));
+        integral.setText(getIntent().getStringExtra("integer") == null ? "0" : getIntent().getStringExtra("integer") );
         LoginBean loginBean = SpUtil.getObject(this,"user");
         mPresenter.getIntergralList(loginBean.getRepairUser_ID(),1);
         mAdapter = new IntegralAdapter(this);
@@ -64,12 +61,12 @@ public class MyIntegralActivity extends MvpActivity<IntergralPresenter> implemen
     }
 
     @Override
-    public void showContent(IntergralBean intergralBean) {
+    public void showContent(List<IntergralBean> intergralBean) {
 
     }
 
     @Override
-    public void loadMore(IntergralBean intergralBean) {
+    public void loadMore(List<IntergralBean> intergralBean) {
 
     }
 
