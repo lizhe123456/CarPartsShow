@@ -18,7 +18,7 @@
         android:textSize="@dimen/dm_15"
         android:layout_centerVertical="true"/>
 
-    <!--<com.carpartsshow.view.CountdownTextView-->
+    <!--<CountdownTextViewView>-->
         <!--android:id="@+id/tv_time"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -28,7 +28,7 @@
         <!--android:textColor="@color/white"-->
         <!--android:layout_marginLeft="@dimen/dm_18"/>-->
 
-    <com.carpartsshow.view.CountdownTextView
+    <com.whmnrc.carpartsshow.view.CountdownTextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

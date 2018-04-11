@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <com.carpartsshow.view.LoadingIndicatorView
+            <com.whmnrc.carpartsshow.view.LoadingIndicatorView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:indicator_color="@color/title_bg"

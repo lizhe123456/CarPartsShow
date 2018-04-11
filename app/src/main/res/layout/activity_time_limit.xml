@@ -78,7 +78,7 @@
             android:textSize="@dimen/dm_15"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tv_time"/>
-        <com.carpartsshow.view.CountdownTextView
+        <com.whmnrc.carpartsshow.view.CountdownTextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

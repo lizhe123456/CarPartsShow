@@ -12,7 +12,7 @@
         android:scrollbars="none"
         android:divider="@null"
         android:background="@color/white"/>
-    <com.carpartsshow.view.SideBar
+    <com.whmnrc.carpartsshow.view.SideBar
         android:id="@+id/right_side"
         android:layout_width="20dp"
         android:layout_height="wrap_content"

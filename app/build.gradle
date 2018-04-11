@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
 
-        applicationId "com.carpartsshow"
+        applicationId "com.whmnrc.carpartsshow"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

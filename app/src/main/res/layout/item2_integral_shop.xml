@@ -16,14 +16,14 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <com.carpartsshow.view.NoMarginsTextView
+        <com.whmnrc.carpartsshow.view.NoMarginsTextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="8766"
             android:textColor="@color/tv_FE3F19"
             android:textSize="@dimen/dm_21"/>
-        <com.carpartsshow.view.NoMarginsTextView
+        <com.whmnrc.carpartsshow.view.NoMarginsTextView
             android:id="@+id/tv_houz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

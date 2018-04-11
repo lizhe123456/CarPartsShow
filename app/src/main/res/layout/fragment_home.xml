@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.carpartsshow.widgets.MyNestedScrollView
+            <com.whmnrc.carpartsshow.widgets.MyNestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/nested_scroll_view">
@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dm_48" />
                 </LinearLayout>
-            </com.carpartsshow.widgets.MyNestedScrollView>
+            </com.whmnrc.carpartsshow.widgets.MyNestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/rl_title"

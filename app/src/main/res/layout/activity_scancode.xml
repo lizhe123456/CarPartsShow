@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/scan_bg">
-        <com.carpartsshow.widgets.BmpImageView
+        <com.whmnrc.carpartsshow.widgets.BmpImageView
             android:id="@+id/iv_scan_xian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:textSize="@dimen/dm_15"
         android:layout_centerVertical="true"
         android:textColor="@color/white"/>
-    <com.carpartsshow.widgets.BmpImageView
+    <com.whmnrc.carpartsshow.widgets.BmpImageView
         android:id="@+id/iv_distinguish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

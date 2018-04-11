@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/layout_title"/>
-    <com.carpartsshow.widgets.AnimatedExpandableListView
+    <com.whmnrc.carpartsshow.widgets.AnimatedExpandableListView
         android:id="@+id/expandable_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
