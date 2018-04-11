@@ -14,12 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
-import com.carpartsshow.model.http.bean.AddressBean;
 import com.carpartsshow.model.http.bean.CouponBean;
 import com.carpartsshow.model.http.bean.LoginBean;
 import com.carpartsshow.model.http.bean.OrderBean;
@@ -31,14 +29,12 @@ import com.carpartsshow.ui.me.activity.MyOrderActivity;
 import com.carpartsshow.ui.me.adapter.AddressAdapter;
 import com.carpartsshow.ui.me.fragment.order.adapter.OrderGoodsAdapter;
 import com.carpartsshow.ui.shopping.adapter.ConfirmOrderAdapter;
-import com.carpartsshow.util.LogUtil;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.PayDialog;
 import com.carpartsshow.view.ZlCustomDialog;
 import com.carpartsshow.widgets.CPSToast;
 import com.carpartsshow.widgets.CurrencyDialog;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -332,8 +328,41 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                                 }
                                 map.put("Order_PayType",type);
                                 if (type == 0){
+                                    /**
+                                     * AliPayTools.aliPay(mContext,
+                                         APP_ID,//支付宝分配的APP_ID
+                                         isRSA2,//是否是 RSA2 加密
+                                         RSA_PRIVATE,// RSA 或 RSA2 字符串
+                                         new AliPayModel(order_id,//订单ID (唯一)
+                                         money,//价格
+                                         name,//商品名称
+                                         detail),//商品描述详情 (用于显示在 支付宝 的交易记录里)
+                                         new onRequestListener() {
+                                        @Override
+                                        public void onSuccess(String s) {RxToast.success("支付成功");}
+
+                                        @Override
+                                        public void onError(String s) {RxToast.error("支付失败");
+                                        }
+                                        });
+                                     */
                                     CPSToast.showText(ConfirmOrderActivity.this, "暂未不支持");
                                 }else if (type == 1){
+                                    /**
+                                     * wechatPayApp(mContext,
+                                         app_id, //微信分配的APP_ID
+                                         partner_id, //微信分配的 PARTNER_ID (商户ID)
+                                         wx_private_key, //微信分配的 PRIVATE_KEY (私钥)
+                                         prepay_id, //订单ID (唯一)
+                                         new onRequestListener() {
+                                        @Override
+                                        public void onSuccess(String s) {}
+
+                                        @Override
+                                        public void onError(String s) {}
+                                        });
+                                     */
+
                                     CPSToast.showText(ConfirmOrderActivity.this, "暂未不支持");
                                 }else if (type == 2){
                                     currencyDialog.show();

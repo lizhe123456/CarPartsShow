@@ -359,4 +359,17 @@ public class ImageUtil {
         bitmap = rotateToDegrees(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length, options),90);
         return bitmapCrop(bitmap,bitmap.getWidth()/3,bitmap.getHeight()/9,bitmap.getWidth()/3, (int) ((bitmap.getHeight()*6.5)/9));
     }
+
+    /**
+     * bitmap转byteArr
+     *
+     * @param bitmap bitmap对象
+     * @param format 格式
+     * @return 字节数组
+     */
+    public static byte[] bitmap2Bytes(Bitmap bitmap, Bitmap.CompressFormat format) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(format, 100, baos);
+        return baos.toByteArray();
+    }
 }

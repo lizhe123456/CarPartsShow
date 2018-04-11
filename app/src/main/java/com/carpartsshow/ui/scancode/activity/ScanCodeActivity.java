@@ -2,6 +2,7 @@ package com.carpartsshow.ui.scancode.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -30,17 +30,11 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
-import com.baidu.ocr.sdk.model.GeneralBasicParams;
-import com.baidu.ocr.sdk.model.GeneralResult;
-import com.baidu.ocr.sdk.model.WordSimple;
 import com.carpartsshow.R;
-import com.carpartsshow.base.BaseActivity;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.BaiduToken;
@@ -48,45 +42,23 @@ import com.carpartsshow.model.http.bean.BaiduWord;
 import com.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.carpartsshow.presenter.scancode.ScanCodePresenter;
 import com.carpartsshow.presenter.scancode.contract.ScanCodeContract;
-import com.carpartsshow.ui.classify.adapter.CarBrandAdapter;
 import com.carpartsshow.ui.home.activity.GoodsSearchActivity;
-import com.carpartsshow.ui.me.adapter.AddressAdapter;
 import com.carpartsshow.ui.scancode.RecognizeService;
 import com.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
-import com.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
-import com.carpartsshow.util.Base64Util;
 import com.carpartsshow.util.FileUtil;
 import com.carpartsshow.util.ImageUtil;
 import com.carpartsshow.util.ScreenUtils;
 import com.carpartsshow.view.ScanCodeDialog;
-import com.carpartsshow.view.ZlCustomDialog;
 import com.carpartsshow.widgets.BmpImageView;
 import com.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
-import com.zhy.http.okhttp.OkHttpUtils;
-
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
-import okhttp3.Response;
 
 
 /**
@@ -204,16 +176,15 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (ContextCompat.checkSelfPermission(ScanCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(ScanCodeActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             //申请权限，REQUEST_TAKE_PHOTO_PERMISSION是自定义的常量
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.CAMERA},
                     REQUEST_TAKE_PHOTO_PERMISSION);
         } else {
             //有权限，直接拍照
             openCamera(surfaceHolder); // 开启相机
         }
-
     }
 
 

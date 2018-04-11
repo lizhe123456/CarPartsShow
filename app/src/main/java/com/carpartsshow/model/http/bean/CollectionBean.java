@@ -41,6 +41,33 @@ public class CollectionBean implements Serializable {
         private String Name;
         private String ImagePath;
         private boolean select;
+        private String Url;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
 
         public boolean isSelect() {
             return select;

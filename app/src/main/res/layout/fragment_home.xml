@@ -77,6 +77,8 @@
                         android:scrollbars="none"
                         android:visibility="gone" />
                     <include layout="@layout/img_layout"/>
+
+                    <include layout="@layout/home_data_item_v2"/>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_data_item"
                         android:layout_width="match_parent"

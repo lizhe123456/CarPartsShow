@@ -44,41 +44,7 @@ public class ListDateItemAdapter extends BaseAdapter<HomePageBean.ListCardImg> {
             });
         }else {
             if (flag) {
-                holder.setText(R.id.tv_title0, lists.get(0).get(0).getTitle()).setText(R.id.tv_search0, getDataSource().get(0).getSearch()).setGlieuImage(R.id.iv_img0, getDataSource().get(0).getImgUrl());
-                holder.setText(R.id.tv_title1, lists.get(0).get(1).getTitle()).setText(R.id.tv_search1, getDataSource().get(1).getSearch()).setGlieuImage(R.id.iv_img1, getDataSource().get(1).getImgUrl());
-                holder.setText(R.id.tv_title2, lists.get(0).get(2).getTitle()).setText(R.id.tv_search2, getDataSource().get(2).getSearch()).setGlieuImage(R.id.iv_img2, getDataSource().get(2).getImgUrl());
-                holder.setText(R.id.tv_title3, lists.get(0).get(3).getTitle()).setText(R.id.tv_search3, getDataSource().get(3).getSearch()).setGlieuImage(R.id.iv_img3, getDataSource().get(3).getImgUrl());
-                holder.setText(R.id.tv_title4, lists.get(0).get(4).getTitle()).setText(R.id.tv_search4, getDataSource().get(4).getSearch()).setGlieuImage(R.id.iv_img4, getDataSource().get(4).getImgUrl());
-                holder.setOnClickListener(R.id.ll_goods_0, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GoodsSearchActivity.start(getContext(), lists.get(0).get(0).getSearch());
-                    }
-                });
-                holder.setOnClickListener(R.id.ll_goods_1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GoodsSearchActivity.start(getContext(), lists.get(0).get(1).getSearch());
-                    }
-                });
-                holder.setOnClickListener(R.id.ll_goods_2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GoodsSearchActivity.start(getContext(), lists.get(0).get(2).getSearch());
-                    }
-                });
-                holder.setOnClickListener(R.id.ll_goods_3, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GoodsSearchActivity.start(getContext(), lists.get(0).get(3).getSearch());
-                    }
-                });
-                holder.setOnClickListener(R.id.ll_goods_4, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GoodsSearchActivity.start(getContext(), lists.get(0).get(4).getSearch());
-                    }
-                });
+
                 flag = false;
             }else {
                 holder.setVisible(R.id.ll_all,false);

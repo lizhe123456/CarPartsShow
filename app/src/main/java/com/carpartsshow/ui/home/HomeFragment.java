@@ -3,14 +3,16 @@ package com.carpartsshow.ui.home;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
 import com.carpartsshow.R;
 import com.carpartsshow.base.MvpFragment;
 import com.carpartsshow.base.adapter.BaseAdapter;
@@ -37,6 +40,7 @@ import com.carpartsshow.ui.home.adapter.SpecialOfferAdapter;
 import com.carpartsshow.ui.me.activity.IntegralShopActivity;
 import com.carpartsshow.ui.me.activity.NewsDetailsActivity;
 import com.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.carpartsshow.util.GlideuUtil;
 import com.carpartsshow.util.SpUtil;
 import com.carpartsshow.view.CountdownTextView;
 import com.carpartsshow.widgets.GlideImageLoader;
@@ -47,12 +51,17 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 
 /**
@@ -96,6 +105,48 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     RelativeLayout rlTile;
     @BindView(R.id.ll_title)
     RelativeLayout linearLayout;
+    @BindView(R.id.tv_title0)
+    TextView tvTitle0;
+    @BindView(R.id.tv_search0)
+    TextView tvSearch0;
+    @BindView(R.id.iv_img0)
+    ImageView ivImg0;
+    @BindView(R.id.ll_goods_0)
+    LinearLayout llGoods0;
+    @BindView(R.id.tv_title1)
+    TextView tvTitle1;
+    @BindView(R.id.tv_search1)
+    TextView tvSearch1;
+    @BindView(R.id.iv_img1)
+    ImageView ivImg1;
+    @BindView(R.id.ll_goods_1)
+    LinearLayout llGoods1;
+    @BindView(R.id.tv_title2)
+    TextView tvTitle2;
+    @BindView(R.id.tv_search2)
+    TextView tvSearch2;
+    @BindView(R.id.iv_img2)
+    ImageView ivImg2;
+    @BindView(R.id.ll_goods_2)
+    LinearLayout llGoods2;
+    @BindView(R.id.tv_title3)
+    TextView tvTitle3;
+    @BindView(R.id.tv_search3)
+    TextView tvSearch3;
+    @BindView(R.id.iv_img3)
+    ImageView ivImg3;
+    @BindView(R.id.ll_goods_3)
+    LinearLayout llGoods3;
+    @BindView(R.id.tv_title4)
+    TextView tvTitle4;
+    @BindView(R.id.tv_search4)
+    TextView tvSearch4;
+    @BindView(R.id.iv_img4)
+    ImageView ivImg4;
+    @BindView(R.id.ll_goods_4)
+    LinearLayout llGoods4;
+    @BindView(R.id.ll_all)
+    LinearLayout llAll;
 
 
 //    private HomePageAdapter mAdapter;
@@ -167,7 +218,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     public void onResume() {
         super.onResume();
 //        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
-        Calendar calendar=Calendar.getInstance();  //获取当前时间，作为图标的名字
+        Calendar calendar = Calendar.getInstance();  //获取当前时间，作为图标的名字
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
@@ -234,30 +285,71 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             @Override
             public void onClick(View view, Object item, int position) {
                 HomePageBean.SpecialOfferBean listSeckillGoodsBean = (HomePageBean.SpecialOfferBean) item;
-                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(),listSeckillGoodsBean.isCollection(),listSeckillGoodsBean.getCarCount());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(), listSeckillGoodsBean.isCollection(), listSeckillGoodsBean.getCarCount());
                 GoodsDetailsActivity.newInstance(getContext(), goodsDetailToBean);
             }
         });
     }
 
-    private void initDataItem(List<HomePageBean.ListCardImg> listDateItem) {
-        LinearLayoutManager linearLayoutManager=null;
+    private void initDataItem(final List<HomePageBean.ListCardImg> listDateItem) {
+        LinearLayoutManager linearLayoutManager = null;
         ListDateItemAdapter adapter = null;
-        if (listDateItem.size() > 5){
+        if (listDateItem.size() > 5) {
             linearLayoutManager = new GridLayoutManager(getContext(), 3);
-            adapter = new ListDateItemAdapter(getContext(),0);
-        }else if (listDateItem.size() == 5){
-            linearLayoutManager = new LinearLayoutManager(getContext());
-            adapter = new ListDateItemAdapter(getContext(),1);
-            List<List<HomePageBean.ListCardImg>> lists = new ArrayList<>();
-            lists.add(listDateItem);
-            lists.add(null);
-            lists.add(null);
-            lists.add(null);
-            lists.add(null);
-            adapter.setLists(lists);
-        }else {
-            adapter = new ListDateItemAdapter(getContext(),0);
+            adapter = new ListDateItemAdapter(getContext(), 0);
+        } else if (listDateItem.size() == 5) {
+            tvTitle0.setText(listDateItem.get(0).getTitle());
+            tvSearch0.setText(listDateItem.get(0).getSearch());
+            GlideuUtil.loadImageView(getContext(),listDateItem.get(0).getImgUrl(),ivImg0);
+            tvTitle1.setText(listDateItem.get(1).getTitle());
+            tvSearch1.setText(listDateItem.get(1).getSearch());
+            GlideuUtil.loadImageView(getContext(),listDateItem.get(1).getImgUrl(),ivImg1);
+            tvTitle2.setText(listDateItem.get(2).getTitle());
+            tvSearch2.setText(listDateItem.get(2).getSearch());
+            GlideuUtil.loadImageView(getContext(),listDateItem.get(2).getImgUrl(),ivImg2);
+            tvTitle3.setText(listDateItem.get(3).getTitle());
+            tvSearch3.setText(listDateItem.get(3).getSearch());
+            GlideuUtil.loadImageView(getContext(),listDateItem.get(3).getImgUrl(),ivImg3);
+            tvTitle4.setText(listDateItem.get(4).getTitle());
+            tvSearch4.setText(listDateItem.get(4).getSearch());
+            GlideuUtil.loadImageView(getContext(),listDateItem.get(4).getImgUrl(),ivImg4);
+            llGoods0.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodsSearchActivity.start(getContext(), listDateItem.get(0).getSearch());
+                }
+            });
+            llGoods1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodsSearchActivity.start(getContext(), listDateItem.get(1).getSearch());
+                }
+            });
+
+            llGoods2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodsSearchActivity.start(getContext(), listDateItem.get(2).getSearch());
+                }
+            });
+
+            llGoods3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodsSearchActivity.start(getContext(), listDateItem.get(3).getSearch());
+                }
+            });
+
+            llGoods4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodsSearchActivity.start(getContext(), listDateItem.get(4).getSearch());
+                }
+            });
+            llAll.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
+        } else {
+            adapter = new ListDateItemAdapter(getContext(), 0);
             linearLayoutManager = new GridLayoutManager(getContext(), 2);
         }
         rvDataItem.setLayoutManager(linearLayoutManager);
@@ -289,7 +381,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             @Override
             public void onClick(View view, Object item, int position) {
                 HomePageBean.ListSeckillGoodsBean listSeckillGoodsBean = (HomePageBean.ListSeckillGoodsBean) item;
-                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(),listSeckillGoodsBean.isCollection(),listSeckillGoodsBean.getCarCount());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(listSeckillGoodsBean.getUrl(), listSeckillGoodsBean.isCollection(), listSeckillGoodsBean.getCarCount());
                 GoodsDetailsActivity.newInstance(getContext(), goodsDetailToBean);
             }
         });

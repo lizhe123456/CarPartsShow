@@ -7,6 +7,8 @@ import com.carpartsshow.model.http.api.CPSApi;
 import com.carpartsshow.util.JsonUtil;
 import com.carpartsshow.util.LogUtil;
 import com.carpartsshow.util.SystemUtil;
+import com.carpartsshow.widgets.CPSToast;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -88,6 +90,7 @@ public class HttpModule {
                             .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
                             .removeHeader("Pragma")
                             .build();
+                    CPSToast.showText(App.getInstance().getmContext(),"网络已断开，无网络连接");
                 }
                 return response;
             }

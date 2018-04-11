@@ -29,7 +29,7 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     protected void setData() {
-        tvVersion.setText(SystemUtil.getVerName(this) + SystemUtil.getVersionCode(this));
+        tvVersion.setText("智配库（" + SystemUtil.getVerName(this)+"）");
     }
 
     @OnClick(R.id.iv_back)

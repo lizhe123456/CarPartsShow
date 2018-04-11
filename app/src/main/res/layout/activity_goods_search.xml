@@ -120,19 +120,26 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:weightSum="4">
-
-        <TextView
-            android:id="@+id/tv_zh"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1">
+        <TextView
+            android:id="@+id/tv_zh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="@dimen/dm_13"
             android:paddingTop="@dimen/dm_13"
             android:text="价格"
             android:textColor="@color/tv_999"
+            android:layout_centerInParent="true"
+            android:drawableRight="@drawable/ic_asc"
+            android:paddingRight="@dimen/dm_8"
+            android:drawablePadding="@dimen/dm_8"
+            android:paddingLeft="@dimen/dm_8"
             android:textSize="@dimen/dm_15" />
-
+        </RelativeLayout>
         <TextView
             android:id="@+id/tv_classify"
             android:layout_width="0dp"

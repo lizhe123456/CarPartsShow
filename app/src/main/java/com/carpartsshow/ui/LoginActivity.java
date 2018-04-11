@@ -83,14 +83,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     protected void init() {
         super.init();
-        if (SpUtil.getObject(this,"user") != null) {
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setClass(this, MainActivity.class);
-            startActivity(intent);
-            this.finish();
-            overridePendingTransition(0, 0);
-        }
+
     }
 
     @Override

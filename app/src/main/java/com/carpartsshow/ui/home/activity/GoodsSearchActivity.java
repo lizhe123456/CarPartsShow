@@ -2,6 +2,7 @@ package com.carpartsshow.ui.home.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -244,9 +245,15 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             case R.id.tv_zh:
                 //价格
                 if (isAsc) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_asc);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tvZh.setCompoundDrawables(null,null,drawable,null);
                     map.put("OrderASC", "ASC");
                     isAsc = false;
                 }else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_desc);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tvZh.setCompoundDrawables(null,null,drawable,null);
                     map.put("OrderASC", "desc");
                     isAsc = true;
                 }

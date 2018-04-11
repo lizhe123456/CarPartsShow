@@ -14,12 +14,16 @@ import com.carpartsshow.widgets.CPSToast;
 
 public class NetworkReceiver extends BroadcastReceiver {
 
+    boolean flag = true;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (SystemUtil.isNetworkConnected(context)){
         }else {
-            CPSToast.showText(context,"网络已断开，无网络连接");
+            if (flag) {
+                CPSToast.showText(context, "网络已断开，无网络连接");
+                flag = false;
+            }
         }
     }
 

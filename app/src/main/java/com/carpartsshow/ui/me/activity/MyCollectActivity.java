@@ -10,7 +10,9 @@ import com.carpartsshow.R;
 import com.carpartsshow.base.MvpActivity;
 import com.carpartsshow.base.adapter.BaseAdapter;
 import com.carpartsshow.model.http.bean.CollectionBean;
+import com.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.carpartsshow.model.http.bean.LoginBean;
+import com.carpartsshow.model.http.bean.OrderListBean;
 import com.carpartsshow.presenter.me.CollectionPresenter;
 import com.carpartsshow.presenter.me.contract.CollectionContract;
 import com.carpartsshow.ui.home.activity.GoodsDetailsActivity;
@@ -87,7 +89,9 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
             @Override
             public void onClick(View view, Object item, int position) {
                 CollectionBean.CollectionListProductBean collectionBean = (CollectionBean.CollectionListProductBean) item;
-                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),collectionBean.isCollection(),collectionBean.getCarCount());
+                GoodsDetailsActivity.newInstance(MyCollectActivity.this ,goodsDetailToBean);
+//                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
             }
         });
     }
