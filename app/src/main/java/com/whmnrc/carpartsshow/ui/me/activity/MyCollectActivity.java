@@ -1,12 +1,19 @@
 package com.whmnrc.carpartsshow.ui.me.activity;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.view.ViewStub;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpActivity;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
@@ -19,15 +26,12 @@ import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.me.adapter.CollectionAdapter;
 import com.whmnrc.carpartsshow.util.SpUtil;
 import com.whmnrc.carpartsshow.widgets.CPSToast;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -47,6 +51,8 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
     LinearLayout llSelect;
     @BindView(R.id.all_select)
     TextView allSelect;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     private CollectionAdapter mAdapter;
 
@@ -67,8 +73,8 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     protected void setData() {
-        loginBean = SpUtil.getObject(this,"user");
-        mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
+        loginBean = SpUtil.getObject(this, "user");
+        mPresenter.getCollectionList(loginBean.getRepairUser_ID(), 1);
         mAdapter = new CollectionAdapter(this);
         StaggeredGridLayoutManager linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -76,21 +82,21 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                mPresenter.getCollectionList(loginBean.getRepairUser_ID(),2);
+                mPresenter.getCollectionList(loginBean.getRepairUser_ID(), 2);
             }
         });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
+                mPresenter.getCollectionList(loginBean.getRepairUser_ID(), 1);
             }
         });
         mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, Object item, int position) {
                 CollectionBean.CollectionListProductBean collectionBean = (CollectionBean.CollectionListProductBean) item;
-                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),collectionBean.isCollection(),collectionBean.getCarCount());
-                GoodsDetailsActivity.newInstance(MyCollectActivity.this ,goodsDetailToBean);
+                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(), collectionBean.isCollection(), collectionBean.getCarCount());
+                GoodsDetailsActivity.newInstance(MyCollectActivity.this, goodsDetailToBean);
 //                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
             }
         });
@@ -126,7 +132,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                     isAllSelect = true;
                     mAdapter.allSelect(isAllSelect);
 
-                }else {
+                } else {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.drawable.round_btn_normal);
                     allSelect.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
@@ -140,7 +146,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                 String pids = "";
                 List<CollectionBean.CollectionListProductBean> list = new ArrayList<>();
                 for (int i = 0; i < mAdapter.getDataSource().size(); i++) {
-                    if (mAdapter.getDataSource().get(i).isSelect()){
+                    if (mAdapter.getDataSource().get(i).isSelect()) {
                         list.add(mAdapter.getDataSource().get(i));
                     }
 
@@ -148,8 +154,8 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                 for (CollectionBean.CollectionListProductBean coll : list) {
                     if (list.size() == 1) {
                         pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type();
-                    }else {
-                        pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type()+"|";
+                    } else {
+                        pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type() + "|";
                     }
                 }
                 mPresenter.delCollections(pids);
@@ -159,7 +165,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                 String cids = "";
                 List<CollectionBean.CollectionListProductBean> list1 = new ArrayList<>();
                 for (int i = 0; i < mAdapter.getDataSource().size(); i++) {
-                    if (mAdapter.getDataSource().get(i).isSelect()){
+                    if (mAdapter.getDataSource().get(i).isSelect()) {
                         list1.add(mAdapter.getDataSource().get(i));
                     }
 
@@ -167,11 +173,11 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                 for (CollectionBean.CollectionListProductBean coll : list1) {
                     if (list1.size() == 1) {
                         cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type();
-                    }else {
-                        cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type()+"|";
+                    } else {
+                        cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type() + "|";
                     }
                 }
-                mPresenter.plus(loginBean.getRepairUser_ID(),cids);
+                mPresenter.plus(loginBean.getRepairUser_ID(), cids);
                 break;
         }
     }
@@ -183,6 +189,13 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     public void showData(CollectionBean collectionBean) {
+        if (collectionBean.getCollectionListProduct().size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         refresh.finishRefresh();
         mAdapter.addFirstDataSet(collectionBean.getCollectionListProduct());
     }
@@ -195,7 +208,19 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
 
     @Override
     public void state(String msg) {
-        CPSToast.showText(this,msg);
-        mPresenter.getCollectionList(loginBean.getRepairUser_ID(),1);
+        CPSToast.showText(this, msg);
+        mPresenter.getCollectionList(loginBean.getRepairUser_ID(), 1);
+    }
+
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多数据~");
+        }
     }
 }

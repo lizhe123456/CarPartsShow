@@ -48,6 +48,8 @@
             android:paddingBottom="@dimen/dm_10"
             android:textColor="@color/tv_000"
             android:layout_marginLeft="@dimen/dm_44"
+            android:hint="省"
+            android:textColorHint="@color/tv_999"
             />
         <TextView
             android:id="@+id/tv_add_c"
@@ -58,6 +60,8 @@
             android:paddingBottom="@dimen/dm_10"
             android:textColor="@color/tv_000"
             android:layout_marginLeft="@dimen/dm_44"
+            android:hint="市"
+            android:textColorHint="@color/tv_999"
             />
     </LinearLayout>
     <View
@@ -77,7 +81,8 @@
             android:layout_marginLeft="@dimen/dm_38"
             android:paddingTop="@dimen/dm_10"
             android:paddingBottom="@dimen/dm_10"
-            android:text="地区"/>
+            android:text="地区"
+            />
         <TextView
             android:id="@+id/tv_add_a"
             android:layout_width="wrap_content"
@@ -87,6 +92,8 @@
             android:paddingBottom="@dimen/dm_10"
             android:textColor="@color/tv_000"
             android:layout_marginLeft="@dimen/dm_44"
+            android:hint="区"
+            android:textColorHint="@color/tv_999"
             />
 
     </LinearLayout>

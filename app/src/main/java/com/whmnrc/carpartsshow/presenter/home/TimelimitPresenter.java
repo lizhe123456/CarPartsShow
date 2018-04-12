@@ -39,6 +39,9 @@ public class TimelimitPresenter extends BasePresenterImpl<TimelimitContract.View
                     public void onNext(List<SeckillGoodsBean> list) {
                         super.onNext(list);
                         if (type == 1){
+                            if (list.size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.loadData(list);
                         }else {
                             mView.loadMore(list);

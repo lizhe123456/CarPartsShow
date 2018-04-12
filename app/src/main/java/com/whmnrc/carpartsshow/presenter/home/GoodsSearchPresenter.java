@@ -13,6 +13,7 @@ import com.whmnrc.carpartsshow.presenter.home.contract.GoodsSearchContract;
 import com.whmnrc.carpartsshow.util.RxUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -26,6 +27,17 @@ import javax.inject.Inject;
 public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.View> implements GoodsSearchContract.Presenter{
 
     DataManager dataManager;
+
+    private int page = 1;
+    private boolean isDialog = true;
+
+    public boolean isDialog() {
+        return isDialog;
+    }
+
+    public void setDialog(boolean dialog) {
+        isDialog = dialog;
+    }
 
     @Inject
     public GoodsSearchPresenter(DataManager dataManager) {
@@ -80,16 +92,76 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
 
     //商品搜索
     @Override
-    public void getGoodsSearch(Map<String, Object> map) {
-        mView.loading("加载中..");
-        addSubscribe(dataManager.fetchListSplitGoods(map)
+    public void getGoodsSearch(Map<String, Object> map, final int type) {
+        if (type == 1) {
+            page = 1;
+//            mView.loading("加载中..");
+        }
+        if (isDialog){
+            mView.loading("加载中..");
+            isDialog = false;
+        }
+        HashMap<String,Object> map1 = new HashMap<>();
+        if (!TextUtils.isEmpty((String) map.get("OrderFiled"))){
+            map1.put("OrderFiled",map.get("OrderFiled"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("RepairUser_ID"))){
+            map1.put("RepairUser_ID",map.get("RepairUser_ID"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("OrderASC"))){
+            map1.put("OrderASC",map.get("OrderASC"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("BrandName"))){
+            map1.put("BrandName",map.get("BrandName"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("CategoryName"))){
+            map1.put("CategoryName",map.get("CategoryName"));
+            if (map.get("Step") != null &&(int) map.get("Step") != 0){
+                map1.put("Step",map.get("Step"));
+            }
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("OrderFiled"))){
+            map1.put("OrderFiled",map.get("OrderFiled"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("SearchValue"))){
+            map1.put("SearchValue",map.get("SearchValue"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("VIN"))){
+            map1.put("VIN",map.get("VIN"));
+        }
+
+        if (!TextUtils.isEmpty((String) map.get("NLevelID"))){
+            map1.put("NLevelID",map.get("NLevelID"));
+        }
+
+
+
+        if (map.get("CarID") != null && (int) map.get("CarID") != 0){
+            map1.put("CarID",map.get("CarID"));
+        }
+
+        map1.put("PageIndex",page);
+
+        addSubscribe(dataManager.fetchListSplitGoods(map1)
                 .compose(RxUtil.<CPSResponse<GoodsListBean>>rxSchedulerHelper())
                 .compose(RxUtil.<GoodsListBean>handle())
                 .subscribeWith(new CommonSubscriber<GoodsListBean>(mView){
                     @Override
                     public void onNext(GoodsListBean cpsResponse) {
                         super.onNext(cpsResponse);
-                        mView.showGoodsList(cpsResponse);
+                        if (type == 1) {
+                            mView.showGoodsList(cpsResponse,1);
+                        }else {
+                            mView.showGoodsList(cpsResponse,2);
+                        }
+                        page++;
                     }
                 })
 

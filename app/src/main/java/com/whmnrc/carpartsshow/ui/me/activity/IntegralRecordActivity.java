@@ -2,6 +2,10 @@ package com.whmnrc.carpartsshow.ui.me.activity;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpActivity;
@@ -33,6 +37,8 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
     SmartRefreshLayout refresh;
     private IntegralRecordAdapter mAdapter;
     LoginBean loginBean;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     @Override
     protected int setLayout() {
@@ -47,16 +53,16 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
     @Override
     protected void setData() {
         loginBean = SpUtil.getObject(this,"user");
-        mPresenter.getRecord(loginBean.getRepairUser_ID(),1);
         mAdapter = new IntegralRecordAdapter(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        refresh.autoRefresh();
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refresh.finishRefresh(3000);
+                refresh.finishRefresh();
                 mPresenter.getRecord(loginBean.getRepairUser_ID(),1);
 
             }
@@ -64,7 +70,7 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                refresh.finishLoadmore(3000);
+                refresh.finishLoadmore();
                 mPresenter.getRecord(loginBean.getRepairUser_ID(),2);
             }
         });
@@ -83,6 +89,13 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
 
     @Override
     public void showContent(List<IntegralRecordBean> list) {
+        if (list.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         refresh.finishRefresh();
         mAdapter.addFirstDataSet(list);
     }
@@ -91,5 +104,16 @@ public class IntegralRecordActivity extends MvpActivity<IntegralRecordPresenter>
     public void loadMore(List<IntegralRecordBean> list) {
         refresh.finishLoadmore();
         mAdapter.addMoreDataSet(list);
+    }
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多数据~");
+        }
     }
 }

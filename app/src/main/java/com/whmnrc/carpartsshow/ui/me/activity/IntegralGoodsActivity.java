@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.whmnrc.carpartsshow.R;
@@ -35,7 +37,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lizhe on 2018/3/16.
- * 积分兑换
+ *
  */
 
 public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> implements IntegralGoodsContract.View {
@@ -48,6 +50,8 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
     SmartRefreshLayout refresh;
 
     private GoodsAdapter mAdapter;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     private String textMsg;
     private String userId;
@@ -99,7 +103,7 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refresh.finishRefresh(3000);
+                refresh.finishRefresh();
                 etSearch.setText("");
                 if (TextUtils.isEmpty(type)){
                     mPresenter.getGoodsInfo(1,"",userId,"");
@@ -111,7 +115,7 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                refresh.finishLoadmore(3000);
+                refresh.finishLoadmore();
                 if (TextUtils.isEmpty(type)){
                     mPresenter.getGoodsInfo(2,"",userId,"");
                 }else {
@@ -147,11 +151,15 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
 
     @Override
     public void showContent(List<IntergralShopBean.IstIntegerGoods> list) {
+        if (list.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         mAdapter.addFirstDataSet(list);
         refresh.finishRefresh();
-        if (list.size() == 0){
-            CPSToast.showText(this,"暂无更多");
-        }
     }
 
     @Override
@@ -160,6 +168,17 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
         refresh.finishLoadmore();
         if (list.size() == 0){
             CPSToast.showText(this,"暂无更多");
+        }
+    }
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多数据~");
         }
     }
 }

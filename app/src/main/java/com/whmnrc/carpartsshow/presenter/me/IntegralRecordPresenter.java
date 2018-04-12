@@ -40,6 +40,9 @@ public class IntegralRecordPresenter extends BasePresenterImpl<IntegralRecordCon
                     public void onNext(List<IntegralRecordBean> list) {
                         super.onNext(list);
                         if (type == 1){
+                            if (list.size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.showContent(list);
                         }else {
                             mView.loadMore(list);

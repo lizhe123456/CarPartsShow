@@ -55,9 +55,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:visibility="gone">
-
                         <include layout="@layout/home_item_listnotice" />
-
                         <include layout="@layout/home_item_timelimit" />
                     </LinearLayout>
 
@@ -77,7 +75,6 @@
                         android:scrollbars="none"
                         android:visibility="gone" />
                     <include layout="@layout/img_layout"/>
-
                     <include layout="@layout/home_data_item_v2"/>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_data_item"
@@ -86,10 +83,9 @@
                         android:overScrollMode="never"
                         android:scrollbars="none"
                         android:visibility="gone" />
-
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dm_48" />
+                        android:layout_height="@dimen/dm_65" />
                 </LinearLayout>
             </com.whmnrc.carpartsshow.widgets.MyNestedScrollView>
 

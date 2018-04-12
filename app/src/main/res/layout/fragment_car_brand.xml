@@ -16,9 +16,11 @@
 
     <com.whmnrc.carpartsshow.view.SideBar
         android:id="@+id/right_side"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/dm_60"
+        />
 
     <TextView
         android:id="@+id/dialog"

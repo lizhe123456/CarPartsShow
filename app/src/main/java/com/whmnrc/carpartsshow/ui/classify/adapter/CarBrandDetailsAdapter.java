@@ -69,16 +69,15 @@ public class CarBrandDetailsAdapter extends AnimatedExpandableListView.AnimatedE
         holder.tvTitle.setText(getDts().get(groupPosition).getName());
         holder.ivImg.setVisibility(View.GONE);
         holder.tvLetter.setVisibility(View.GONE);
-        holder.ivItemGo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOpenListener.open(groupPosition);
-            }
-        });
         holder.groupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGroupItemListener.OnGroupItemClick(getDts().get(groupPosition));
+                onGroupItemListener.OnGroupItemClick(getDts().get(groupPosition),groupPosition);
+                if (getDts().get(groupPosition).isOpen()){
+                    getDts().get(groupPosition).setOpen(false);
+                }else {
+                    getDts().get(groupPosition).setOpen(true);
+                }
             }
         });
         return convertView;
@@ -185,7 +184,7 @@ public class CarBrandDetailsAdapter extends AnimatedExpandableListView.AnimatedE
     }
 
     public interface OnItemListener{
-        void OnGroupItemClick(CarFilterBean.ListCXIBean listCXIBean);
+        void OnGroupItemClick(CarFilterBean.ListCXIBean listCXIBean,int groupPosition);
 
         void OnSubItemClick(CarFilterBean.ListCXIBean listCXIBean, CarFilterBean.ListCXIBean.ListCarsBean listCarsBean);
     }

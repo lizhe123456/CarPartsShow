@@ -111,5 +111,6 @@ public class NewsActivity extends MvpActivity<NewsTypePresenter> implements News
 //        reflex(tabLayout);
         reduceMarginsInTabs(tabLayout,40);
         viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(1);
     }
 }

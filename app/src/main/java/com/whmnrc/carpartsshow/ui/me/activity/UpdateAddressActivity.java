@@ -41,10 +41,10 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
 
     String add;
     //省编码
-    String pCode;
+    String pCode = "110000";
     //市编码
-    String cCode;
-    String aCode;
+    String cCode = "110100";
+    String aCode = "110101";
 
     private boolean isFrist = true;
     private boolean isRun = false;
@@ -65,11 +65,11 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     protected void setData() {
         currentRepairUser = (UserInfoBean.CurrentRepairUserBean) getIntent().getSerializableExtra("userInfo");
         if (currentRepairUser != null) {
-            if (currentRepairUser.getRepairUser_Provice()!=null && currentRepairUser.getRepairUser_City() != null && currentRepairUser.getRepairUser_Region() != null){
+            if (!TextUtils.isEmpty(currentRepairUser.getRepairUser_Provice()) && !TextUtils.isEmpty(currentRepairUser.getRepairUser_City())){
                 pCode = currentRepairUser.getRepairUser_Provice();
                 cCode = currentRepairUser.getRepairUser_City();
-                aCode = currentRepairUser.getRepairUser_Region();
-                add = currentRepairUser.getRepairUser_DetailAddress();
+                aCode = currentRepairUser.getRepairUser_Region() == null ? "" : currentRepairUser.getRepairUser_Region();
+                add = currentRepairUser.getRepairUser_DetailAddress() == null ? "" : currentRepairUser.getRepairUser_DetailAddress();
                 mPresenter.getAreaList();
                 isRun = true;
                 tvAdd.setText(add);
@@ -141,6 +141,9 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                     tvAddS.setText(addressBean.get(i).getAreaName());
                     pCode = addressBean.get(i).getAreaId();
                     mPresenter.getAreaList(pCode,1);
+                    if (TextUtils.isEmpty(cCode)){
+                        isFrist = false;
+                    }
                     break;
                 }
             }
@@ -182,6 +185,9 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                     tvAddC.setText(addressBean.get(i).getAreaName());
                     cCode = addressBean.get(i).getAreaId();
                     mPresenter.getAreaList(cCode,2);
+                    if (TextUtils.isEmpty(aCode)){
+                        isFrist = false;
+                    }
                     break;
                 }
             }

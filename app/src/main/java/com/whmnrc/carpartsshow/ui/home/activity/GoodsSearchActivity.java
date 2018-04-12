@@ -3,6 +3,8 @@ package com.whmnrc.carpartsshow.ui.home.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.app.Constants;
 import com.whmnrc.carpartsshow.base.MvpActivity;
@@ -33,8 +34,8 @@ import com.whmnrc.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.whmnrc.carpartsshow.ui.me.activity.CreditMoneyActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.whmnrc.carpartsshow.util.SpUtil;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -96,11 +97,10 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     private int cid;
     private LoginBean loginBean;
     private String searchValue;
-    private String step;
+    private int step;
 
     //商品搜索请求参数map
     private Map<String , Object> map = new HashMap<>();
-    private int page = 1;
 
     public boolean isClassifyShow;
     public boolean isBrandShow;
@@ -141,34 +141,32 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         latelCarBrand = getIntent().getStringExtra("carBrand") ;
         searchValue = getIntent().getStringExtra("searchValue") == null ? "" : getIntent().getStringExtra("searchValue");
         nLevelID = getIntent().getStringExtra("NLevelID") == null ? "" : getIntent().getStringExtra("NLevelID");
-        step = getIntent().getStringExtra("classifyStep");
+        step = Integer.parseInt(getIntent().getStringExtra("classifyStep") == null ? "0" : getIntent().getStringExtra("classifyStep"));
         initLabel();
         fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
         mPresenter.getClassification(loginBean.getRepairUser_ID());
         map.put("RepairUser_ID",loginBean.getRepairUser_ID());
-        map.put("PageIndex",page);
         map.put("BrandName",latelBrand);
         map.put("CategoryName",latelClassify);
         if (cid != -1) {
             map.put("CarID", cid);
         }
         map.put("SearchValue",searchValue);
-        if (!TextUtils.isEmpty(step)) {
+        if (step != 0) {
             map.put("Step", step);
         }
         if (!TextUtils.isEmpty(nLevelID)){
             map.put("NLevelID",nLevelID);
         }
-        mPresenter.getGoodsSearch(map);
+        mPresenter.getGoodsSearch(map,1);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     searchValue = etSearch.getText().toString().trim();
                     map.put("SearchValue",searchValue);
-                    page = 1;
-                    mPresenter.getGoodsSearch(map);
+                    mPresenter.getGoodsSearch(map,1);
                     return true;
                 }
                 return false;
@@ -215,7 +213,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         etSearch.setSelection(etSearch.getText().length());
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models})
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models,R.id.iv_record})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -307,6 +306,10 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 }
 
                 break;
+            case R.id.iv_record:
+                ScanCodeActivity.start(GoodsSearchActivity.this);
+                this.finish();
+                break;
         }
     }
 
@@ -334,27 +337,23 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     }
 
     @Override
-    public void showGoodsList(GoodsListBean goodsListBean) {
-        if (page == 1){
+    public void showGoodsList(GoodsListBean goodsListBean,int type) {
+        if (type == 1){
             goodsListBean.setIsMore(1);
         }else {
             goodsListBean.setIsMore(2);
         }
         //向商品Fragment发送数据
         EventBus.getDefault().post(goodsListBean);
-        page++;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getGoosData(GoodsMoreBean bean){
         //刷新ui
         if (bean.getInteger() == 1) {
-            page = 1;
-            map.put("PageIndex",page);
-            mPresenter.getGoodsSearch(map);
+            mPresenter.getGoodsSearch(map,1);
         }else {
-            map.put("PageIndex",page);
-            mPresenter.getGoodsSearch(map);
+            mPresenter.getGoodsSearch(map,2);
         }
     }
 
@@ -374,9 +373,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 break;
             case "classify":
                 latelClassify = carClassifyBean.getName();
-                step = carClassifyBean.getcType();
+                step = Integer.parseInt(carClassifyBean.getcType());
                 map.put("CategoryName",latelClassify);
-                map.put("Step",carClassifyBean.getcType());
+                map.put("Step",step);
                 tvLabelDelete.setVisibility(View.VISIBLE);
                 tvLabelDelete.setText(latelClassify);
                 updateDate(map);
@@ -405,8 +404,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     }
 
     public void updateDate(Map<String , Object> map){
-        page = 1;
-        mPresenter.getGoodsSearch(map);
+        mPresenter.setDialog(true);
+        mPresenter.getGoodsSearch(map,1);
     }
 
     //设置fragment 切换

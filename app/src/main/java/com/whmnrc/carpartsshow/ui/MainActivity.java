@@ -24,6 +24,7 @@ import com.whmnrc.carpartsshow.ui.home.HomeFragment;
 import com.whmnrc.carpartsshow.ui.me.MeFragment;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.whmnrc.carpartsshow.ui.shopping.ShoppingCartActivity;
+import com.whmnrc.carpartsshow.util.SystemUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,7 @@ public class MainActivity extends BaseActivity {
 
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
+    private boolean isNet;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -75,8 +77,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setImmersionStateMode(this);
-
         super.onCreate(savedInstanceState);
+        if (SystemUtil.isNetworkConnected(this)){
+            isNet = true;
+        }else {
+            isNet = false;
+        }
     }
 
     @Override

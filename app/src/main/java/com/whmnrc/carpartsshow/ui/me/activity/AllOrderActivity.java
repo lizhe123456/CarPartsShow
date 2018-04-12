@@ -66,6 +66,13 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
 
     @Override
     public void showData(OrderListBean orderListBean) {
+        if (orderListBean.getData().size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         mAdapter.addFirstDataSet(orderListBean.getData());
         refresh.finishRefresh();
     }
@@ -193,11 +200,13 @@ public class AllOrderActivity extends MvpActivity<MyOrderPresenter> implements M
 
     @Override
     public void showEmpty() {
-        View view = vsEmpty.inflate();
-        ImageView imageView = view.findViewById(R.id.iv_empty);
-        TextView textView = view.findViewById(R.id.tv_empty_msg);
-        imageView.setImageResource(R.drawable.order_empty);
-        textView.setText("暂无更多订单~");
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多订单~");
+        }
     }
 
 }

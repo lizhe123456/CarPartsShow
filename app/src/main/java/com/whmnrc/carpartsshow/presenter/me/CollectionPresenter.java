@@ -37,6 +37,9 @@ public class CollectionPresenter extends BasePresenterImpl<CollectionContract.Vi
                     public void onNext(CollectionBean collectionBean) {
                         super.onNext(collectionBean);
                         if (type == 1){
+                            if (collectionBean.getCollectionListProduct().size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.showData(collectionBean);
                         }else {
                             mView.loadMore(collectionBean);

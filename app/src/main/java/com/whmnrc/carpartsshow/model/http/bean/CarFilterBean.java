@@ -48,6 +48,15 @@ public class CarFilterBean implements Serializable {
         private int OrderID;
         private String PP;
         private List<ListCarsBean> ListCars;
+        private boolean isOpen;
+
+        public boolean isOpen() {
+            return isOpen;
+        }
+
+        public void setOpen(boolean open) {
+            isOpen = open;
+        }
 
         public String getCJ() {
             return CJ;

@@ -445,6 +445,11 @@ public class ClassificationBean implements Serializable {
         private String Code;
         private int OrderID;
         private List<VCJListBean> listBeans;
+        private boolean isOpen;
+
+        public ListCarBrandBean(){
+
+        }
 
         protected ListCarBrandBean(Parcel in) {
             CarBrand_ID = in.readString();
@@ -454,9 +459,7 @@ public class ClassificationBean implements Serializable {
             Name = in.readString();
             Code = in.readString();
             OrderID = in.readInt();
-        }
-
-        public ListCarBrandBean() {
+            isOpen = in.readByte() != 0;
         }
 
         public static final Creator<ListCarBrandBean> CREATOR = new Creator<ListCarBrandBean>() {
@@ -470,6 +473,14 @@ public class ClassificationBean implements Serializable {
                 return new ListCarBrandBean[size];
             }
         };
+
+        public boolean isOpen() {
+            return isOpen;
+        }
+
+        public void setOpen(boolean open) {
+            isOpen = open;
+        }
 
         public List<VCJListBean> getListBeans() {
             return listBeans;
@@ -535,6 +546,7 @@ public class ClassificationBean implements Serializable {
             this.OrderID = OrderID;
         }
 
+
         @Override
         public int describeContents() {
             return 0;
@@ -549,6 +561,7 @@ public class ClassificationBean implements Serializable {
             dest.writeString(Name);
             dest.writeString(Code);
             dest.writeInt(OrderID);
+            dest.writeByte((byte) (isOpen ? 1 : 0));
         }
     }
 

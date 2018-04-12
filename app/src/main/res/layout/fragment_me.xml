@@ -5,6 +5,7 @@
     android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <View
+        android:id="@+id/stu_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_20"
         android:background="@color/title_bg"/>
@@ -67,13 +68,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/tv_000"
-                        android:textSize="@dimen/dm_20"/>
+                        android:textSize="@dimen/dm_20"
+                        android:text="0"/>
                     <TextView
                         android:id="@+id/text_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="@color/tv_999"/>
+                        android:textColor="@color/tv_999"
+                        android:text="可信信用额度"/>
                 </LinearLayout>
                 <View
                     android:layout_width="0.5dp"
@@ -95,13 +98,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/tv_000"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp"
+                        android:text="0"/>
                     <TextView
                         android:id="@+id/text_collection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="@color/tv_999"/>
+                        android:textColor="@color/tv_999"
+                        android:text="收藏"/>
                 </LinearLayout>
                 <View
                     android:layout_width="0.5dp"
@@ -123,13 +128,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/tv_000"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp"
+                        android:text="0"/>
                     <TextView
                         android:id="@+id/text_coupon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="@color/tv_999"/>
+                        android:textColor="@color/tv_999"
+                        android:text="优惠券"/>
 
                 </LinearLayout>
                 <View
@@ -152,13 +159,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/tv_000"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp"
+                        android:text="0"/>
                     <TextView
                         android:id="@+id/text_integral"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="@color/tv_999"/>
+                        android:textColor="@color/tv_999"
+                        android:text="积分"/>
                 </LinearLayout>
             </LinearLayout>
             <View
@@ -226,7 +235,7 @@
                 android:gravity="center"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dm_60"/>
+                android:layout_height="@dimen/dm_65"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

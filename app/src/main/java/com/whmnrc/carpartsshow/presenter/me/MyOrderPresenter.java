@@ -43,10 +43,10 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
                     public void onNext(OrderListBean orderListBean) {
                         super.onNext(orderListBean);
                         if (loadType == 1){
-                            mView.showData(orderListBean);
                             if (orderListBean.getData().size() == 0){
                                 mView.showEmpty();
                             }
+                            mView.showData(orderListBean);
                         }else {
                             mView.loadMore(orderListBean);
                         }

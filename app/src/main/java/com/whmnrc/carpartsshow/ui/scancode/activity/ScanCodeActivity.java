@@ -411,7 +411,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         try {
             BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
             mPresenter.getVinCode(beanResutl.getWords_result().get(0).getWords());
-            CPSToast.showText(this,beanResutl.getWords_result().get(0).getWords());
+//            CPSToast.showText(this,beanResutl.getWords_result().get(0).getWords());
         }catch (Exception e){
 
         }
@@ -424,7 +424,6 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     @Override
     public void showErrorMsg(String msg) {
-        super.showErrorMsg(msg);
     }
 
     @Override

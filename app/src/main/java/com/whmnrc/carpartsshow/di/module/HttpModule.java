@@ -95,32 +95,15 @@ public class HttpModule {
                 return response;
             }
         };
-//        try {
-//            Interceptor apikey = new Interceptor() {
-//                @Override
-//                public Response intercept(Chain chain) throws IOException {
-//                    Request request = chain.request();
-//                    request = request.newBuilder()
-//                            .addHeader("loginId", SpUtil.getString(App.getInstance().getContext(),"loginId") == null ? "" : SpUtil.getString(App.getInstance().getContext(),"loginId"))
-//                            .addHeader("token",SpUtil.getString(App.getInstance().getContext(),"token") == null ? "" : SpUtil.getString(App.getInstance().getContext(),"token"))
-//                            .build();
-//                    return chain.proceed(request);
-//                }
-//            };
-//            builder.addInterceptor(apikey);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
 
         builder.connectTimeout(15, TimeUnit.SECONDS)
                 .addInterceptor(logInterceptor)
                 .addNetworkInterceptor(cacheInterceptor)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
-                .cache(cache)
-                .addInterceptor(cacheInterceptor);
+                .cache(cache);
         return builder.build();
     }
 
@@ -159,11 +142,6 @@ public class HttpModule {
             }
         }
     }
-
-    /**
-     * 封装公共参数
-     */
-
 
 
 }

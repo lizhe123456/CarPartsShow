@@ -56,6 +56,13 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
 
     @Override
     public void showData(OrderListBean orderListBean) {
+        if (orderListBean.getData().size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         orderBean = orderListBean;
         mAdapter.addFirstDataSet(orderListBean.getData());
         refresh.finishRefresh();
@@ -181,11 +188,13 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
 
     @Override
     public void showEmpty() {
-        View view = vsEmpty.inflate();
-        ImageView imageView = view.findViewById(R.id.iv_empty);
-        TextView textView = view.findViewById(R.id.tv_empty_msg);
-        imageView.setImageResource(R.drawable.order_empty);
-        textView.setText("暂无更多订单~");
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多订单~");
+        }
     }
 
 

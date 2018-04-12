@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.BaseFragment;
 import com.whmnrc.carpartsshow.eventbus.CarClassifyBean;
@@ -19,9 +18,7 @@ import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.PinyinUtils;
 import com.whmnrc.carpartsshow.view.SideBar;
 import com.whmnrc.carpartsshow.widgets.AnimatedExpandableListView;
-
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -87,12 +84,10 @@ public class CarBrandFragment extends BaseFragment {
         });
         mAdapter.setOnOpenListener(new CarBrandAdapterV2.OnOpenListener() {
             @Override
-            public void open(int groupPosition) {
-                if (flag) {
-                    flag = false;
+            public void open(ClassificationBean.ListCarBrandBean listCarBrandBean,int groupPosition) {
+                if (listCarBrandBean.isOpen()){
                     expandableListView.collapseGroupWithAnimation(groupPosition);
                 }else {
-                    flag = true;
                     expandableListView.expandGroupWithAnimation(groupPosition);
                 }
             }

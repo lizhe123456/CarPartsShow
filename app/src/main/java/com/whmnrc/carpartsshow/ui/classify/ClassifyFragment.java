@@ -10,9 +10,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpFragment;
 import com.whmnrc.carpartsshow.eventbus.HomePageBean;
@@ -26,14 +30,12 @@ import com.whmnrc.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.whmnrc.carpartsshow.util.ScreenUtils;
 import com.whmnrc.carpartsshow.util.SpUtil;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -63,6 +65,8 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     View divider;
     @BindView(R.id.et_search)
     EditText etSearch;
+    @BindView(R.id.stu_bar)
+    View view;
 
     private CarClassifyFragment classification;
     private BrandFragment brand;
@@ -86,9 +90,13 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
     @Override
     protected void setData() {
+        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) view.getLayoutParams();
+        //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
+        linearParams.height = ScreenUtils.getStatusHeight(getContext());
+        view.setLayoutParams(linearParams);
+        //使设置好的布局参数应用到控件
         loginBean = SpUtil.getObject(getContext(), "user");
-        mPresenter.getClassification(loginBean.getRepairUser_ID(), 0);
-//        page = getArguments().getInt("page");
+
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -102,7 +110,10 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
                 return false;
             }
         });
+        mPresenter.getClassification(loginBean.getRepairUser_ID(), 0);
     }
+
+
 
     @Override
     public void stateError() {
@@ -128,7 +139,6 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
         FragmentAdapter adapter = new FragmentAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(page);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -156,12 +166,20 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
             }
         });
-        viewPager.setCurrentItem(0);
-        selectedModels();
+        viewPager.setCurrentItem(page);
+        if (page == 0){
+            selectedModels();
+        }else if (page == 1){
+            selectedClassify();
+        }else if (page == 2){
+            selectedBrand();
+        }
+
     }
 
+
     @Override
-    public void showGoodsList(GoodsListBean goodsListBean) {
+    public void showGoodsList(GoodsListBean goodsListBean, int type) {
 
     }
 

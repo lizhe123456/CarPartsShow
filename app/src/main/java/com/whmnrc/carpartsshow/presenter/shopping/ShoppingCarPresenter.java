@@ -22,6 +22,8 @@ public class ShoppingCarPresenter extends BasePresenterImpl<ShoppingCarContract.
     DataManager dataManager;
     int page = 1;
     int size = 10;
+    private boolean isLoading = true;
+
     @Inject
     public ShoppingCarPresenter(DataManager dataManager) {
         this.dataManager = dataManager;
@@ -29,7 +31,10 @@ public class ShoppingCarPresenter extends BasePresenterImpl<ShoppingCarContract.
 
     @Override
     public void getShoppingCarData(String userId, final int type) {
-        mView.loading("加载中..");
+        if (isLoading) {
+            mView.loading("加载中..");
+            isLoading = false;
+        }
         if (type == 1){
             page = 1;
         }

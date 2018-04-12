@@ -60,16 +60,16 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
             return;
         }
         mView.unLoading();
+        if (!SystemUtil.isNetworkConnected(App.getInstance().getmContext())) {
+            mView.showErrorMsg("网络已断开，请检查网络连接..");
+            return;
+        }
         if (mErrorMsg != null && !TextUtils.isEmpty(mErrorMsg)) {
             mView.showErrorMsg(mErrorMsg);
         } else if (e instanceof ApiException) {
             mView.showErrorMsg(e.toString());
         } else if (e instanceof HttpException) {
-            if (SystemUtil.isNetworkConnected(App.getInstance().getmContext())) {
-                mView.showErrorMsg("服务器异常，正在抢修中..");
-            }else {
-                mView.showErrorMsg("网络已断开，请检查网络连接..");
-            }
+            mView.showErrorMsg("服务器异常，正在抢修中..");
         }else if (e instanceof SysException){
             mView.showErrorMsg(e.getMessage());
         }else if (e instanceof JsonSyntaxException){
@@ -80,8 +80,10 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
             mView.showErrorMsg("网络不给力，请重试..");
         }else if (e instanceof UnknownHostException){
 
+        }else if (e instanceof NullPointerException){
+
         }else {
-            mView.showErrorMsg("未知错误");
+//            mView.showErrorMsg("网络不给力，请重试..");
             LogUtil.d(e.toString());
         }
         if (isShowErrorState) {

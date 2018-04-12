@@ -3,6 +3,8 @@ package com.whmnrc.carpartsshow.ui.home;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpFragment;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
@@ -26,6 +27,7 @@ import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.presenter.home.HomePagePresenter;
 import com.whmnrc.carpartsshow.presenter.home.contract.HomePageContract;
+import com.whmnrc.carpartsshow.receiver.NetworkReceiver;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.MessageRecordActivity;
@@ -48,13 +50,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
-
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -143,9 +142,6 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @BindView(R.id.ll_all)
     LinearLayout llAll;
 
-
-//    private HomePageAdapter mAdapter;
-
     @Override
     protected int setLayout() {
         return R.layout.fragment_home;
@@ -153,7 +149,6 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
 
     @Override
     protected void initInject() {
-//        setFitsSystemWindows(getActivity(),true);
         getFragmentComponent().inject(this);
     }
 
@@ -198,7 +193,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refresh.finishRefresh(3000);
+                refresh.finishRefresh(1000);
                 mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
             }
         });
@@ -212,8 +207,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     public void onResume() {
         super.onResume();
-//        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
-        Calendar calendar = Calendar.getInstance();  //获取当前时间，作为图标的名字
+        Calendar calendar = Calendar.getInstance();
+        //获取当前时间，作为图标的名字
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
@@ -230,14 +225,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         initGoods(homePageBean.getListSeckillGoods());
         initCrad(homePageBean);
         initDataItem(homePageBean.getListCardImg());
-//        List<Object> list = new ArrayList<>();
-//        list.add(homePageBean.getListFirstCategory());
-//        list.add(homePageBean.getListNotice());
-//        list.add(homePageBean.getTimeLimit());
-//        list.add(homePageBean.getListSeckillGoods());
-//        list.add(homePageBean.getListCrad());
-//        list.add(homePageBean.getListDateItem());
-//        mAdapter.addData(list);
+        refresh.finishRefresh();
     }
 
     private void initCrad(HomePageBean homePageBean) {

@@ -22,7 +22,7 @@ public interface GoodsSearchContract {
 
         void showCarBrand(List<ClassificationBean.ListCarBrandBean> listCarBrandBeans);
 
-        void showGoodsList(GoodsListBean goodsListBean);
+        void showGoodsList(GoodsListBean goodsListBean,int type);
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -30,7 +30,7 @@ public interface GoodsSearchContract {
 
         void getClassification(String userId,int type);
 
-        void getGoodsSearch(Map<String ,Object> map);
+        void getGoodsSearch(Map<String ,Object> map,int type);
     }
 
 }

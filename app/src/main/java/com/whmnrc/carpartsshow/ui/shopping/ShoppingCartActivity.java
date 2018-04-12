@@ -209,12 +209,14 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
 
     @Override
     public void loadMore(ShopCarBean shopCarBean) {
-
+        mAdapter.addFirstDataSet(shopCarBean.getListCarProduct());
+        refresh.finishLoadmore();
     }
 
     @Override
     public void showContent(ShopCarBean shopCarBean) {
         mAdapter.addFirstDataSet(shopCarBean.getListCarProduct());
+        refresh.finishRefresh();
     }
 
     //加减请求成功

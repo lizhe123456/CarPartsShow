@@ -119,15 +119,24 @@ public class MyCouponActivity extends MvpActivity<CouponPresenter> implements Co
 
     @Override
     public void showContent(List<CouponBean> couponBean) {
+        if (couponBean.size() == 0) {
+            if (vsEmpty.getParent() != null) {
+                View view = vsEmpty.inflate();
+                ImageView imageView = view.findViewById(R.id.iv_empty);
+                TextView textView = view.findViewById(R.id.tv_empty_msg);
+                imageView.setImageResource(R.drawable.coupon_empty);
+                textView.setText("没有可用的优惠券哟~");
+            }
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            if (vsEmpty.getParent() == null) {
+                vsEmpty.setVisibility(View.GONE);
+            }
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         mAdapter.addFirstDataSet(couponBean);
         refresh.finishRefresh();
-        if (mAdapter.getDataSource().size() == 0){
-            View view = vsEmpty.inflate();
-            ImageView imageView = view.findViewById(R.id.iv_empty);
-            TextView textView = view.findViewById(R.id.tv_empty_msg);
-            imageView.setImageResource(R.drawable.coupon_empty);
-            textView.setText("没有可用的优惠券哟~");
-        }
     }
 
     @Override

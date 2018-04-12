@@ -62,13 +62,7 @@ public class CarBrandDetailsActivity extends MvpActivity<CarFilterPresenter> imp
         mAdapter.setOnOpenListener(new CarBrandDetailsAdapter.OnOpenListener() {
             @Override
             public void open(int groupPosition) {
-                if (flag) {
-                    flag = false;
-                    expandableListView.collapseGroupWithAnimation(groupPosition);
-                }else {
-                    flag = true;
-                    expandableListView.expandGroupWithAnimation(groupPosition);
-                }
+
             }
         });
 
@@ -81,9 +75,15 @@ public class CarBrandDetailsActivity extends MvpActivity<CarFilterPresenter> imp
 
         mAdapter.setOnItemListener(new CarBrandDetailsAdapter.OnItemListener() {
             @Override
-            public void OnGroupItemClick(CarFilterBean.ListCXIBean listCXIBean) {
+            public void OnGroupItemClick(CarFilterBean.ListCXIBean listCXIBean,int groupPosition) {
                 if (listCXIBean.getListCars().size() == 0){
                     CPSToast.showText(CarBrandDetailsActivity.this,"暂未录入该车型");
+                }else {
+                    if (listCXIBean.isOpen()) {
+                        expandableListView.collapseGroupWithAnimation(groupPosition);
+                    }else {
+                        expandableListView.expandGroupWithAnimation(groupPosition);
+                    }
                 }
             }
 

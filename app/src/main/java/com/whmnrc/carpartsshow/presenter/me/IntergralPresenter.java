@@ -40,6 +40,9 @@ public class IntergralPresenter extends BasePresenterImpl<IntergralContract.View
                     public void onNext(List<IntergralBean> intergralBean) {
                         super.onNext(intergralBean);
                         if (type == 1){
+                            if (intergralBean.size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.showContent(intergralBean);
                         }else {
                             mView.loadMore(intergralBean);

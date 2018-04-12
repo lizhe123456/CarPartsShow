@@ -37,15 +37,15 @@ public class NewsListPresenter extends BasePresenterImpl<NewsListContract.View> 
                     @Override
                     public void onNext(List<NewsListBean> newsListBeans) {
                         super.onNext(newsListBeans);
-                        if (newsListBeans == null || newsListBeans.size() == 0){
-//                            mView.showEmpty("",);
-                        }else {
                             if (type == 1){
+                                if (newsListBeans.size() == 0){
+                                    mView.showEmpty();
+                                }
                                 mView.loadFirst(newsListBeans);
                             }else {
                                 mView.loadMore(newsListBeans);
                             }
-                        }
+
 
                     }
                 })

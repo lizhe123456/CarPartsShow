@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:paddingRight="@dimen/dm_15"
-        android:paddingLeft="@dimen/dm_15"
+        android:paddingLeft="@dimen/dm_30"
         android:paddingBottom="@dimen/dm_15"
         android:paddingTop="@dimen/dm_15"
         android:src="@drawable/more"

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -188,6 +189,18 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         startActivity(intent);
         this.finish();
         overridePendingTransition(0, 0);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            App.getInstance().exitApp();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+
     }
 
 }

@@ -13,7 +13,7 @@ import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsBean;
  * Created by lizhe on 2018/4/8.
  */
 
-public class TimelimitAdapter extends BaseAdapter<SeckillGoodsBean> {
+public class  TimelimitAdapter extends BaseAdapter<SeckillGoodsBean> {
 
     public TimelimitAdapter(Context context) {
         super(context);

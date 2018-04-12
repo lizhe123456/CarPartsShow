@@ -3,6 +3,7 @@ package com.whmnrc.carpartsshow.ui.home.activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,8 @@ public class MessageRecordActivity extends MvpActivity<MessageRecordPresenter> i
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
     private LoginBean loginBean;
 
     private MessageRecordAdapter mAdapter;
@@ -47,17 +50,21 @@ public class MessageRecordActivity extends MvpActivity<MessageRecordPresenter> i
 
     @Override
     public void loadFirst(List<MsgBean> msgBeans) {
-        mAdapter.addFirstDataSet(msgBeans);
-        refresh.finishRefresh();
-        if (msgBeans.size() < 10){
-            mPresenter.getMsgData(loginBean.getRepairUser_ID(),2);
+        if (msgBeans.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
+        refresh.finishRefresh();
+        mAdapter.addFirstDataSet(msgBeans);
     }
 
     @Override
     public void loadMore(List<MsgBean> msgBeans) {
-        mAdapter.addMoreDataSet(msgBeans);
         refresh.finishLoadmore();
+        mAdapter.addMoreDataSet(msgBeans);
     }
 
     @Override

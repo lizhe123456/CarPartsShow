@@ -29,7 +29,7 @@ public class IntegralGoodsPresenter extends BasePresenterImpl<IntegralGoodsContr
     @Override
     public void getGoodsInfo(final int type, String sValue, String userId, String goodsType) {
         if (type == 1){
-            mView.loading("加载中..");
+//            mView.loading("加载中..");
             page = 1;
         }
         addSubscribe(dataManager.fetchsplitListIntegerGoods(size,page,sValue,userId,goodsType)

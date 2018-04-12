@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.BaseFragment;
 import com.whmnrc.carpartsshow.eventbus.CarClassifyBean;
@@ -18,9 +17,7 @@ import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.PinyinUtils;
 import com.whmnrc.carpartsshow.view.SideBar;
-
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

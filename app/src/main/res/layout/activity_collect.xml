@@ -112,4 +112,9 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dm_15" />
     </LinearLayout>
+    <ViewStub
+        android:id="@+id/vs_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/empty_data_layout" />
 </RelativeLayout>

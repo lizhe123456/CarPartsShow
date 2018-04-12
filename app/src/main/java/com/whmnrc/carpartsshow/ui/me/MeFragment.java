@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whmnrc.carpartsshow.R;
@@ -74,6 +75,8 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
     SlideListView lvItemList;
     @BindView(R.id.tv_exit_login)
     TextView tvExitLogin;
+    @BindView(R.id.stu_bar)
+    View view;
 
     private String userId;
     private OrderListAdapter orderListAdapter;
@@ -95,6 +98,9 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
     @Override
     protected void init() {
         super.init();
+        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) view.getLayoutParams(); //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
+        linearParams.height = ScreenUtils.getStatusHeight(getContext());
+        view.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
         title.setText("个人中心");
         textCollection.setText("收藏");
         textCoupon.setText("优惠券");
@@ -239,6 +245,7 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
                 break;
             case R.id.tv_exit_login:
                 SpUtil.removeObject(getContext(),"user");
+                getActivity().finish();
                 intent.setClass(getContext(), LoginActivity.class);
                 startActivity(intent);
                 break;

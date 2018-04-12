@@ -90,5 +90,15 @@
             app:viewSize="12"/>
 
     </RelativeLayout>
-    <include layout="@layout/refresh_view_more"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/refresh_view_more"/>
+        <ViewStub
+            android:id="@+id/vs_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/empty_data_layout" />
+    </RelativeLayout>
+
 </LinearLayout>

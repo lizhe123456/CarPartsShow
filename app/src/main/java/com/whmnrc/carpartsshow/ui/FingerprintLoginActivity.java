@@ -201,6 +201,7 @@ public class FingerprintLoginActivity extends MvpActivity<LoginPresenter> implem
                 if (TextUtils.isEmpty(username)){
                     CPSToast.showText(FingerprintLoginActivity.this,"请先首次登录");
                     LoginActivity.start(FingerprintLoginActivity.this);
+                    FingerprintLoginActivity.this.finish();
                 }else {
                     mPresenter.passLogin(username, pass);
                 }

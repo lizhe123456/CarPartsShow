@@ -17,6 +17,7 @@
             android:paddingLeft="16dp"
             android:paddingTop="16dp"
             android:paddingRight="10dp"
+            android:visibility="gone"
             android:layout_alignBottom="@+id/login_title"/>
         <TextView
             android:id="@+id/login_title"
@@ -93,6 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@string/switch_user"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:textColor="@color/tv_999"
             android:textSize="13sp"

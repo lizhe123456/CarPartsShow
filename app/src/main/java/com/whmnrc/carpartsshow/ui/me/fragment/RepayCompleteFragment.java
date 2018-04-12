@@ -2,6 +2,10 @@ package com.whmnrc.carpartsshow.ui.me.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpFragment;
@@ -33,6 +37,8 @@ public class RepayCompleteFragment extends MvpFragment<CreditMoneyPresenter> imp
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     private ConsumptionRecordAdapter adapter;
 
@@ -85,8 +91,23 @@ public class RepayCompleteFragment extends MvpFragment<CreditMoneyPresenter> imp
     public void loadFrist(List<ConsumptionRecordBean> list) {
         refresh.finishRefresh();
         adapter.addFirstDataSet(list);
-        if (list.size() == 0){
-            CPSToast.showText(getContext(),"没有更多记录了");
+        if (list.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            vsEmpty.setVisibility(View.VISIBLE);
+        } else {
+            vsEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showEmpty() {
+        if (vsEmpty.getParent() != null) {
+            View view = vsEmpty.inflate();
+            ImageView imageView = view.findViewById(R.id.iv_empty);
+            TextView textView = view.findViewById(R.id.tv_empty_msg);
+            imageView.setImageResource(R.drawable.order_empty);
+            textView.setText("暂无更多数据~");
         }
     }
 }

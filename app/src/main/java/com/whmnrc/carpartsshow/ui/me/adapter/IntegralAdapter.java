@@ -19,9 +19,12 @@ public class IntegralAdapter extends BaseAdapter<IntergralBean> {
 
     @Override
     protected void bindDataToItemView(BaseViewHolder holder, IntergralBean item, int position) {
-        holder.setText(R.id.tv_desc,"");
-        holder.setText(R.id.tv_time,"");
-        holder.setText(R.id.tv_integral,"");
+        holder.setText(R.id.tv_desc,item.getIntegerGoods_Name());
+        holder.setText(R.id.tv_time,item.getExchange_CreateTime());
+        holder.setText(R.id.tv_integral,"-"+item.getIntegerGoods_Integer());
+        if (position == getDataSource().size()-1){
+            holder.setVisible(R.id.v_xian,false);
+        }
     }
 
     @Override

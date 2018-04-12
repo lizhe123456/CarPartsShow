@@ -33,7 +33,6 @@ public class CarBrandAdapterV2 extends AnimatedExpandableListView.AnimatedExpand
     private LayoutInflater mInflater;
     private OnOpenListener onOpenListener;
     private OnItemListener onGroupItemListener;
-
     public CarBrandAdapterV2(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
@@ -89,16 +88,15 @@ public class CarBrandAdapterV2 extends AnimatedExpandableListView.AnimatedExpand
         }
         holder.tvTitle.setText(getDts().get(groupPosition).getName());
         GlideuUtil.loadImageView(context,getDts().get(groupPosition).getCarBrand_ImgPath(), holder.ivImg);
-        holder.ivItemGo.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onOpenListener.open(groupPosition);
-            }
-        });
-        holder.groupLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onGroupItemListener.OnGroupItemClick(getDts().get(groupPosition));
+                onOpenListener.open(getDts().get(groupPosition),groupPosition);
+                if (getDts().get(groupPosition).isOpen()){
+                    getDts().get(groupPosition).setOpen(false);
+                }else {
+                    getDts().get(groupPosition).setOpen(true);
+                }
             }
         });
         int section = getSectionForPosition(groupPosition);
@@ -203,7 +201,7 @@ public class CarBrandAdapterV2 extends AnimatedExpandableListView.AnimatedExpand
     }
 
     public interface OnOpenListener{
-        void open(int groupPosition);
+        void open(ClassificationBean.ListCarBrandBean listCarBrandBean,int groupPosition);
     }
 
     public interface OnItemListener{

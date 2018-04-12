@@ -128,7 +128,6 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
             }
             isCollections = istIntegerGoods.isCollection();
         }
-
         wvX5.setOnWebViewListener(new X5WebView.OnWebViewListener() {
             @Override
             public void onProgressChange(WebView view) {
