@@ -21,6 +21,6 @@
         android:flipInterval="2000"
         android:inAnimation="@anim/anim_marquee_in"
         android:outAnimation="@anim/anim_marquee_out"
-        android:paddingLeft="@dimen/x10" />
+        android:paddingLeft="@dimen/dm_10" />
 
 </LinearLayout>

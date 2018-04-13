@@ -137,6 +137,7 @@ public class FingerprintLoginActivity extends MvpActivity<LoginPresenter> implem
                 break;
             case R.id.switch_login_mode:
                 LoginActivity.start(this);
+                this.finish();
                 break;
             case R.id.switch_user:
                 break;
@@ -154,7 +155,6 @@ public class FingerprintLoginActivity extends MvpActivity<LoginPresenter> implem
             @Override
             public void onSupportFailed() {
                 CPSToast.showText(FingerprintLoginActivity.this, "当前设备不支持指纹",1000);
-                LoginActivity.start(FingerprintLoginActivity.this);
             }
 
             @Override

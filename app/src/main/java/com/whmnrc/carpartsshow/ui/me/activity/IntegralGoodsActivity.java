@@ -128,9 +128,7 @@ public class IntegralGoodsActivity extends MvpActivity<IntegralGoodsPresenter> i
             @Override
             public void onClick(View view, Object item, int position) {
                 IntergralShopBean.IstIntegerGoods goods = (IntergralShopBean.IstIntegerGoods) item;
-                GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(goods.getUrl(),goods.isCollection(),goods.getCarCount());
-                goodsDetailToBean.setType(1);
-                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this, goodsDetailToBean);
+                GoodsDetailsActivity.newInstance(IntegralGoodsActivity.this,goods);
             }
         });
     }

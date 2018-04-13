@@ -33,8 +33,6 @@ public class ForgetPassActivity extends MvpActivity<ForgetPassPresenter> impleme
     String mobile;
     String code;
 
-    private FingerprintManagerCompat managerCompat;
-    private FingerprintManager fingerprintManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
@@ -53,8 +51,6 @@ public class ForgetPassActivity extends MvpActivity<ForgetPassPresenter> impleme
 
     @Override
     protected void setData() {
-        managerCompat = FingerprintManagerCompat.from(this);
-        fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
     }
 
     @OnClick({R.id.tv_code, R.id.tv_login, R.id.tv_xyb})

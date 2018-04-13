@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
@@ -79,6 +80,7 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
         StaggeredGridLayoutManager linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
@@ -95,16 +97,8 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
             @Override
             public void onClick(View view, Object item, int position) {
                 CollectionBean.CollectionListProductBean collectionBean = (CollectionBean.CollectionListProductBean) item;
-                if (collectionBean.getCollection_Type() == 0){
-                    GoodsDetailsActivity.newInstance(MyCollectActivity.this, collectionBean.getCollection_ID(),0);
-                }else if (collectionBean.getCollection_Type() == 1){
-                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),true,collectionBean.getCarCount());
-                    GoodsDetailsActivity.newInstance(MyCollectActivity.this ,goodsDetailToBean);
-                }else if (collectionBean.getCollection_Type() == 2){
-                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),true,collectionBean.getCarCount());
-                    goodsDetailToBean.setType(1);
-                    GoodsDetailsActivity.newInstance(MyCollectActivity.this, goodsDetailToBean);
-                }
+                GoodsDetailsActivity.newInstance(MyCollectActivity.this, collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
+
 //                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
             }
         });
@@ -166,7 +160,9 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                         pids += coll.getCollection_ProductID() + "," + coll.getCollection_Type() + "|";
                     }
                 }
-                mPresenter.delCollections(pids);
+                if (!TextUtils.isEmpty(pids)) {
+                    mPresenter.delCollections(pids);
+                }
                 break;
             case R.id.tv_add:
                 //加入购物车
@@ -185,7 +181,10 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
                         cids += coll.getCollection_ProductID() + "," + coll.getCollection_Type() + "|";
                     }
                 }
-                mPresenter.plus(loginBean.getRepairUser_ID(), cids);
+                if (!TextUtils.isEmpty(cids)){
+                    mPresenter.plus(loginBean.getRepairUser_ID(), cids);
+                }
+
                 break;
         }
     }
@@ -206,6 +205,12 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
         }
         refresh.finishRefresh();
         mAdapter.addFirstDataSet(collectionBean.getCollectionListProduct());
+        Drawable drawableLeft = getResources().getDrawable(
+                R.drawable.round_btn_normal);
+        allSelect.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
+                null, null, null);
+        allSelect.setCompoundDrawablePadding(8);
+        isAllSelect = false;
     }
 
     @Override

@@ -13,15 +13,16 @@ android {
             storeFile file('D:/zhipeiku.jks')
             storePassword '123456'
         }
+
     }
 
     defaultConfig {
-
+        resConfigs "zh"
         applicationId "com.whmnrc.carpartsshow"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.04"
+        versionName "1.05"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
