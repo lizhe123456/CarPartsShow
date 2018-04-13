@@ -159,6 +159,7 @@ public class VINActivity extends MvpActivity<ScanCodePresenter> implements ScanC
                         .openCamera(PictureMimeType.ofImage())
                         .enableCrop(true)
                         .compress(true)
+                        .rotateEnabled(false)
                         .withAspectRatio(5,2)
                         .forResult(PictureConfig.CHOOSE_REQUEST);
             }
@@ -173,6 +174,7 @@ public class VINActivity extends MvpActivity<ScanCodePresenter> implements ScanC
                         .minSelectNum(1)
                         .enableCrop(true)
                         .compress(true)
+                        .rotateEnabled(false)
                         .withAspectRatio(5,2)
                         .forResult(PictureConfig.CHOOSE_REQUEST);
             }
@@ -238,6 +240,7 @@ public class VINActivity extends MvpActivity<ScanCodePresenter> implements ScanC
                                             }
 
                                         } catch (Exception e) {
+                                            CPSToast.showText(VINActivity.this, "VIN码识别失败");
                                             unLoading();
                                         }
                                     }

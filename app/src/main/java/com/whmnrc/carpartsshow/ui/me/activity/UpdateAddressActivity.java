@@ -64,7 +64,7 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     @Override
     protected void setData() {
         currentRepairUser = (UserInfoBean.CurrentRepairUserBean) getIntent().getSerializableExtra("userInfo");
-        if (currentRepairUser != null) {
+         if (currentRepairUser != null) {
             if (!TextUtils.isEmpty(currentRepairUser.getRepairUser_Provice()) && !TextUtils.isEmpty(currentRepairUser.getRepairUser_City())){
                 pCode = currentRepairUser.getRepairUser_Provice();
                 cCode = currentRepairUser.getRepairUser_City();
