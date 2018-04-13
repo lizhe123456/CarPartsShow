@@ -50,6 +50,21 @@
             android:textColor="@color/red_login"
             android:text="137 1111 2222"
             android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dm_0.5"
+            android:background="#AAAAAA"/>
+        <TextView
+            android:id="@+id/tv_phone_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dm_15"
+            android:paddingBottom="@dimen/dm_15"
+            android:textSize="@dimen/dm_20"
+            android:textColor="@color/red_login"
+            android:text="137 1111 2222"
+            android:gravity="center"
+            android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

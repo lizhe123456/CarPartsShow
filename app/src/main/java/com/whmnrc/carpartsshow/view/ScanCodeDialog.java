@@ -46,12 +46,14 @@ public class ScanCodeDialog extends Dialog {
     }
 
 
-    public void show(BaseAdapter adapter, List list){
-        this.show();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-        adapter.addFirstDataSet(list);
+    public void show(BaseAdapter adapter, List list) {
+        if (!this.isShowing()) {
+            this.show();
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(adapter);
+            adapter.addFirstDataSet(list);
+        }
     }
 
 

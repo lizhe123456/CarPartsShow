@@ -24,6 +24,7 @@ import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 public class ImageUtil {
@@ -39,6 +40,7 @@ public class ImageUtil {
         }
         return 0;
     }
+
 
     // Returns the degrees in clockwise. Values are 0, 90, 180, or 270.
     public static int getOrientation(byte[] jpeg) {
@@ -336,28 +338,31 @@ public class ImageUtil {
         }
     }
 
-    public static Bitmap runInPreviewFrame(byte[] data, Camera camera) {
-        ByteArrayOutputStream baos;
-        byte[] rawImage;
-        Bitmap bitmap;
-        //处理data
-        Camera.Size previewSize = camera.getParameters().getPreviewSize();//获取尺寸,格式转换的时候要用到
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        newOpts.inJustDecodeBounds = true;
-        YuvImage yuvimage = new YuvImage(
-                data,
-                ImageFormat.NV21,
-                previewSize.width,
-                previewSize.height,
-                null);
-        baos = new ByteArrayOutputStream();
-        yuvimage.compressToJpeg(new Rect(0, 0, previewSize.width, previewSize.height), 100, baos);// 80--JPG图片的质量[0-100],100最高
-        rawImage = baos.toByteArray();
-        //将rawImage转换成bitmap
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        bitmap = rotateToDegrees(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length, options),90);
-        return bitmapCrop(bitmap,bitmap.getWidth()/3,bitmap.getHeight()/9,bitmap.getWidth()/3, (int) ((bitmap.getHeight()*6.5)/9));
+    public static Bitmap runInPreviewFrame(byte[] data, Camera camera,boolean isCamera) {
+        if (isCamera) {
+            ByteArrayOutputStream baos;
+            byte[] rawImage;
+            Bitmap bitmap;
+            //处理data
+            Camera.Size previewSize = camera.getParameters().getPreviewSize();//获取尺寸,格式转换的时候要用到
+            BitmapFactory.Options newOpts = new BitmapFactory.Options();
+            newOpts.inJustDecodeBounds = true;
+            YuvImage yuvimage = new YuvImage(
+                    data,
+                    ImageFormat.NV21,
+                    previewSize.width,
+                    previewSize.height,
+                    null);
+            baos = new ByteArrayOutputStream();
+            yuvimage.compressToJpeg(new Rect(0, 0, previewSize.width, previewSize.height), 100, baos);// 80--JPG图片的质量[0-100],100最高
+            rawImage = baos.toByteArray();
+            //将rawImage转换成bitmap
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            bitmap = rotateToDegrees(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length, options), 90);
+            return bitmapCrop(bitmap, bitmap.getWidth() / 3, bitmap.getHeight() / 9, bitmap.getWidth() / 3, (int) ((bitmap.getHeight() * 6.5) / 9));
+        }
+        return null;
     }
 
     /**
@@ -372,4 +377,6 @@ public class ImageUtil {
         bitmap.compress(format, 100, baos);
         return baos.toByteArray();
     }
+
+
 }

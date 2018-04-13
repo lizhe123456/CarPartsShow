@@ -25,6 +25,8 @@ import com.whmnrc.carpartsshow.ui.me.activity.NewsActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.UpdateAddressActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.UpdatePassActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.VINResultActivity;
 import com.whmnrc.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.whmnrc.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 
@@ -86,4 +88,8 @@ public interface ActivityComponent {
     void inject(ScanCodeActivity scanCodeActivity);
 
     void inject(FingerprintLoginActivity fingerprintLoginActivity);
+
+    void inject(VINActivity vinActivity);
+
+    void inject(VINResultActivity vinResultActivity);
 }

@@ -162,6 +162,34 @@ public class UserInfoBean implements Serializable{
         private int RepairUser_CreditType;
         private int RepairUser_CreditMonth;
         private int RepairUser_CreditDay;
+        private String RepairUser_ProviceName;
+        private String RepairUser_CityName;
+        private String RepairUser_RegionName;
+
+
+        public String getRepairUser_ProviceName() {
+            return RepairUser_ProviceName;
+        }
+
+        public void setRepairUser_ProviceName(String repairUser_ProviceName) {
+            RepairUser_ProviceName = repairUser_ProviceName;
+        }
+
+        public String getRepairUser_CityName() {
+            return RepairUser_CityName;
+        }
+
+        public void setRepairUser_CityName(String repairUser_CityName) {
+            RepairUser_CityName = repairUser_CityName;
+        }
+
+        public String getRepairUser_RegionName() {
+            return RepairUser_RegionName;
+        }
+
+        public void setRepairUser_RegionName(String repairUser_RegionName) {
+            RepairUser_RegionName = repairUser_RegionName;
+        }
 
         public String getRepairUser_ID() {
             return RepairUser_ID;

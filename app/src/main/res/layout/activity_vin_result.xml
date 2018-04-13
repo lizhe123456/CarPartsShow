@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <include layout="@layout/layout_title"/>
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_150"
+        android:scaleType="centerCrop"/>
+    <EditText
+        android:id="@+id/et_vin_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bg_xian"
+        android:paddingTop="@dimen/dm_10"
+        android:paddingBottom="@dimen/dm_10"
+        android:layout_marginRight="@dimen/dm_20"
+        android:layout_marginLeft="@dimen/dm_20"
+        android:textColor="@color/tv_000"
+        android:textSize="@dimen/dm_16"
+        android:textScaleX="1.5"
+        android:lines="1"
+        android:inputType="text"
+        android:textCursorDrawable="@null"
+        android:paddingLeft="@dimen/dm_5"
+        android:paddingRight="@dimen/dm_5"
+        android:layout_marginTop="@dimen/dm_10"
+        />
+    <TextView
+        android:id="@+id/tv_qu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="@dimen/dm_38"
+        android:layout_marginLeft="@dimen/dm_38"
+        android:padding="@dimen/dm_10"
+        android:background="@drawable/shape_login"
+        android:layout_below="@+id/ll_input"
+        android:text="核对无误，点击查询"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dm_30"
+        android:text="@string/vin_desc"
+        android:textSize="@dimen/dm_12"
+        android:textColor="@color/tv_999"
+        android:layout_marginLeft="@dimen/dm_10"
+        android:layout_marginRight="@dimen/dm_10"
+        android:lineSpacingExtra="5dp"
+        />
+</LinearLayout>

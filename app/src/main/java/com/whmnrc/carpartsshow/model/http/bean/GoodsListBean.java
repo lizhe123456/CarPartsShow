@@ -93,45 +93,46 @@ public class GoodsListBean implements Serializable{
         }
     }
 
-    public static class ListGoodsBean implements Serializable{
+    public static class ListGoodsBean {
+
         /**
-         * ID : 3568
-         * Code : G0000003568
+         * ID : 42
+         * Code : G0000000042
          * BrandCategoryID : null
-         * Category : D0T
-         * Name : 天合 JBJ176
-         * Model : JBJ176
-         * ModelLetter : JBJ176
-         * SizeInfo :
-         * StyleInfo : 前轴,下,右
+         * Category : GYZ
+         * Name : SWF(优视) 奥迪A6L(C6) 专用无骨雨刮 117217
+         * Model : 117217
+         * ModelLetter : 117217
+         * SizeInfo : 22"/22"
+         * StyleInfo : 无骨雨刮
          * Tag : null
-         * Keywords : TRW 悬挂球头（球铰链） 天合 JBJ176
-         * Description : TRW 悬挂球头（球铰链） 天合 JBJ176
-         * Introduce : <p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="1.jpg" src="/UploadFiles/Goods/G0000003568/Images/49525c403d8345449f05160fce3e1ca7.jpg"/></p><p style="TEXT-ALIGN: center"><img title="2.jpg" src="/UploadFiles/Goods/G0000003568/Images/0f65360800c943e4b14bc373b797f531.jpg"/></p><p style="TEXT-ALIGN: center"><img title="3.jpg" src="/UploadFiles/Goods/G0000003568/Images/d5304422209344858c534481cabd1534.jpg"/></p><p>&nbsp;</p>
-         * Parameters : <p>品牌：TRW/天合</p><p>类型：悬挂球头（球铰链）</p><p>适用位置：前轴,下,右</p><p>型号：JBJ176</p><p>&nbsp;</p>
+         * Keywords : 法雷奥 雨刮器 SWF(优视)  奥迪A6L(C6)   专用无骨雨刮 117217
+         * Description : 法雷奥 雨刮器 SWF(优视)  奥迪A6L(C6)   专用无骨雨刮 117217
+         * Introduce : <p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="0.jpg" src="/UploadFiles/Goods/G0000000042/Images/459e8c06c6364baaa3778b6d043e2182.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="1.jpg" src="/UploadFiles/Goods/G0000000042/Images/699e344302374db589b9fbac39c69536.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="2.jpg" src="/UploadFiles/Goods/G0000000042/Images/f81647f25b62480abd52e4dfd2d18e9c.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="3.jpg" src="/UploadFiles/Goods/G0000000042/Images/77d1f81ce4c744c4a70fe4117c5e91a8.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="4.jpg" src="/UploadFiles/Goods/G0000000042/Images/8c8ea552d9964f14acb1dcf21b80f372.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="5.jpg" src="/UploadFiles/Goods/G0000000042/Images/a824cf77732f443cb6a605f14279bbd4.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="6.jpg" src="/UploadFiles/Goods/G0000000042/Images/7755c90b377b4521a7109336d7558af7.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="7.jpg" src="/UploadFiles/Goods/G0000000042/Images/511acc213e054a13bda58f82d86d19ec.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="8.jpg" src="/UploadFiles/Goods/G0000000042/Images/d2a0188b6e094529ac35eb32a1966141.jpg"/></p><p style="TEXT-ALIGN: center"><img style="FLOAT: none" title="9.jpg" src="/UploadFiles/Goods/G0000000042/Images/4bc648e5f01d476bb65c55d3178462c5.jpg"/></p><p style="TEXT-ALIGN: center">&nbsp;</p>
+         * Parameters : <ul style="list-style-type: none;" class="attributes-list list-paddingleft-2"><li><p>品牌: Valeo/法雷奥</p></li><li><p>型号: 117217</p></li><li><p>尺寸: 22&quot;/22&quot;</p></li><li><p>雨刷类型: 无骨雨刷</p></li><li><p>件数: 2件</p></li></ul><p>&nbsp;</p>
          * EditType : 1
-         * EditTime : 2017-11-21T14:19:22.3
-         * EditTimeStamp : 1511245162300
-         * EditUser : 2
+         * EditTime : 2017-11-21T10:00:29.623
+         * EditTimeStamp : 1511229629622
+         * EditUser : 1
          * Deleted : false
-         * Brand : TRW
-         * TCode : TRW_JBJ176
-         * Goods_ID : 0004f845-b3af-4a0c-a66a-058cb34aef7e
-         * Goods_CarNoContent :
-         * Goods_SaleContent :
-         * Goods_Code : G0000003568
-         * Goods_LookCount : 0
+         * Brand : FL0
+         * TCode : FL0_117217
+         * Goods_ID : 5aa92597-3c27-4ef5-8e1d-d4411242a3c6
+         * Goods_CarNoContent : <p>dqwd</p>
+         * Goods_SaleContent : <p>带我去多</p>
+         * Goods_Code : G0000000042
+         * Goods_LookCount : 2
          * Goods_Sort : 99
-         * Goods_Integer : 0
-         * Goods_SuggestPrice : 22
-         * Goods_Price : 15
+         * Goods_Integer : 111
+         * Goods_SuggestPrice : 111
+         * Goods_Price : 222.5
          * Goods_IsOn : true
-         * Goods_IsHot : false
+         * Goods_IsHot : true
          * Company_ID : 0465ad54-ef0a-401f-a4a8-1072fa544da2
          * MonthCount : 0
-         * BrandName : TRW
-         * CategoryName : 球头
-         * ImagePath : http://zpk.jscxqp.com//UploadFiles/Goods/G0000003568/f934dd97f48846a3b72413050c209f02.jpg
+         * BrandName : 法雷奥
+         * CategoryName : 专用雨刷
+         * ImagePath : http://zpk.jscxqp.com//UploadFiles/Goods/G0000000042/cad5c9629f8548ccaed58c15d206b5ef.jpg
          * UniversalParts : false
          */
 
@@ -164,7 +165,7 @@ public class GoodsListBean implements Serializable{
         private int Goods_Sort;
         private int Goods_Integer;
         private int Goods_SuggestPrice;
-        private int Goods_Price;
+        private double Goods_Price;
         private boolean Goods_IsOn;
         private boolean Goods_IsHot;
         private String Company_ID;
@@ -406,11 +407,11 @@ public class GoodsListBean implements Serializable{
             this.Goods_SuggestPrice = Goods_SuggestPrice;
         }
 
-        public int getGoods_Price() {
+        public double getGoods_Price() {
             return Goods_Price;
         }
 
-        public void setGoods_Price(int Goods_Price) {
+        public void setGoods_Price(double Goods_Price) {
             this.Goods_Price = Goods_Price;
         }
 

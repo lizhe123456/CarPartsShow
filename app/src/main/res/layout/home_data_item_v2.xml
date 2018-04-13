@@ -43,9 +43,9 @@
                 android:text="火花"/>
             <ImageView
                 android:id="@+id/iv_img0"
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:scaleType="center"
+                android:layout_width="@dimen/dm_100"
+                android:layout_height="@dimen/dm_120"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dm_10"/>
         </LinearLayout>
@@ -80,9 +80,9 @@
                 android:text="火花"/>
             <ImageView
                 android:id="@+id/iv_img1"
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:scaleType="center"
+                android:layout_width="@dimen/dm_100"
+                android:layout_height="@dimen/dm_120"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dm_10"/>
         </LinearLayout>
@@ -123,9 +123,9 @@
                 android:text="火花"/>
             <ImageView
                 android:id="@+id/iv_img2"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:scaleType="center"
+                android:layout_width="@dimen/dm_60"
+                android:layout_height="@dimen/dm_80"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dm_10"/>
         </LinearLayout>
@@ -160,9 +160,9 @@
                 android:text="火花"/>
             <ImageView
                 android:id="@+id/iv_img3"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:scaleType="center"
+                android:layout_width="@dimen/dm_60"
+                android:layout_height="@dimen/dm_80"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dm_10"/>
         </LinearLayout>
@@ -197,9 +197,9 @@
                 android:text="火花"/>
             <ImageView
                 android:id="@+id/iv_img4"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:scaleType="center"
+                android:layout_width="@dimen/dm_60"
+                android:layout_height="@dimen/dm_80"
+                android:scaleType="fitXY"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dm_10"/>
         </LinearLayout>

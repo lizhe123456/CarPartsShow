@@ -23,6 +23,7 @@ import com.whmnrc.carpartsshow.ui.classify.ClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.HomeFragment;
 import com.whmnrc.carpartsshow.ui.me.MeFragment;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
 import com.whmnrc.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.whmnrc.carpartsshow.util.SystemUtil;
 
@@ -115,7 +116,7 @@ public class MainActivity extends BaseActivity {
                 tag = ME;
                 break;
             case R.id.tv_scan_code:
-                ScanCodeActivity.start(this);
+                VINActivity.start(this);
                 break;
         }
         selectNavigation();
@@ -163,7 +164,7 @@ public class MainActivity extends BaseActivity {
         }
 
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+//        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         Fragment currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
 
         if (currentFragment != null) {

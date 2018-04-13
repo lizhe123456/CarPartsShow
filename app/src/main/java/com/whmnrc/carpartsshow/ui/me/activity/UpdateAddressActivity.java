@@ -46,7 +46,7 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
     String cCode = "110100";
     String aCode = "110101";
 
-    private boolean isFrist = true;
+    private boolean isFrist = false;
     private boolean isRun = false;
     private UserInfoBean.CurrentRepairUserBean currentRepairUser;
 
@@ -70,10 +70,13 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                 cCode = currentRepairUser.getRepairUser_City();
                 aCode = currentRepairUser.getRepairUser_Region() == null ? "" : currentRepairUser.getRepairUser_Region();
                 add = currentRepairUser.getRepairUser_DetailAddress() == null ? "" : currentRepairUser.getRepairUser_DetailAddress();
-                mPresenter.getAreaList();
-                isRun = true;
+//                mPresenter.getAreaList();
+//                isRun = true;
                 tvAdd.setText(add);
                 tvAdd.setSelection(add.length());
+                tvAddA.setText(currentRepairUser.getRepairUser_RegionName());
+                tvAddS.setText(currentRepairUser.getRepairUser_ProviceName());
+                tvAddC.setText(currentRepairUser.getRepairUser_CityName());
             }else {
 
             }
@@ -233,10 +236,10 @@ public class UpdateAddressActivity extends MvpActivity<UpdateAddressPresenter> i
                 if (addressBean.get(i).getAreaId().equals(aCode)) {
                     tvAddA.setText(addressBean.get(i).getAreaName());
                     aCode = addressBean.get(i).getAreaId();
-                    isFrist = false;
                     break;
                 }
             }
+            isFrist = false;
         }else if (isRun){
             tvAddA.setText(addressBean.get(0).getAreaName());
             aCode = addressBean.get(0).getAreaId();

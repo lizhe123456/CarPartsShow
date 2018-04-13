@@ -35,6 +35,7 @@ import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.whmnrc.carpartsshow.ui.me.activity.CreditMoneyActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
 import com.whmnrc.carpartsshow.util.SpUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -254,7 +255,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                     Drawable drawable = getResources().getDrawable(R.drawable.ic_desc);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     tvZh.setCompoundDrawables(null,null,drawable,null);
-                    map.put("OrderASC", "desc");
+                    map.put("OrderASC", "DESC");
                     isAsc = true;
                 }
                 updateDate(map);

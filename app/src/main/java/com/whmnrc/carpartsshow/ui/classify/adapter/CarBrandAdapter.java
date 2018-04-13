@@ -59,7 +59,7 @@ public class CarBrandAdapter extends SecondaryListAdapter<CarBrandAdapter.GroupI
     @Override
     public void onGroupItemBindViewHolder(RecyclerView.ViewHolder holder, int groupItemIndex) {
         ((GroupItemViewHolder) holder).tvTitle.setText(dts.get(groupItemIndex).getGroupItem().getName());
-        GlideuUtil.loadImageViewCache(context,dts.get(groupItemIndex).getGroupItem().getCarBrand_ImgPath(),((GroupItemViewHolder) holder).ivImg);
+        GlideuUtil.loadImageView(context,dts.get(groupItemIndex).getGroupItem().getCarBrand_ImgPath(),((GroupItemViewHolder) holder).ivImg);
         int section = getSectionForPosition(groupItemIndex);
         if (groupItemIndex == getPositionForSection(section)) {
             ((GroupItemViewHolder) holder).tvLetter.setVisibility(View.VISIBLE);

@@ -39,6 +39,7 @@ import com.whmnrc.carpartsshow.ui.home.adapter.SpecialOfferAdapter;
 import com.whmnrc.carpartsshow.ui.me.activity.IntegralShopActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.NewsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
 import com.whmnrc.carpartsshow.util.GlideuUtil;
 import com.whmnrc.carpartsshow.util.SpUtil;
 import com.whmnrc.carpartsshow.view.CountdownTextView;

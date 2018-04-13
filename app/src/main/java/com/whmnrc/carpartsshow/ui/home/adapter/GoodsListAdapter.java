@@ -28,7 +28,7 @@ public class GoodsListAdapter extends BaseAdapter<GoodsListBean.ListGoodsBean>{
     @Override
     protected void bindDataToItemView(BaseViewHolder holder, final GoodsListBean.ListGoodsBean item, int position) {
         holder.setText(R.id.tv_goods_desc,item.getName())
-                .setText(R.id.tv_price,item.getGoods_Price()+".00")
+                .setText(R.id.tv_price,""+item.getGoods_Price())
                 .setGlieuImage(R.id.iv_goods,item.getImagePath());
         holder.setOnClickListener(R.id.tv_join_car, new View.OnClickListener() {
             @Override

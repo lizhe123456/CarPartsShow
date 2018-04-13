@@ -21,6 +21,17 @@
             android:layout_marginTop="78dp"
             android:background="@drawable/scan_xian"
             android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请将车架号VIN码信息置于扫描框内，以便精准识别"
+            android:rotation="90"
+            android:rotationX="90"
+            android:lines="1"
+            android:layout_marginLeft="-90dp"
+            android:textSize="@dimen/dm_15"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"/>
     </RelativeLayout>
 
     <ImageView
@@ -29,25 +40,5 @@
         android:layout_height="@dimen/dm_48"
         android:src="@drawable/back_go"
         android:scaleType="center"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请将车架号VIN码信息置于扫描框内，以便精准识别"
-        android:rotation="90"
-        android:rotationX="90"
-        android:lines="1"
-        android:layout_marginLeft="-90dp"
-        android:textSize="@dimen/dm_15"
-        android:layout_centerVertical="true"
-        android:textColor="@color/white"/>
-    <com.whmnrc.carpartsshow.widgets.BmpImageView
-        android:id="@+id/iv_distinguish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/scan_btn"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dm_30" />
 
 </RelativeLayout>

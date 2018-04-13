@@ -64,6 +64,9 @@ public class CreditMoneyPresenter extends BasePresenterImpl<CreditMoneyContract.
                     public void onNext(List<ConsumptionRecordBean> cpsResponse) {
                         super.onNext(cpsResponse);
                         if (type == 1){
+                            if (cpsResponse.size() == 0){
+                                mView.showEmpty();
+                            }
                             mView.loadFrist(cpsResponse);
                         }else {
                             mView.loadMore(cpsResponse);

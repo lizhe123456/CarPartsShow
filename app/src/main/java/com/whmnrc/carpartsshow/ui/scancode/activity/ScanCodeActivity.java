@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -20,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.PixelCopy;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
@@ -42,11 +45,13 @@ import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.presenter.scancode.ScanCodePresenter;
 import com.whmnrc.carpartsshow.presenter.scancode.contract.ScanCodeContract;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.whmnrc.carpartsshow.ui.scancode.ImgPretreatment;
 import com.whmnrc.carpartsshow.ui.scancode.RecognizeService;
 import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
 import com.whmnrc.carpartsshow.util.FileUtil;
 import com.whmnrc.carpartsshow.util.ImageUtil;
 import com.whmnrc.carpartsshow.util.ScreenUtils;
+import com.whmnrc.carpartsshow.util.VINUtil;
 import com.whmnrc.carpartsshow.view.ScanCodeDialog;
 import com.whmnrc.carpartsshow.widgets.BmpImageView;
 import com.whmnrc.carpartsshow.widgets.CPSToast;
@@ -57,6 +62,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -66,14 +72,12 @@ import butterknife.OnClick;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements ScanCodeContract.View,SurfaceHolder.Callback, Camera.PreviewCallback ,RecognizeService.ServiceListener{
+public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements ScanCodeContract.View, SurfaceHolder.Callback, Camera.PreviewCallback, RecognizeService.ServiceListener {
 
 
     private static final int REQUEST_TAKE_PHOTO_PERMISSION = 3;
     @BindView(R.id.iv_scan_xian)
     ImageView ivScanXian;
-    @BindView(R.id.iv_distinguish)
-    BmpImageView ivDistinguish;
     @BindView(R.id.camera)
     SurfaceView surfaceView;
 
@@ -83,14 +87,13 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     private Camera.Parameters parameters;
     private int num;
     private Camera.AutoFocusCallback mAutoFocusCallback;
-    private BaiduToken token = null;
     private SurfaceHolder surfaceHolder;
-    private Handler handler;
-    BitmapThread bitmapThread;
+    BitmapHandleThread bitmapHandleThread;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, ScanCodeActivity.class);
         context.startActivity(starter);
+
     }
 
     @Override
@@ -107,14 +110,6 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
     }
-//    Runnable runnable = new Runnable() {
-//        @Override
-//        public void run() {
-//            CPSToast.showText(ScanCodeActivity.this,"扫描超时，请重试");
-//            ScanCodeActivity.this.finish();
-//
-//        }
-//    };
 
     @Override
     protected void init() {
@@ -130,21 +125,9 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 }
             }
         };
-        OCR.getInstance().initAccessToken(new OnResultListener<AccessToken>() {
-            @Override
-            public void onResult(AccessToken result) {
-                // 调用成功，返回AccessToken对象
-                String token = result.getAccessToken();
-            }
-            @Override
-            public void onError(OCRError error) {
-                // 调用失败，返回OCRError子类SDKError对象
-            }
-        }, getApplicationContext());
-        handler = new Handler();
-//        handler.postDelayed(runnable,30000);
-        bitmapThread = new BitmapThread();
-        bitmapThread.start();
+
+        bitmapHandleThread = new BitmapHandleThread();
+        bitmapHandleThread.start();
     }
 
 
@@ -200,19 +183,17 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     private void openCamera(SurfaceHolder surfaceHolder) {
         releaseCamera();
-
+        isStop = true;
         try {
             camera = getCamera(Camera.CameraInfo.CAMERA_FACING_BACK); // 根据需求选择前/后置摄像头
         } catch (Exception e) {
             camera = null;
-//            if (AppContext.isDebugMode) {
-//                e.printStackTrace();
-//            }
         }
         if (camera != null) {
             try {
                 camera.setPreviewCallback(this);
-                camera.setDisplayOrientation(90); // 此方法为官方提供的旋转显示部分的方法，并不会影响onPreviewFrame方法中的原始数据；
+                camera.setDisplayOrientation(90);
+                // 此方法为官方提供的旋转显示部分的方法，并不会影响onPreviewFrame方法中的原始数据；
                 if (parameters == null) {
                     parameters = camera.getParameters();
                 }
@@ -310,34 +291,31 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 e.printStackTrace();
             }
             camera = null;
+            isStop = false;
         }
     }
 
     @Override
-    public void onPreviewFrame(byte[] bytes, Camera camera) {
-        if (num == 60) {
-            Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera);
-            boolean flag = saveBitmapToSd(bitmap, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath());
-//            RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), this);
-            if (bitmapThread != null) {
-                bitmapThread.handler.sendEmptyMessage(0);
-            }
-            if (bitmap != null && !bitmap.isRecycled()) {
-                bitmap.isRecycled();
-                bitmap = null;
-            }
-
+    public void onPreviewFrame(final byte[] bytes, final Camera camera) {
+        if (num == 20) {
+            bitmapHandleThread.setBytes(bytes, camera);
+            bitmapHandleThread.handler.sendEmptyMessage(0);
         }
         num = num + 1;
-        if (num == 61) {
+        if (num == 21) {
             num = 0;
         }
     }
 
-
-
-    class BitmapThread extends Thread {
+    class BitmapHandleThread extends Thread {
         public Handler handler;
+        byte[] bytes;
+        Camera camera;
+
+        public void setBytes(byte[] bytes, Camera camera) {
+            this.bytes = bytes;
+            this.camera = camera;
+        }
 
         @Override
         public void run() {
@@ -347,8 +325,27 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
-                    RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), ScanCodeActivity.this);
+                    if (bytes.length != 0) {
+                        Bitmap bitmap = ImageUtil.runInPreviewFrame(bytes, camera, isStop);
+                        if (bitmap != null) {
+                            bitmap = ImgPretreatment.converyToGrayImg(bitmap);
+                            bitmap = ImageUtil.rotateToDegrees(bitmap, -90);
+                            saveBitmapToSd(bitmap, FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath());
+                            if (bitmap != null && !bitmap.isRecycled()) {
+                                bitmap.isRecycled();
+                                bitmap = null;
+                            }
+                            try {
+
+                                RecognizeService.recGeneralBasic(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), ScanCodeActivity.this);
+//                                RecognizeService.recGeneralEnhanced(FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath(), ScanCodeActivity.this);
+                            } catch (NullPointerException e) {
+
+                            }
+                        }
+                    }
                 }
+
             };
             Looper.loop();//loop()会调用到handler的handleMessage(Message msg)方法，所以，写在下面；
         }
@@ -363,7 +360,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 //申请成功，可以拍照
                 openCamera(surfaceHolder);
             } else {
-                CPSToast.showText(this,"相机权限未开启");
+                CPSToast.showText(this, "相机权限未开启");
             }
             return;
         }
@@ -372,8 +369,9 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
 
     @Override
     protected void onDestroy() {
-//        handler.removeCallbacks(runnable);
         super.onDestroy();
+        releaseCamera();
+        bitmapHandleThread.handler = null;
     }
 
     @Override
@@ -381,11 +379,11 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         getActivityComponent().inject(this);
     }
 
-    public static boolean saveBitmapToSd(Bitmap bitmap, String filePath){
+    public static boolean saveBitmapToSd(Bitmap bitmap, String filePath) {
         FileOutputStream outputStream = null;
         try {
             File file = new File(filePath);
-            if(file.exists() || file.isDirectory()){
+            if (file.exists() || file.isDirectory()) {
                 file.delete();
             }
             file.createNewFile();
@@ -394,7 +392,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
         } catch (IOException e) {
             return false;
         } finally {
-            if(outputStream != null){
+            if (outputStream != null) {
                 try {
                     outputStream.flush();
                     outputStream.close();
@@ -407,12 +405,28 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        releaseCamera();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        openCamera(surfaceHolder);
+    }
+
+    @Override
     public void onResult(String result) {
         try {
-            BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
-            mPresenter.getVinCode(beanResutl.getWords_result().get(0).getWords());
-//            CPSToast.showText(this,beanResutl.getWords_result().get(0).getWords());
-        }catch (Exception e){
+            if (isStop) {
+                BaiduWord beanResutl = new Gson().fromJson(result, BaiduWord.class);
+                String vin = beanResutl.getWords_result().get(0).getWords();
+                if (VINUtil.checkVIN(vin)) {
+                    mPresenter.getVinCode(vin);
+                }
+            }
+        } catch (Exception e) {
 
         }
     }
@@ -426,29 +440,34 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
     public void showErrorMsg(String msg) {
     }
 
+    private boolean isStop = true;
+
     @Override
     public void showData(final List<CarModelByVINBean> list) {
-        releaseCamera();
         final ScanCodeDialog dialog = new ScanCodeDialog(ScanCodeActivity.this);
         ScanCodeCarBrandAdapter scanCodeCarBrandAdapter = new ScanCodeCarBrandAdapter(ScanCodeActivity.this);
         scanCodeCarBrandAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, Object item, int position) {
                 CarModelByVINBean carModelByVINBean = (CarModelByVINBean) item;
-                Intent intent = new Intent(ScanCodeActivity.this,GoodsSearchActivity.class);
-                intent.putExtra("NLevelID",carModelByVINBean.getNLevelID());
-                intent.putExtra("carBrand",carModelByVINBean.getPP() +" " + carModelByVINBean.getCX() +"--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK());
+                Intent intent = new Intent(ScanCodeActivity.this, GoodsSearchActivity.class);
+                intent.putExtra("NLevelID", carModelByVINBean.getNLevelID());
+                intent.putExtra("carBrand", carModelByVINBean.getPP() + " " + carModelByVINBean.getCX() + "--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK());
                 startActivity(intent);
                 ScanCodeActivity.this.finish();
             }
         });
-        dialog.show(scanCodeCarBrandAdapter,list);
+        if (isStop) {
+            dialog.show(scanCodeCarBrandAdapter, list);
+        }
+
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 openCamera(surfaceHolder);
             }
         });
+        releaseCamera();
     }
 
 
