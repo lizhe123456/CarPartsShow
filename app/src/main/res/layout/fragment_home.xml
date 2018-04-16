@@ -36,7 +36,7 @@
                         app:indicator_drawable_selected="@drawable/indicator_drawable_selected"
                         app:indicator_drawable_unselected="@drawable/indicator_drawable_unselected"
                         app:indicator_height="@dimen/dm_8"
-                        app:indicator_margin="@dimen/x5"
+                        app:indicator_margin="@dimen/dm_5"
                         app:indicator_width="@dimen/dm_8" />
 
                     <android.support.v7.widget.RecyclerView
@@ -92,36 +92,45 @@
             <RelativeLayout
                 android:id="@+id/rl_title"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y48"
+                android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <View
+                    android:id="@+id/v_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dm_15"/>
                 <ImageView
                     android:id="@+id/iv_scan"
-                    android:layout_width="@dimen/x48"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/dm_48"
+                    android:layout_height="@dimen/dm_48"
                     android:scaleType="center"
-                    android:src="@drawable/home_scan" />
-
+                    android:src="@drawable/home_scan"
+                    android:layout_below="@+id/v_state" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dm_48"
+                    android:layout_toLeftOf="@+id/iv_message"
+                    android:layout_toRightOf="@id/iv_scan"
+                    android:gravity="center_vertical"
+                    android:layout_below="@+id/v_state">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/iv_message"
-                    android:layout_toRightOf="@id/iv_scan"
+
                     android:background="@drawable/search_shape_v2"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingBottom="@dimen/y3"
-                    android:paddingLeft="@dimen/x8"
-                    android:paddingRight="@dimen/x8"
-                    android:paddingTop="@dimen/y3">
+                    android:paddingBottom="@dimen/dm_3"
+                    android:paddingLeft="@dimen/dm_8"
+                    android:paddingRight="@dimen/dm_8"
+                    android:paddingTop="@dimen/dm_3">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/search" />
-
                     <EditText
                         android:id="@+id/et_search"
                         android:layout_width="match_parent"
@@ -135,16 +144,18 @@
                         android:textColor="@color/tv_000"
                         android:textColorHint="@color/tv_999"
                         android:textCursorDrawable="@drawable/et_cursor"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        />
                 </LinearLayout>
-
+                </LinearLayout>
                 <ImageView
                     android:id="@+id/iv_message"
-                    android:layout_width="@dimen/x48"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/dm_48"
+                    android:layout_height="@dimen/dm_48"
                     android:layout_alignParentRight="true"
                     android:scaleType="center"
-                    android:src="@drawable/home_message" />
+                    android:src="@drawable/home_message"
+                    android:layout_below="@+id/v_state"/>
             </RelativeLayout>
         </RelativeLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

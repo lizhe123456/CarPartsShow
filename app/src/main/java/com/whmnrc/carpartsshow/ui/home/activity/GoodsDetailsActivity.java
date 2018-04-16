@@ -31,6 +31,8 @@ import com.whmnrc.carpartsshow.widgets.CPSToast;
 import com.google.gson.Gson;
 import com.tencent.smtt.sdk.WebView;
 
+import java.util.logging.Handler;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -175,12 +177,14 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                 }else if (specialOfferBean != null){
                     String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
                     String pids = pid[pid.length-1]+",1"+"|";
-                    if (isCollections) {
-                        mPresenter.delCollections(pids);
-                        isCollections = false;
-                    } else {
-                        mPresenter.collections(loginBean.getRepairUser_ID(),pids);
-                        isCollections = true;
+                    if (!TextUtils.isEmpty(pid[pid.length-1])) {
+                        if (isCollections) {
+                            mPresenter.delCollections(pids);
+                            isCollections = false;
+                        } else {
+                            mPresenter.collections(loginBean.getRepairUser_ID(), pids);
+                            isCollections = true;
+                        }
                     }
                 }else if (istIntegerGoods != null){
                     if (isCollections){
@@ -198,7 +202,9 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                     mPresenter.generateOrder(loginBean.getRepairUser_ID(), goodsDetailBean.getVGoods().getGoods_ID() + ",1|");
                 }else if (specialOfferBean != null){
                     String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
-                    mPresenter.generateOrder(loginBean.getRepairUser_ID(), pid[pid.length-1] + ",1|");
+                    if (!TextUtils.isEmpty(pid[pid.length-1])) {
+                        mPresenter.generateOrder(loginBean.getRepairUser_ID(), pid[pid.length - 1] + ",1|");
+                    }
                 }else if (istIntegerGoods != null){
                     mPresenter.generateOrder(loginBean.getRepairUser_ID(), istIntegerGoods.getIntegerGoods_ID() + ",1|");
                 } else {
@@ -211,7 +217,9 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
                     mPresenter.plus(loginBean.getRepairUser_ID(), goodsDetailBean.getVGoods().getGoods_ID(), goodsType);
                 }else if (specialOfferBean != null){
                     String[] pid = specialOfferBean.getUrl().split("Seckill_ID=");
-                    mPresenter.plus(loginBean.getRepairUser_ID(), pid[pid.length-1],1);
+                    if (!TextUtils.isEmpty(pid[pid.length-1])){
+                        mPresenter.plus(loginBean.getRepairUser_ID(), pid[pid.length-1],1);
+                    }
                 }else if (istIntegerGoods != null){
                     mPresenter.plus(loginBean.getRepairUser_ID(), istIntegerGoods.getIntegerGoods_ID(),2);
                 }

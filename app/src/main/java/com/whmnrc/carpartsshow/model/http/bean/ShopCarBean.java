@@ -113,6 +113,33 @@ public class ShopCarBean implements Serializable {
         private String Name;
         private String ImagePath;
         private boolean isSelected;
+        private String Url;
+        private boolean IsCollection;
+        private int CarCount;
+
+        public String getUrl() {
+            return Url;
+        }
+
+        public void setUrl(String url) {
+            Url = url;
+        }
+
+        public boolean isCollection() {
+            return IsCollection;
+        }
+
+        public void setCollection(boolean collection) {
+            IsCollection = collection;
+        }
+
+        public int getCarCount() {
+            return CarCount;
+        }
+
+        public void setCarCount(int carCount) {
+            CarCount = carCount;
+        }
 
         public boolean isSelected() {
             return isSelected;

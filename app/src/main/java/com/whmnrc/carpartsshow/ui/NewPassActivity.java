@@ -36,9 +36,7 @@ public class NewPassActivity extends MvpActivity<NewPassPresenter> implements Ne
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StatusBarUtil.setStatusBarColor(this, R.color.white);
-        }
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         super.onCreate(savedInstanceState);
     }
 
@@ -106,6 +104,6 @@ public class NewPassActivity extends MvpActivity<NewPassPresenter> implements Ne
 
     @Override
     public void state() {
-
+        LoginActivity.start(this);
     }
 }

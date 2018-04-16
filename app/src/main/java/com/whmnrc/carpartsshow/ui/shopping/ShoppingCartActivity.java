@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpActivity;
+import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
@@ -21,6 +22,7 @@ import com.whmnrc.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.whmnrc.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
 import com.whmnrc.carpartsshow.ui.MainActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
+import com.whmnrc.carpartsshow.ui.me.activity.MyCollectActivity;
 import com.whmnrc.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.whmnrc.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
 import com.whmnrc.carpartsshow.util.SpUtil;
