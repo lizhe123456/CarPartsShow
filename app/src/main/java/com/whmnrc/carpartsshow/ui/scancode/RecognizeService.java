@@ -108,6 +108,7 @@ public class RecognizeService {
         GeneralBasicParams param = new GeneralBasicParams();
         param.setDetectDirection(true);
         param.setImageFile(new File(filePath));
+        param.setLanguageType(GeneralBasicParams.ENGLISH);
         OCR.getInstance().recognizeGeneralBasic(param, new OnResultListener<GeneralResult>() {
             @Override
             public void onResult(GeneralResult result) {

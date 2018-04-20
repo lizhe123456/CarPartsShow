@@ -114,6 +114,8 @@ public class GoodsFragment extends MvpFragment<AddCarPresenter> implements AddCa
             }
             refresh.finishRefresh();
             mAdapter.addFirstDataSet(bean.getListGoods());
+        }else if (bean.getIsMore() == 0){
+            mAdapter.addFirstDataSet(bean.getListGoods());
         }else {
             refresh.finishLoadmore();
             mAdapter.addMoreDataSet(bean.getListGoods());

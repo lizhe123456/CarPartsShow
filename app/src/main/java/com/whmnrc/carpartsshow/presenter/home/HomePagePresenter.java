@@ -3,10 +3,13 @@ package com.whmnrc.carpartsshow.presenter.home;
 import com.whmnrc.carpartsshow.base.BasePresenterImpl;
 import com.whmnrc.carpartsshow.base.CommonSubscriber;
 import com.whmnrc.carpartsshow.model.DataManager;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
 import com.whmnrc.carpartsshow.model.http.response.CPSResponse;
 import com.whmnrc.carpartsshow.presenter.home.contract.HomePageContract;
 import com.whmnrc.carpartsshow.util.RxUtil;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,4 +50,20 @@ public class HomePagePresenter extends BasePresenterImpl<HomePageContract.View> 
                 })
         );
     }
+
+    @Override
+    public void searchVin(String vin) {
+        addSubscribe(dataManager.fetchGetCarModelByVIN(vin)
+                .compose(RxUtil.<CPSResponse<List<CarModelByVINBean>>>rxSchedulerHelper())
+                .compose(RxUtil.<List<CarModelByVINBean>>handle())
+                .subscribeWith(new CommonSubscriber<List<CarModelByVINBean>>(mView){
+                    @Override
+                    public void onNext(List<CarModelByVINBean> carModelByVINBean) {
+                        super.onNext(carModelByVINBean);
+                        mView.showVinData(carModelByVINBean);
+                    }
+                })
+        );
+    }
+
 }

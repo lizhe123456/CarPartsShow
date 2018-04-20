@@ -14,6 +14,7 @@ import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
 import com.whmnrc.carpartsshow.util.GlideuUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
-    private List<ClassificationBean.ListBrandBean> list = null;
+    private List<ClassificationBean.ListBrandBean> list = new ArrayList<>();
     private Context mContext;
 
     public BrandAdapter(Context mContext, List<ClassificationBean.ListBrandBean> list) {
@@ -36,7 +37,8 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
      * @param list
      */
     public void updateListView(List<ClassificationBean.ListBrandBean> list) {
-        this.list = list;
+        this.list.removeAll(this.list);
+        this.list.addAll(list);
         notifyDataSetChanged();
     }
 

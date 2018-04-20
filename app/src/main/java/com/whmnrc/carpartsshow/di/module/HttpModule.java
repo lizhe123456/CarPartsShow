@@ -12,7 +12,9 @@ import com.whmnrc.carpartsshow.widgets.CPSToast;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
@@ -35,26 +37,26 @@ public class HttpModule {
 
     @Singleton
     @Provides
-    Retrofit.Builder provideRetrofitBuilder(){
+    Retrofit.Builder provideRetrofitBuilder() {
         return new Retrofit.Builder();
     }
 
     @Singleton
     @Provides
-    OkHttpClient.Builder provideOkHttpBuilder(){
+    OkHttpClient.Builder provideOkHttpBuilder() {
         return new OkHttpClient.Builder();
     }
 
     @Singleton
     @Provides
     @CPSUrl
-    Retrofit provideZLRetrofit(Retrofit.Builder builder, OkHttpClient client){
-        return createRetrofit(builder,client, Constants.CPS_URL);
+    Retrofit provideZLRetrofit(Retrofit.Builder builder, OkHttpClient client) {
+        return createRetrofit(builder, client, Constants.CPS_URL);
     }
 
     @Singleton
     @Provides
-    CPSApi provideZLService(@CPSUrl Retrofit retrofit){
+    CPSApi provideZLService(@CPSUrl Retrofit retrofit) {
         return retrofit.create(CPSApi.class);
     }
 
@@ -63,7 +65,7 @@ public class HttpModule {
     OkHttpClient provideZLClient(OkHttpClient.Builder builder) {
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
         logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
+        builder.addInterceptor(logInterceptor);
         File cacheFile = new File(Constants.PATH_CACHE);
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 50);
         Interceptor cacheInterceptor = new Interceptor() {
@@ -90,16 +92,15 @@ public class HttpModule {
                             .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
                             .removeHeader("Pragma")
                             .build();
-                    CPSToast.showText(App.getInstance().getmContext(),"网络已断开，无网络连接");
+//                    CPSToast.showText(App.getInstance().getmContext(), "网络已断开，无网络连接");
                 }
                 return response;
             }
         };
 
-
         builder.connectTimeout(15, TimeUnit.SECONDS)
-                .addInterceptor(logInterceptor)
                 .addNetworkInterceptor(cacheInterceptor)
+                .addInterceptor(cacheInterceptor)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
@@ -117,10 +118,11 @@ public class HttpModule {
                 .build();
     }
 
+
     /**
      * http完整日志打印
      */
-    private class HttpLogger implements HttpLoggingInterceptor.Logger{
+    private class HttpLogger implements HttpLoggingInterceptor.Logger {
 
         private StringBuilder mMessage = new StringBuilder();
 

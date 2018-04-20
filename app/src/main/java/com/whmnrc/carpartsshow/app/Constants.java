@@ -1,5 +1,6 @@
 package com.whmnrc.carpartsshow.app;
 
+import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
 import com.whmnrc.carpartsshow.util.FileUtil;
 
 /**
@@ -23,5 +24,6 @@ public class Constants {
     public static String WX_PAY_PRIVATE_KEY=""; //微信私钥
     //微信统一下单接口
     public static final String WX_TOTAL_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public static HomePageBean homePageBean;
 
 }

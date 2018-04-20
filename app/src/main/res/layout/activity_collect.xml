@@ -45,45 +45,27 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_title"
         android:orientation="vertical">
-
-        <android.support.v4.widget.NestedScrollView
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            app:srlDragRate="1"
+            app:srlEnableLoadmore="true">
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                    android:id="@+id/refresh"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srlDragRate="1"
-                    app:srlEnableLoadmore="true">
+                android:overScrollMode="never"
+                android:scrollbars="none" />
 
-                    <com.scwang.smartrefresh.layout.header.ClassicsHeader
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:overScrollMode="never"
-                        android:scrollbars="none" />
-
-                    <com.scwang.smartrefresh.layout.footer.ClassicsFooter
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dm_60" />
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </LinearLayout>
 
     <LinearLayout

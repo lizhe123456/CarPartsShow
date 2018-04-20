@@ -8,18 +8,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpFragment;
+import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.eventbus.HomePageBean;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsListBean;
@@ -30,8 +30,16 @@ import com.whmnrc.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
+import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
+import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.ScreenUtils;
 import com.whmnrc.carpartsshow.util.SpUtil;
+import com.whmnrc.carpartsshow.view.ScanCodeDialog;
+import com.zyyoona7.lib.EasyPopup;
+import com.zyyoona7.lib.HorizontalGravity;
+import com.zyyoona7.lib.VerticalGravity;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
@@ -65,14 +73,18 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     View divider;
     @BindView(R.id.et_search)
     EditText etSearch;
-    @BindView(R.id.stu_bar)
-    View view;
+    @BindView(R.id.tv_vin)
+    TextView tvVin;
+    @BindView(R.id.iv_scan)
+    ImageView ivScan;
+//    @BindView(R.id.stu_bar)
+//    View view;
 
     private CarClassifyFragment classification;
     private BrandFragment brand;
     private CarBrandFragment models;
     private List<Fragment> fragments = new ArrayList<>();
-
+    public int searchType;
 
     private int page = 0;
     private LoginBean loginBean;
@@ -90,10 +102,10 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
     @Override
     protected void setData() {
-        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) view.getLayoutParams();
-        //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
-        linearParams.height = ScreenUtils.getStatusHeight(getContext());
-        view.setLayoutParams(linearParams);
+//        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) view.getLayoutParams();
+//        //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
+//        linearParams.height = ScreenUtils.getStatusHeight(getContext());
+//        view.setLayoutParams(linearParams);
         //使设置好的布局参数应用到控件
         loginBean = SpUtil.getObject(getContext(), "user");
 
@@ -101,10 +113,15 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Intent intent = new Intent();
-                    intent.setClass(getContext(), GoodsSearchActivity.class);
-                    intent.putExtra("searchValue", etSearch.getText().toString().trim());
-                    startActivity(intent);
+                    String value = etSearch.getText().toString().trim();
+                    if (searchType == 0){
+                        Intent intent = new Intent();
+                        intent.setClass(getContext(), GoodsSearchActivity.class);
+                        intent.putExtra("searchValue", value);
+                        startActivity(intent);
+                    }else {
+                        mPresenter.searchVin(value);
+                    }
                     return true;
                 }
                 return false;
@@ -183,8 +200,33 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
     }
 
+    @Override
+    public void showVinData(List<CarModelByVINBean> carModelByVINBean) {
+        final ScanCodeDialog dialog = new ScanCodeDialog(getContext());
+        ScanCodeCarBrandAdapter scanCodeCarBrandAdapter = new ScanCodeCarBrandAdapter(getContext());
+        scanCodeCarBrandAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                CarModelByVINBean carModelByVINBean = (CarModelByVINBean) item;
+                Intent intent = new Intent(getContext(), GoodsSearchActivity.class);
+                intent.putExtra("NLevelID", carModelByVINBean.getNLevelID());
+                intent.putExtra("carBrand", carModelByVINBean.getPP() + " " + carModelByVINBean.getCX() + "--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK());
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        if (!dialog.isShowing()) {
+            dialog.show(scanCodeCarBrandAdapter, carModelByVINBean);
+        }
+    }
 
-    @OnClick({R.id.tv_models, R.id.tv_classify, R.id.tv_brand})
+    @Override
+    public void updateBrand(List<ClassificationBean.ListBrandBean> listBrandBeans) {
+
+    }
+
+
+    @OnClick({R.id.tv_models, R.id.tv_classify, R.id.tv_brand,R.id.tv_vin,R.id.iv_scan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_models:
@@ -195,6 +237,12 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
                 break;
             case R.id.tv_brand:
                 viewPager.setCurrentItem(2);
+                break;
+            case R.id.tv_vin:
+                showWindow(view);
+                break;
+            case R.id.iv_scan:
+                ScanCodeActivity.start(getContext());
                 break;
         }
     }
@@ -272,6 +320,34 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
                 viewPager.setCurrentItem(2);
                 break;
         }
+    }
+
+    public void showWindow(View view){
+        final EasyPopup mCirclePop = new EasyPopup(getContext())
+                .setContentView(R.layout.window_vin_comment,
+                        DensityUtils.dip2px(getContext(),80), ViewGroup.LayoutParams.WRAP_CONTENT)
+                //是否允许点击PopupWindow之外的地方消失
+                .setFocusAndOutsideEnable(true)
+                .createPopup();
+        TextView tvSearch = mCirclePop.getView(R.id.tv_search);
+        final TextView tvVin = mCirclePop.getView(R.id.tv_vin);
+        tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClassifyFragment.this.tvVin.setText("关键字");
+                searchType = 0;
+                mCirclePop.dismiss();
+            }
+        });
+        tvVin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClassifyFragment.this.tvVin.setText("VIN");
+                searchType = 1;
+                mCirclePop.dismiss();
+            }
+        });
+        mCirclePop.showAtAnchorView(view, VerticalGravity.BELOW, HorizontalGravity.ALIGN_LEFT, (int) 0, (int) 10);
     }
 
 }

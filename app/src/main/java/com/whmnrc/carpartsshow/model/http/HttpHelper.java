@@ -24,10 +24,8 @@ import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
 import com.whmnrc.carpartsshow.model.http.bean.UserInfoBean;
 import com.whmnrc.carpartsshow.model.http.response.CPSResponse;
-
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Flowable;
 
 /**
@@ -123,5 +121,7 @@ public interface HttpHelper {
     Flowable<CPSResponse<List<CarModelByVINBean>>> fetchGetCarModelByVIN(String vin);
 
     Flowable<CPSResponse> fetchSubmitRefundOrder(String orederId, String userId);
+
+    Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> fetchgetListBrand(String userId, int step, String categoryName);
 
 }

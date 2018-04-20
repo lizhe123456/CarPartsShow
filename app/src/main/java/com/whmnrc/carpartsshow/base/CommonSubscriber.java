@@ -3,11 +3,13 @@ package com.whmnrc.carpartsshow.base;
 import android.text.TextUtils;
 
 import com.whmnrc.carpartsshow.app.App;
+import com.whmnrc.carpartsshow.app.Constants;
 import com.whmnrc.carpartsshow.exception.ApiException;
 import com.whmnrc.carpartsshow.exception.SysException;
 import com.whmnrc.carpartsshow.util.LogUtil;
 import com.whmnrc.carpartsshow.util.SystemUtil;
 import com.google.gson.JsonSyntaxException;
+import com.whmnrc.carpartsshow.widgets.CPSToast;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -69,7 +71,13 @@ public abstract class CommonSubscriber<T> extends ResourceSubscriber<T> {
         } else if (e instanceof ApiException) {
             mView.showErrorMsg(e.toString());
         } else if (e instanceof HttpException) {
-            mView.showErrorMsg("服务器异常，正在抢修中..");
+            if(Constants.IS_DEBUG){
+                mView.showErrorMsg(e.getMessage());
+            }else {
+                mView.showErrorMsg("服务器异常");
+            }
+//            mView.showErrorMsg("服务器异常");
+
         }else if (e instanceof SysException){
             mView.showErrorMsg(e.getMessage());
         }else if (e instanceof JsonSyntaxException){

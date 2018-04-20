@@ -97,7 +97,18 @@ public class MyCollectActivity extends MvpActivity<CollectionPresenter> implemen
             @Override
             public void onClick(View view, Object item, int position) {
                 CollectionBean.CollectionListProductBean collectionBean = (CollectionBean.CollectionListProductBean) item;
-                GoodsDetailsActivity.newInstance(MyCollectActivity.this, collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
+                if (collectionBean.getCollection_Type() == 0) {
+                    GoodsDetailsActivity.newInstance(MyCollectActivity.this, collectionBean.getCollection_ProductID(), collectionBean.getCollection_Type());
+                }else if (collectionBean.getCollection_Type() == 1){
+                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),true,collectionBean.getCarCount());
+                    GoodsDetailsActivity.newInstance(MyCollectActivity.this ,goodsDetailToBean);
+                }else if (collectionBean.getCollection_Type() == 2){
+                    GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(collectionBean.getUrl(),true,collectionBean.getCarCount());
+                    goodsDetailToBean.setType(1);
+                    GoodsDetailsActivity.newInstance(MyCollectActivity.this, goodsDetailToBean);
+                }
+
+//                GoodsDetailsActivity.newInstance(MyCollectActivity.this, collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
 
 //                GoodsDetailsActivity.newInstance(MyCollectActivity.this,collectionBean.getCollection_ProductID(),collectionBean.getCollection_Type());
             }

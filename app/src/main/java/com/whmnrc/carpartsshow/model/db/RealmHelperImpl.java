@@ -13,7 +13,8 @@ public class RealmHelperImpl implements RealmHelper {
 
     @Inject
     public RealmHelperImpl() {
-
+//        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+//        Realm.setDefaultConfiguration(realmConfig);
     }
 
 }

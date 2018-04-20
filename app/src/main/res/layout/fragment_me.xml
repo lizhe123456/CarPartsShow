@@ -4,11 +4,11 @@
     android:orientation="vertical"
     android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <View
-        android:id="@+id/stu_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dm_25"
-        android:background="@color/title_bg"/>
+    <!--<View-->
+        <!--android:id="@+id/stu_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dm_25"-->
+        <!--android:background="@color/title_bg"/>-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

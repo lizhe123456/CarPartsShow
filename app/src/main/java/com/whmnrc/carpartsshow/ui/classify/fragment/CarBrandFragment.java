@@ -2,10 +2,15 @@ package com.whmnrc.carpartsshow.ui.classify.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.BaseFragment;
 import com.whmnrc.carpartsshow.eventbus.CarClassifyBean;
@@ -18,11 +23,16 @@ import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.PinyinUtils;
 import com.whmnrc.carpartsshow.view.SideBar;
 import com.whmnrc.carpartsshow.widgets.AnimatedExpandableListView;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by lizhe on 2018/3/27.
@@ -38,6 +48,8 @@ public class CarBrandFragment extends BaseFragment {
     SideBar rightSide;
     @BindView(R.id.dialog)
     TextView dialog;
+    @BindView(R.id.vs_empty)
+    ViewStub vsEmpty;
 
     private ArrayList<ClassificationBean.ListCarBrandBean> list;
     private CarBrandAdapterV2 mAdapter;
@@ -68,7 +80,7 @@ public class CarBrandFragment extends BaseFragment {
     @Override
     protected void setData() {
         mAdapter = new CarBrandAdapterV2(getContext());
-        Collections.sort(list,new CarBrandComparator());
+        Collections.sort(list, new CarBrandComparator());
         expandableListView.setAdapter(mAdapter);
         mAdapter.loadMore(list);
         //设置右侧触摸监听
@@ -84,10 +96,10 @@ public class CarBrandFragment extends BaseFragment {
         });
         mAdapter.setOnOpenListener(new CarBrandAdapterV2.OnOpenListener() {
             @Override
-            public void open(ClassificationBean.ListCarBrandBean listCarBrandBean,int groupPosition) {
-                if (listCarBrandBean.isOpen()){
+            public void open(ClassificationBean.ListCarBrandBean listCarBrandBean, int groupPosition) {
+                if (listCarBrandBean.isOpen()) {
                     expandableListView.collapseGroupWithAnimation(groupPosition);
-                }else {
+                } else {
                     expandableListView.expandGroupWithAnimation(groupPosition);
                 }
             }
@@ -108,7 +120,7 @@ public class CarBrandFragment extends BaseFragment {
             }
 
             @Override
-            public void OnSubItemClick(ClassificationBean.ListCarBrandBean listCarBrandBean,ClassificationBean.VCJListBean vcjListBean) {
+            public void OnSubItemClick(ClassificationBean.ListCarBrandBean listCarBrandBean, ClassificationBean.VCJListBean vcjListBean) {
                 Intent intent = new Intent();
                 intent.setClass(getContext(), CarBrandDetailsActivity.class);
                 intent.putExtra("group", listCarBrandBean.getCarBrand_Name() + "," + vcjListBean.getName());
@@ -118,7 +130,7 @@ public class CarBrandFragment extends BaseFragment {
         });
 
         View view = new View(getContext());
-        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, DensityUtils.dip2px(getContext(),60)));
+        view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, DensityUtils.dip2px(getContext(), 60)));
         expandableListView.addFooterView(view);
     }
 
@@ -146,20 +158,21 @@ public class CarBrandFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == this.requestCode){
-            if (resultCode == 1){
-                int cid = data.getIntExtra("cid",-1);
+        if (requestCode == this.requestCode) {
+            if (resultCode == 1) {
+                int cid = data.getIntExtra("cid", -1);
                 String name = data.getStringExtra("label");
                 if (getActivity() instanceof GoodsSearchActivity) {
-                    EventBus.getDefault().post(new CarClassifyBean("carBrand",name,cid));
-                }else {
+                    EventBus.getDefault().post(new CarClassifyBean("carBrand", name, cid));
+                } else {
                     Intent intent = new Intent();
                     intent.putExtra("carBrand", name);
-                    intent.putExtra("cid",cid);
+                    intent.putExtra("cid", cid);
                     intent.setClass(getContext(), GoodsSearchActivity.class);
                     startActivity(intent);
                 }
             }
         }
     }
+
 }

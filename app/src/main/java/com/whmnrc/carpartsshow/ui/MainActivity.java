@@ -10,13 +10,16 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whmnrc.carpartsshow.R;
+import com.whmnrc.carpartsshow.app.App;
 import com.whmnrc.carpartsshow.base.BaseActivity;
 import com.whmnrc.carpartsshow.eventbus.HomePageBean;
 import com.whmnrc.carpartsshow.ui.classify.ClassifyFragment;
@@ -50,7 +53,7 @@ public class MainActivity extends BaseActivity {
 
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
-    private boolean isNet;
+    private long exitTime = 0;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -77,13 +80,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setImmersionStateMode(this);
+//        setImmersionStateMode(this);
         super.onCreate(savedInstanceState);
-        if (SystemUtil.isNetworkConnected(this)){
-            isNet = true;
-        }else {
-            isNet = false;
-        }
     }
 
     @Override
@@ -207,6 +205,25 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            App.getInstance().exitApp();
+        }
     }
 
     /**

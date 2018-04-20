@@ -266,4 +266,10 @@ public class DataManager implements RealmHelper, HttpHelper {
     public Flowable<CPSResponse> fetchSubmitRefundOrder(String orederId, String userId) {
         return httpHelper.fetchSubmitRefundOrder(orederId,userId);
     }
+
+    @Override
+    public Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> fetchgetListBrand(String userId, int step, String categoryName) {
+        return httpHelper.fetchgetListBrand(userId, step, categoryName);
+    }
+
 }

@@ -18,4 +18,5 @@
     <string name="camera_permission_confirmation">需要先打开相机权限</string>
     <string name="camera_permission_not_granted">没有打开相机权限</string>
     <string name="vin_desc">如果识别结果和照片不一致，可手动修改\n请确保照片清晰，若模糊，太暗，遮挡，可能会影响相应VIN分析结果</string>
+    <string name="tv_copy">复\n制</string>
 </resources>

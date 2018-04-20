@@ -17,6 +17,7 @@ import com.whmnrc.carpartsshow.base.MvpActivity;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
 import com.whmnrc.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.whmnrc.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
@@ -282,7 +283,16 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
 
     @Override
     public void goodsDetails(ShopCarBean.ListCarProductBean item) {
-        GoodsDetailsActivity.newInstance(this,item.getProduct_ID(),item.getProduct_Type());
+        if (item.getProduct_Type() == 0) {
+            GoodsDetailsActivity.newInstance(this, item.getProduct_ID(), item.getProduct_Type());
+        }else if (item.getProduct_Type() == 1){
+            GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(item.getUrl(),item.isCollection(),item.getCarCount());
+            GoodsDetailsActivity.newInstance(this ,goodsDetailToBean);
+        }else if (item.getProduct_Type() == 2){
+            GoodsDetailToBean goodsDetailToBean = new GoodsDetailToBean(item.getUrl(),item.isCollection(),item.getCarCount());
+            goodsDetailToBean.setType(1);
+            GoodsDetailsActivity.newInstance(this, goodsDetailToBean);
+        }
     }
 
     @Override

@@ -18,17 +18,46 @@
             android:layout_height="match_parent"
             android:scaleType="center"
             android:src="@drawable/back_go" />
-
-        <include
-            android:id="@+id/search_bar"
-            layout="@layout/et_search_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dm_10"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginTop="@dimen/dm_10"
+            android:layout_marginBottom="@dimen/dm_10"
+            android:background="@drawable/search_shape"
+            android:paddingLeft="@dimen/dm_5"
+            android:paddingRight="@dimen/dm_5"
+            android:paddingTop="@dimen/dm_3"
+            android:paddingBottom="@dimen/dm_3"
             android:layout_toLeftOf="@+id/iv_record"
-            android:layout_toRightOf="@+id/iv_back" />
+            android:layout_toRightOf="@+id/iv_back" >
+            <TextView
+                android:id="@+id/tv_vin"
+                android:layout_height="match_parent"
+                android:layout_width="@dimen/dm_45"
+                android:gravity="center"
+                android:text="关键字"
+                android:textColor="@color/tv_000"
+                android:textSize="@dimen/dm_12" />
 
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="247dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dm_9"
+                android:background="@null"
+                android:hint="搜索商品名称/关键字"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="10"
+                android:singleLine="true"
+                android:textColor="@color/tv_000"
+                android:textColorHint="@color/tv_999"
+                android:textCursorDrawable="@drawable/et_cursor"
+                android:textSize="15sp" />
+        </LinearLayout>
         <ImageView
             android:id="@+id/iv_record"
             android:layout_width="@dimen/dm_48"

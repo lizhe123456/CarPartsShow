@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.whmnrc.carpartsshow.base.BasePresenterImpl;
 import com.whmnrc.carpartsshow.base.CommonSubscriber;
 import com.whmnrc.carpartsshow.model.DataManager;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsListBean;
@@ -238,4 +239,35 @@ public class GoodsSearchPresenter extends BasePresenterImpl<GoodsSearchContract.
             listCarBrandBean.setListBeans(listBeans);
         }
     }
+
+    @Override
+    public void searchVin(String vin) {
+        addSubscribe(dataManager.fetchGetCarModelByVIN(vin)
+                .compose(RxUtil.<CPSResponse<List<CarModelByVINBean>>>rxSchedulerHelper())
+                .compose(RxUtil.<List<CarModelByVINBean>>handle())
+                .subscribeWith(new CommonSubscriber<List<CarModelByVINBean>>(mView){
+                    @Override
+                    public void onNext(List<CarModelByVINBean> carModelByVINBean) {
+                        super.onNext(carModelByVINBean);
+                        mView.showVinData(carModelByVINBean);
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void getListBrand(String userId, int step, String categoryName) {
+        addSubscribe(dataManager.fetchgetListBrand(userId, step, categoryName)
+                .compose(RxUtil.<CPSResponse<List<ClassificationBean.ListBrandBean>>>rxSchedulerHelper())
+                .compose(RxUtil.<List<ClassificationBean.ListBrandBean>>handle())
+                .subscribeWith(new CommonSubscriber<List<ClassificationBean.ListBrandBean>>(mView){
+                    @Override
+                    public void onNext(List<ClassificationBean.ListBrandBean> listBrandBeans) {
+                        super.onNext(listBrandBeans);
+                        mView.updateBrand(listBrandBeans);
+                    }
+                })
+        );
+    }
+
 }

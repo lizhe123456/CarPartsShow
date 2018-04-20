@@ -11,18 +11,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.app.Constants;
 import com.whmnrc.carpartsshow.base.MvpActivity;
+import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.eventbus.CarClassifyBean;
 import com.whmnrc.carpartsshow.eventbus.GoodsMoreBean;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsListBean;
@@ -35,8 +35,13 @@ import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.fragment.GoodsFragment;
 import com.whmnrc.carpartsshow.ui.me.activity.CreditMoneyActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
-import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
+import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
+import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.SpUtil;
+import com.whmnrc.carpartsshow.view.ScanCodeDialog;
+import com.zyyoona7.lib.EasyPopup;
+import com.zyyoona7.lib.HorizontalGravity;
+import com.zyyoona7.lib.VerticalGravity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -54,12 +59,8 @@ import butterknife.OnClick;
 
 public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> implements GoodsSearchContract.View {
 
-    @BindView(R.id.iv_back)
-    ImageView ivBack;
     @BindView(R.id.et_search)
     EditText etSearch;
-    @BindView(R.id.rl_title)
-    RelativeLayout rlTitle;
     @BindView(R.id.ll_label)
     LinearLayout mLlabel;
     @BindView(R.id.tv_label_delete)
@@ -70,14 +71,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     TextView tvLabelModelsDelete;
     @BindView(R.id.tv_zh)
     TextView tvZh;
-    @BindView(R.id.tv_classify)
-    TextView tvXl;
-    @BindView(R.id.tv_brand)
-    TextView tvJf;
-    @BindView(R.id.tv_models)
-    TextView tvModels;
-    @BindView(R.id.fragment_content)
-    FrameLayout fragmentContent;
+    @BindView(R.id.tv_vin)
+    TextView tvVin;
 
     private CarClassifyFragment classification;
     private BrandFragment brand;
@@ -108,6 +103,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     public boolean isCarShow;
     private String nLevelID;
 
+    public int searchType;
+
+    private List<ClassificationBean.ListBrandBean> listBrandBeans;
 
     public static void start(Context context,String searchValue) {
         Intent starter = new Intent(context, GoodsSearchActivity.class);
@@ -142,7 +140,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         latelCarBrand = getIntent().getStringExtra("carBrand") ;
         searchValue = getIntent().getStringExtra("searchValue") == null ? "" : getIntent().getStringExtra("searchValue");
         nLevelID = getIntent().getStringExtra("NLevelID") == null ? "" : getIntent().getStringExtra("NLevelID");
-        step = Integer.parseInt(getIntent().getStringExtra("classifyStep") == null ? "0" : getIntent().getStringExtra("classifyStep"));
+        step = getIntent().getIntExtra("classifyStep",0);
         initLabel();
         fragmentManager = getSupportFragmentManager();
         setContentFragment(FRAGMENT_TAG_GOODS);
@@ -166,13 +164,20 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     searchValue = etSearch.getText().toString().trim();
-                    map.put("SearchValue",searchValue);
-                    mPresenter.getGoodsSearch(map,1);
+                    if (searchType == 0){
+                        map.put("SearchValue",searchValue);
+                        mPresenter.getGoodsSearch(map,1);
+                    }else if (searchType == 1){
+                        mPresenter.searchVin(searchValue);
+                    }
                     return true;
                 }
                 return false;
             }
         });
+        if (!TextUtils.isEmpty(latelClassify)){
+            mPresenter.getListBrand(loginBean.getRepairUser_ID(),step,latelClassify);
+        }
     }
 
     @Override
@@ -215,7 +220,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models,R.id.iv_record})
+    @OnClick({R.id.iv_back, R.id.tv_label_delete, R.id.tv_label_brand_delete, R.id.tv_label_models_delete, R.id.tv_zh, R.id.tv_classify, R.id.tv_brand, R.id.tv_models,R.id.iv_record,R.id.tv_vin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -224,6 +229,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
             case R.id.tv_label_delete:
                 latelClassify = "";
                 map.put("CategoryName",latelClassify);
+                mPresenter.getListBrand(loginBean.getRepairUser_ID(),step,latelClassify);
                 tvLabelDelete.setVisibility(View.GONE);
                 initLabel();
                 updateDate(map);
@@ -259,10 +265,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                     isAsc = true;
                 }
                 updateDate(map);
-                isCarShow = false;
-                isBrandShow = false;
-                isClassifyShow = false;
-                setContentFragment(FRAGMENT_TAG_GOODS);
+
                 break;
             case R.id.tv_classify:
                 //分类
@@ -311,6 +314,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 ScanCodeActivity.start(GoodsSearchActivity.this);
                 this.finish();
                 break;
+            case R.id.tv_vin:
+                showWindow(view);
+                break;
         }
     }
 
@@ -318,7 +324,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     public void stateError() {
-
+        unLoading();
     }
 
 
@@ -329,7 +335,7 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
 
     @Override
     public void showBrand(List<ClassificationBean.ListBrandBean> listBrandBeans) {
-        brand = BrandFragment.newInstance(listBrandBeans);
+//        this.listBrandBeans = listBrandBeans;
     }
 
     @Override
@@ -346,6 +352,33 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         }
         //向商品Fragment发送数据
         EventBus.getDefault().post(goodsListBean);
+        unLoading();
+    }
+
+    @Override
+    public void showVinData(List<CarModelByVINBean> carModelByVINBean) {
+        final ScanCodeDialog dialog = new ScanCodeDialog(this);
+        ScanCodeCarBrandAdapter scanCodeCarBrandAdapter = new ScanCodeCarBrandAdapter(this);
+        scanCodeCarBrandAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                CarModelByVINBean carModelByVINBean = (CarModelByVINBean) item;
+                map.put("NLevelID",carModelByVINBean.getNLevelID());
+                latelCarBrand = carModelByVINBean.getPP() + " " + carModelByVINBean.getCX() + "--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK();
+                mPresenter.getGoodsSearch(map,1);
+                initLabel();
+                dialog.dismiss();
+            }
+        });
+        if (!dialog.isShowing()) {
+            dialog.show(scanCodeCarBrandAdapter, carModelByVINBean);
+        }
+    }
+
+    @Override
+    public void updateBrand(List<ClassificationBean.ListBrandBean> listBrandBeans) {
+        this.listBrandBeans = listBrandBeans;
+        EventBus.getDefault().post(this.listBrandBeans);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -367,10 +400,6 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 tvLabelBrandDelete.setVisibility(View.VISIBLE);
                 tvLabelBrandDelete.setText(latelBrand);
                 updateDate(map);
-                isCarShow = false;
-                isBrandShow = false;
-                isClassifyShow = false;
-                setContentFragment(FRAGMENT_TAG_GOODS);
                 break;
             case "classify":
                 latelClassify = carClassifyBean.getName();
@@ -379,11 +408,8 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 map.put("Step",step);
                 tvLabelDelete.setVisibility(View.VISIBLE);
                 tvLabelDelete.setText(latelClassify);
+                mPresenter.getListBrand(loginBean.getRepairUser_ID(),step,latelClassify);
                 updateDate(map);
-                isCarShow = false;
-                isBrandShow = false;
-                isClassifyShow = false;
-                setContentFragment(FRAGMENT_TAG_GOODS);
                 break;
             case "carBrand":
                 latelCarBrand = carClassifyBean.getName();
@@ -393,10 +419,6 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 updateDate(map);
                 tvLabelModelsDelete.setText(latelCarBrand);
                 tvLabelModelsDelete.setVisibility(View.VISIBLE);
-                isCarShow = false;
-                isBrandShow = false;
-                isClassifyShow = false;
-                setContentFragment(FRAGMENT_TAG_GOODS);
                 break;
         }
         if (!isShow(mLlabel)){
@@ -405,8 +427,15 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
     }
 
     public void updateDate(Map<String , Object> map){
-        mPresenter.setDialog(true);
+        GoodsListBean goodsListBean = new GoodsListBean();
+        goodsListBean.setListGoods(new ArrayList<GoodsListBean.ListGoodsBean>());
+        EventBus.getDefault().post(goodsListBean);
+        loading("加载中..");
         mPresenter.getGoodsSearch(map,1);
+        isCarShow = false;
+        isBrandShow = false;
+        isClassifyShow = false;
+        setContentFragment(FRAGMENT_TAG_GOODS);
     }
 
     //设置fragment 切换
@@ -431,6 +460,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                     foundFragment = new GoodsFragment();
                     break;
                 case FRAGMENT_TAG_BRAND:
+                    if (brand == null) {
+                        brand = BrandFragment.newInstance(this.listBrandBeans);
+                    }
                     foundFragment = brand;
                     break;
                 case FRAGMENT_TAG_CARCLASSIFY:
@@ -454,9 +486,38 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
         invalidateOptionsMenu();
     }
 
+    public void showWindow(View view){
+        final EasyPopup mCirclePop = new EasyPopup(this)
+                .setContentView(R.layout.window_vin_comment,
+                        DensityUtils.dip2px(this,80), ViewGroup.LayoutParams.WRAP_CONTENT)
+                //是否允许点击PopupWindow之外的地方消失
+                .setFocusAndOutsideEnable(true)
+                .createPopup();
+        TextView tvSearch = mCirclePop.getView(R.id.tv_search);
+        final TextView tvVin = mCirclePop.getView(R.id.tv_vin);
+        tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoodsSearchActivity.this.tvVin.setText("关键字");
+                searchType = 0;
+                mCirclePop.dismiss();
+            }
+        });
+        tvVin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoodsSearchActivity.this.tvVin.setText("VIN");
+                searchType = 1;
+                mCirclePop.dismiss();
+            }
+        });
+        mCirclePop.showAtAnchorView(view, VerticalGravity.BELOW, HorizontalGravity.ALIGN_LEFT, (int) 0, (int) 10);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }

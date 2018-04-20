@@ -232,4 +232,10 @@ public interface CPSApi {
     //退货
     @GET("/api/User/SubmitRefundOrder")
     Flowable<CPSResponse> submitRefundOrder(@Query("OrderId") String orederId, @Query("RepairUser_ID") String userId);
+
+    //通过分类获取品牌
+    @GET("/api/Home/GetListBrand")
+    Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> getListBrand(@Query("RepairUser_ID") String userId,
+                                                                               @Query("Step") int step,
+                                                                               @Query("CategoryName") String categoryName);
 }

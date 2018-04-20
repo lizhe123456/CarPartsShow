@@ -1,10 +1,7 @@
 package com.whmnrc.carpartsshow.ui.home;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,15 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+import com.google.gson.Gson;
 import com.whmnrc.carpartsshow.R;
+import com.whmnrc.carpartsshow.app.Constants;
 import com.whmnrc.carpartsshow.base.MvpFragment;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.presenter.home.HomePagePresenter;
 import com.whmnrc.carpartsshow.presenter.home.contract.HomePageContract;
-import com.whmnrc.carpartsshow.receiver.NetworkReceiver;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.MessageRecordActivity;
@@ -39,18 +39,22 @@ import com.whmnrc.carpartsshow.ui.home.adapter.SpecialOfferAdapter;
 import com.whmnrc.carpartsshow.ui.me.activity.IntegralShopActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.NewsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
-import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
+import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
+import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.GlideuUtil;
 import com.whmnrc.carpartsshow.util.SpUtil;
 import com.whmnrc.carpartsshow.view.CountdownTextView;
+import com.whmnrc.carpartsshow.view.ScanCodeDialog;
 import com.whmnrc.carpartsshow.widgets.GlideImageLoader;
-import com.whmnrc.carpartsshow.widgets.MyNestedScrollView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.zyyoona7.lib.EasyPopup;
+import com.zyyoona7.lib.HorizontalGravity;
+import com.zyyoona7.lib.VerticalGravity;
 import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,8 +98,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     TextView tvTitle;
     @BindView(R.id.ll_notice)
     LinearLayout linearLayoutNotice;
-    @BindView(R.id.nested_scroll_view)
-    MyNestedScrollView nestedScrollView;
+//    @BindView(R.id.nested_scroll_view)
+//    MyNestedScrollView nestedScrollView;
     @BindView(R.id.rl_title)
     RelativeLayout rlTile;
     @BindView(R.id.ll_title)
@@ -142,6 +146,9 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     LinearLayout llGoods4;
     @BindView(R.id.ll_all)
     LinearLayout llAll;
+    @BindView(R.id.tv_vin)
+    TextView tvVin;
+
 
     @Override
     protected int setLayout() {
@@ -158,15 +165,28 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     @Override
     protected void setData() {
         loginBean = SpUtil.getObject(getContext(), "user");
-        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
+        HomePageBean homePageBean = new Gson().fromJson(SpUtil.getString(getContext(),"home"),HomePageBean.class);
+        if (Constants.homePageBean != null){
+            showContent(Constants.homePageBean);
+        }else if (homePageBean != null){
+            showContent(homePageBean);
+            mPresenter.getHomePage(loginBean.getRepairUser_ID(),1);
+        }else {
+            mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
+        }
+//        mPresenter.getHomePage(loginBean.getRepairUser_ID(), 1);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Intent intent = new Intent();
-                    intent.setClass(getContext(), GoodsSearchActivity.class);
-                    intent.putExtra("searchValue", etSearch.getText().toString().trim());
-                    startActivity(intent);
+                    if (searchType == 0) {
+                        Intent intent = new Intent();
+                        intent.setClass(getContext(), GoodsSearchActivity.class);
+                        intent.putExtra("searchValue", etSearch.getText().toString().trim());
+                        startActivity(intent);
+                    }else {
+                        mPresenter.searchVin(etSearch.getText().toString().trim());
+                    }
                     return true;
                 }
                 return false;
@@ -176,21 +196,21 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvDataItem.setNestedScrollingEnabled(false);
         rvCradItem.setNestedScrollingEnabled(false);
         rvGoodsItem.setNestedScrollingEnabled(false);
-        nestedScrollView.addScrollViewListener(new MyNestedScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(MyNestedScrollView myNestedScrollView, int x, int y, int oldx, int oldy) {
-                if (y <= 0) {
-                    rlTile.setBackgroundColor(Color.argb((int) 0, 0, 0, 0));//AGB由相关工具获得，或者美工提供
-                } else if (y > 0 && y <= 200) {
-                    float scale = (float) y / 200;
-                    float alpha = (255 * scale);
-                    // 只是layout背景透明(仿知乎滑动效果)
-                    rlTile.setBackgroundColor(Color.argb((int) alpha, 0, 0, 0));
-                } else {
-                    rlTile.setBackgroundColor(Color.argb((int) 255, 0, 0, 0));
-                }
-            }
-        });
+//        nestedScrollView.addScrollViewListener(new MyNestedScrollView.ScrollViewListener() {
+//            @Override
+//            public void onScrollChanged(MyNestedScrollView myNestedScrollView, int x, int y, int oldx, int oldy) {
+//                if (y <= 0) {
+//                    rlTile.setBackgroundColor(Color.argb((int) 0, 0, 0, 0));//AGB由相关工具获得，或者美工提供
+//                } else if (y > 0 && y <= 200) {
+//                    float scale = (float) y / 200;
+//                    float alpha = (255 * scale);
+//                    // 只是layout背景透明(仿知乎滑动效果)
+//                    rlTile.setBackgroundColor(Color.argb((int) alpha, 0, 0, 0));
+//                } else {
+//                    rlTile.setBackgroundColor(Color.argb((int) 255, 0, 0, 0));
+//                }
+//            }
+//        });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
@@ -217,6 +237,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         tvTime.start();
     }
 
+
     @Override
     public void showContent(HomePageBean homePageBean) {
         initBanner(homePageBean.getBanner());
@@ -227,6 +248,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         initCrad(homePageBean);
         initDataItem(homePageBean.getListCardImg());
         refresh.finishRefresh();
+        SpUtil.putString(getContext(),"home",new Gson().toJson(homePageBean));
+        Constants.homePageBean = null;
     }
 
     private void initCrad(HomePageBean homePageBean) {
@@ -332,6 +355,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             });
             llAll.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.VISIBLE);
+            return;
         } else {
             adapter = new ListDateItemAdapter(getContext(), 0);
             linearLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -339,8 +363,8 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         rvDataItem.setLayoutManager(linearLayoutManager);
         rvDataItem.setAdapter(adapter);
         rvDataItem.setVisibility(View.VISIBLE);
-        adapter.addFirstDataSet(listDateItem);
         linearLayout.setVisibility(View.VISIBLE);
+        adapter.addFirstDataSet(listDateItem);
     }
 
     @Override
@@ -401,17 +425,23 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
     }
 
     private void initCategory(final List<HomePageBean.ListFirstCategoryBean> listFirstCategory) {
-
         HomeCategoryAdapter adapter = new HomeCategoryAdapter(getContext());
-        listFirstCategory.add(0, new HomePageBean.ListFirstCategoryBean(R.drawable.carbrand, "车型匹配"));
-        listFirstCategory.add(0, new HomePageBean.ListFirstCategoryBean(R.drawable.jifenshop, "积分商城"));
-        listFirstCategory.add(new HomePageBean.ListFirstCategoryBean(R.drawable.brand_dq, "品牌大全"));
-        listFirstCategory.add(new HomePageBean.ListFirstCategoryBean(R.drawable.all_c, "全部分类"));
+        List<HomePageBean.ListFirstCategoryBean> showList = new ArrayList<>();
+
+        HomePageBean.ListFirstCategoryBean listFirstCategoryBean = new HomePageBean.ListFirstCategoryBean(R.drawable.carbrand, "车型匹配");
+        showList.add(listFirstCategoryBean);
+        HomePageBean.ListFirstCategoryBean listFirstCategoryBean1 = new HomePageBean.ListFirstCategoryBean(R.drawable.jifenshop, "积分商城");
+        showList.add(listFirstCategoryBean1);
+        showList.addAll(listFirstCategory);
+        HomePageBean.ListFirstCategoryBean listFirstCategoryBean2 = new HomePageBean.ListFirstCategoryBean(R.drawable.brand_dq, "品牌大全");
+        showList.add(listFirstCategoryBean2);
+        HomePageBean.ListFirstCategoryBean listFirstCategoryBean3 = new HomePageBean.ListFirstCategoryBean(R.drawable.all_c, "全部分类");
+        showList.add(listFirstCategoryBean3);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
-        adapter.addFirstDataSet(listFirstCategory);
+        adapter.addFirstDataSet(showList);
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, Object item, int position) {
@@ -432,6 +462,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                     Intent intent = new Intent();
                     intent.setClass(getContext(), GoodsSearchActivity.class);
                     intent.putExtra("classify", listFirstCategoryBean.getName());
+                    intent.putExtra("classifyStep", listFirstCategoryBean.getStep());
                     startActivity(intent);
                 }
             }
@@ -466,9 +497,29 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
 
     }
 
+    @Override
+    public void showVinData(List<CarModelByVINBean> list) {
+        final ScanCodeDialog dialog = new ScanCodeDialog(getContext());
+        ScanCodeCarBrandAdapter scanCodeCarBrandAdapter = new ScanCodeCarBrandAdapter(getContext());
+        scanCodeCarBrandAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, Object item, int position) {
+                CarModelByVINBean carModelByVINBean = (CarModelByVINBean) item;
+                Intent intent = new Intent(getContext(), GoodsSearchActivity.class);
+                intent.putExtra("NLevelID", carModelByVINBean.getNLevelID());
+                intent.putExtra("carBrand", carModelByVINBean.getPP() + " " + carModelByVINBean.getCX() + "--排量 " + carModelByVINBean.getPL() + " " + carModelByVINBean.getNK());
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        if (!dialog.isShowing()) {
+            dialog.show(scanCodeCarBrandAdapter, list);
+        }
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @OnClick({R.id.iv_scan, R.id.et_search, R.id.iv_message})
+    @OnClick({R.id.iv_scan, R.id.et_search, R.id.iv_message,R.id.tv_vin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_scan:
@@ -479,7 +530,40 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
             case R.id.iv_message:
                 startActivity(new Intent(getContext(), MessageRecordActivity.class));
                 break;
+            case R.id.tv_vin:
+                showWindow(view);
+                break;
         }
+    }
+
+    public int searchType;
+
+    public void showWindow(View view){
+        final EasyPopup mCirclePop = new EasyPopup(getContext())
+                .setContentView(R.layout.window_vin_comment,
+                        DensityUtils.dip2px(getContext(),80), ViewGroup.LayoutParams.WRAP_CONTENT)
+                //是否允许点击PopupWindow之外的地方消失
+                .setFocusAndOutsideEnable(true)
+                .createPopup();
+        TextView tvSearch = mCirclePop.getView(R.id.tv_search);
+        final TextView tvVin = mCirclePop.getView(R.id.tv_vin);
+        tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeFragment.this.tvVin.setText("关键字");
+                searchType = 0;
+                mCirclePop.dismiss();
+            }
+        });
+        tvVin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeFragment.this.tvVin.setText("VIN");
+                searchType = 1;
+                mCirclePop.dismiss();
+            }
+        });
+        mCirclePop.showAtAnchorView(view, VerticalGravity.BELOW, HorizontalGravity.ALIGN_LEFT, (int) 0, (int) 10);
     }
 
 }

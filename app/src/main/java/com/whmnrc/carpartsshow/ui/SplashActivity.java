@@ -8,14 +8,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.whmnrc.carpartsshow.R;
+import com.whmnrc.carpartsshow.app.Constants;
+import com.whmnrc.carpartsshow.base.MvpActivity;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
+import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
+import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
+import com.whmnrc.carpartsshow.presenter.home.HomePagePresenter;
+import com.whmnrc.carpartsshow.presenter.home.contract.HomePageContract;
 import com.whmnrc.carpartsshow.util.SpUtil;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
+import okhttp3.Cache;
 
 /**
  * Created by lizhe on 2018/4/11.
  * 启动页
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends MvpActivity<HomePagePresenter> implements HomePageContract.View {
 
 
     private Handler mHandler;
@@ -37,9 +50,16 @@ public class SplashActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+    protected int setLayout() {
+        return R.layout.activity_splash;
+    }
+
+    @Override
+    protected void setData() {
+        LoginBean loginBean = SpUtil.getObject(SplashActivity.this,"user");
+        if (loginBean != null) {
+            mPresenter.getHomePage(loginBean.getRepairUser_ID(),1);
+        }
         mHandler = new Handler();
         mHandler.postDelayed(runnable,2000);
     }
@@ -49,5 +69,35 @@ public class SplashActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacks(runnable);
+    }
+
+    @Override
+    protected void initInject() {
+        getActivityComponent().inject(this);
+    }
+
+    @Override
+    public void stateError() {
+
+    }
+
+    @Override
+    public void showContent(HomePageBean homePageBean) {
+        Constants.homePageBean  = homePageBean;
+    }
+
+    @Override
+    public void loadMore(HomePageBean homePageBean) {
+
+    }
+
+    @Override
+    public void showVinData(List<CarModelByVINBean> carModelByVINBean) {
+
+    }
+
+    @Override
+    public void showErrorMsg(String msg) {
+
     }
 }

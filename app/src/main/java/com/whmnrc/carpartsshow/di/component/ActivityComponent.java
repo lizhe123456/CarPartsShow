@@ -8,6 +8,7 @@ import com.whmnrc.carpartsshow.ui.FingerprintLoginActivity;
 import com.whmnrc.carpartsshow.ui.ForgetPassActivity;
 import com.whmnrc.carpartsshow.ui.LoginActivity;
 import com.whmnrc.carpartsshow.ui.NewPassActivity;
+import com.whmnrc.carpartsshow.ui.SplashActivity;
 import com.whmnrc.carpartsshow.ui.classify.activity.CarBrandDetailsActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
@@ -92,4 +93,6 @@ public interface ActivityComponent {
     void inject(VINActivity vinActivity);
 
     void inject(VINResultActivity vinResultActivity);
+
+    void inject(SplashActivity splashActivity);
 }

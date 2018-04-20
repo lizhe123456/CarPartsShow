@@ -2,6 +2,7 @@ package com.whmnrc.carpartsshow.presenter.home.contract;
 
 import com.whmnrc.carpartsshow.base.BasePresenter;
 import com.whmnrc.carpartsshow.base.BaseView;
+import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationItemBean;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsListBean;
@@ -23,6 +24,10 @@ public interface GoodsSearchContract {
         void showCarBrand(List<ClassificationBean.ListCarBrandBean> listCarBrandBeans);
 
         void showGoodsList(GoodsListBean goodsListBean,int type);
+
+        void showVinData(List<CarModelByVINBean> carModelByVINBean);
+
+        void updateBrand(List<ClassificationBean.ListBrandBean> listBrandBeans);
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -31,6 +36,10 @@ public interface GoodsSearchContract {
         void getClassification(String userId,int type);
 
         void getGoodsSearch(Map<String ,Object> map,int type);
+
+        void searchVin(String vin);
+
+        void getListBrand(String userId,int step,String categoryName);
     }
 
 }

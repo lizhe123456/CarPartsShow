@@ -3,6 +3,7 @@ package com.whmnrc.carpartsshow.util;
 import android.content.Context;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.whmnrc.carpartsshow.R;
 
 
 /**
@@ -29,7 +30,7 @@ public class GlideuUtil {
 
     //默认加载
     public static void loadImageView(Context mContext, String path, ImageView mImageView) {
-        Glide.with(mContext).load(path).into(mImageView);
+        Glide.with(mContext).load(path).error(R.drawable.bg_img_load_error).into(mImageView);
     }
 
 

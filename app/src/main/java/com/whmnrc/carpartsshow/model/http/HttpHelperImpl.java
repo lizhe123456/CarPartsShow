@@ -269,4 +269,9 @@ public class HttpHelperImpl implements HttpHelper{
         return cpsApi.submitRefundOrder(orederId,userId);
     }
 
+    @Override
+    public Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> fetchgetListBrand(String userId, int step, String categoryName) {
+        return cpsApi.getListBrand(userId, step, categoryName);
+    }
+
 }
