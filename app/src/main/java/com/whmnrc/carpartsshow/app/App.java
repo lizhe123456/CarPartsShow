@@ -76,6 +76,7 @@ public class App extends Application {
                 // 调用失败，返回OCRError子类SDKError对象
             }
         }, getApplicationContext());
+//        LeakCanary.install(App.getInstance());
     }
 
     public void addActivity(Activity activity){

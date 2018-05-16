@@ -63,6 +63,12 @@ public class BaseViewHolder extends RecyclerView.ViewHolder{
         return this;
     }
 
+    public BaseViewHolder setText(int viewId, int value) {
+        TextView view = getView(viewId);
+        view.setText(value);
+        return this;
+    }
+
     /**
      * 传入view可配合ButterKnife使用
      * @param view

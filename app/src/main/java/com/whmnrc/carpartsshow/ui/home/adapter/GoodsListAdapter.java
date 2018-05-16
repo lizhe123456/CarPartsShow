@@ -29,7 +29,12 @@ public class GoodsListAdapter extends BaseAdapter<GoodsListBean.ListGoodsBean>{
     protected void bindDataToItemView(BaseViewHolder holder, final GoodsListBean.ListGoodsBean item, int position) {
         holder.setText(R.id.tv_goods_desc,item.getName())
                 .setText(R.id.tv_price,""+item.getGoods_Price())
-                .setGlieuImage(R.id.iv_goods,item.getImagePath());
+                .setGlieuImage(R.id.iv_goods,item.getImagePath())
+                .setVisible(R.id.tv_rmb,true);
+        if (item.getGoods_Price() <= 0){
+            holder.setText(R.id.tv_price,R.string.no_price);
+            holder.setVisible(R.id.tv_rmb,false);
+        }
         holder.setOnClickListener(R.id.tv_join_car, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

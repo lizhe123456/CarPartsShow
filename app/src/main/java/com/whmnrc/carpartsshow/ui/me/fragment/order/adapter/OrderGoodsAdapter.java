@@ -30,7 +30,13 @@ public class OrderGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detail
             holder.setText(R.id.tv_xiaoj,"积分："+(item.getOrderItem_Money() * item.getOrderItem_Number()));
         }else {
             holder.setVisible(R.id.tv_rmb,true);
-            holder.setText(R.id.tv_price,item.getOrderItem_Money()+".00");
+            if (item.getOrderItem_Money() <= 0){
+                holder.setText(R.id.tv_price, R.string.no_price);
+                holder.setVisible(R.id.tv_rmb,false);
+            }else {
+                holder.setText(R.id.tv_price, item.getOrderItem_Money() + ".00");
+                holder.setVisible(R.id.tv_rmb,true);
+            }
             holder.setText(R.id.tv_xiaoj,"¥"+(item.getOrderItem_Money() * item.getOrderItem_Number())+".00");
         }
 

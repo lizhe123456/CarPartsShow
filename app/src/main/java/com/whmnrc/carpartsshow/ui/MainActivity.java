@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,21 +18,16 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.app.App;
 import com.whmnrc.carpartsshow.base.BaseActivity;
-import com.whmnrc.carpartsshow.eventbus.HomePageBean;
 import com.whmnrc.carpartsshow.ui.classify.ClassifyFragment;
 import com.whmnrc.carpartsshow.ui.home.HomeFragment;
 import com.whmnrc.carpartsshow.ui.me.MeFragment;
-import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.VINActivity;
 import com.whmnrc.carpartsshow.ui.shopping.ShoppingCartActivity;
-import com.whmnrc.carpartsshow.util.SystemUtil;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,22 +50,29 @@ public class MainActivity extends BaseActivity {
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
     private long exitTime = 0;
+    private int page = 0;
 
-    public static void start(Context context) {
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public static void start(Context context, String page) {
         Intent starter = new Intent(context, MainActivity.class);
+        starter.putExtra("page",page);
         context.startActivity(starter);
     }
 
     //首页
-    private static final String HOME = "home";
+    public static final String HOME = "home";
     //查找
-    private static final String CLASSIFY = "classify";
+    public static final String CLASSIFY = "classify";
     //扫码
     private static final String SCANCODE = "scancode";
     //购物车
     private static final String SHOPPINGCART = "shop";
     //我的
-    private static final String ME = "me";
+    public static final String ME = "me";
 
     private String tag = HOME;
 
@@ -79,19 +82,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-//        setImmersionStateMode(this);
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected void init() {
         fragmentManager = getSupportFragmentManager();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void setData() {
+        tag = getIntent().getStringExtra("page") == null ? HOME : getIntent().getStringExtra("page");
         selectNavigation();
         setContentFragment(tag);
     }
@@ -103,38 +100,38 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_home:
                 tag = HOME;
+                selectNavigation();
+                setContentFragment(tag);
                 break;
             case R.id.tv_classify:
                 tag = CLASSIFY;
+                selectNavigation();
+                setContentFragment(tag);
                 break;
             case R.id.tv_shopping_cart:
+//                tag = SHOPPINGCART;
                 ShoppingCartActivity.start(this);
                 break;
             case R.id.tv_me:
                 tag = ME;
+                selectNavigation();
+                setContentFragment(tag);
                 break;
             case R.id.tv_scan_code:
+//                tag = SCANCODE;
                 VINActivity.start(this);
                 break;
         }
-        selectNavigation();
-        setContentFragment(tag);
+
 
     }
 
-    @Subscribe
-    public void selectFragment(HomePageBean homePageBean){
-        switch (homePageBean.getPage()){
-            case 1 :
-            case 2 :
-            case 3 :
-                tvClassify.performClick();
-                break;
-        }
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     //通过转入参数改变navigation颜色
-    private void selectNavigation(){
+    public void selectNavigation(){
         switch (tag){
             case HOME :
                 tvHome.setSelected(true);
@@ -176,7 +173,7 @@ public class MainActivity extends BaseActivity {
                     foundFragment = new HomeFragment();
                     break;
                 case CLASSIFY:
-                    foundFragment = new ClassifyFragment();
+                    foundFragment = ClassifyFragment.newInstance(page);
                     break;
                 case SCANCODE:
 //                    foundFragment = new ScanCodeFragment();
@@ -197,15 +194,11 @@ public class MainActivity extends BaseActivity {
         }else {
             ft.add(R.id.fragment_content,foundFragment,tag);
         }
+
         ft.commit();
         currentFragmentTag = tag;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -259,5 +252,68 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private Method noteStateNotSavedMethod;
+    private Object fragmentMgr;
+    private String[] activityClassName = {"Activity", "FragmentActivity"};
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        invokeFragmentManagerNoteStateNotSaved();
+    }
+
+    private void invokeFragmentManagerNoteStateNotSaved() {
+        //java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            return;
+        }
+        try {
+            if (noteStateNotSavedMethod != null && fragmentMgr != null) {
+                noteStateNotSavedMethod.invoke(fragmentMgr);
+                return;
+            }
+            Class cls = getClass();
+            do {
+                cls = cls.getSuperclass();
+            } while (!(activityClassName[0].equals(cls.getSimpleName())
+                    || activityClassName[1].equals(cls.getSimpleName())));
+
+            Field fragmentMgrField = prepareField(cls, "mFragments");
+            if (fragmentMgrField != null) {
+                fragmentMgr = fragmentMgrField.get(this);
+                noteStateNotSavedMethod = getDeclaredMethod(fragmentMgr, "noteStateNotSaved");
+                if (noteStateNotSavedMethod != null) {
+                    noteStateNotSavedMethod.invoke(fragmentMgr);
+                }
+            }
+
+        } catch (Exception ex) {
+        }
+    }
+
+    private Field prepareField(Class<?> c, String fieldName) throws NoSuchFieldException {
+        while (c != null) {
+            try {
+                Field f = c.getDeclaredField(fieldName);
+                f.setAccessible(true);
+                return f;
+            } finally {
+                c = c.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException();
+    }
+
+    private Method getDeclaredMethod(Object object, String methodName, Class<?>... parameterTypes) {
+        Method method = null;
+        for (Class<?> clazz = object.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
+            try {
+                method = clazz.getDeclaredMethod(methodName, parameterTypes);
+                return method;
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
 
 }

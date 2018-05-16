@@ -11,19 +11,16 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpActivity;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
-import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
 import com.whmnrc.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.whmnrc.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
 import com.whmnrc.carpartsshow.ui.MainActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
-import com.whmnrc.carpartsshow.ui.me.activity.MyCollectActivity;
 import com.whmnrc.carpartsshow.ui.shopping.activity.ConfirmOrderActivity;
 import com.whmnrc.carpartsshow.ui.shopping.adapter.ShopCarAdapter;
 import com.whmnrc.carpartsshow.util.SpUtil;
@@ -33,7 +30,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -308,8 +304,7 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
             textView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.start(ShoppingCartActivity.this);
-//                    EventBus.getDefault().post(new HomePageBean(4));
+                    MainActivity.start(ShoppingCartActivity.this,MainActivity.HOME);
                 }
             });
         }

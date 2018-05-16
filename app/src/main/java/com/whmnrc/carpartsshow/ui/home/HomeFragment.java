@@ -28,6 +28,7 @@ import com.whmnrc.carpartsshow.model.http.bean.HomePageBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.presenter.home.HomePagePresenter;
 import com.whmnrc.carpartsshow.presenter.home.contract.HomePageContract;
+import com.whmnrc.carpartsshow.ui.MainActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsDetailsActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.whmnrc.carpartsshow.ui.home.activity.MessageRecordActivity;
@@ -235,6 +236,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
         int second = calendar.get(Calendar.SECOND);
         tvTime.setTime(23 - hour, 59 - minute, 59 - second);
         tvTime.start();
+
     }
 
 
@@ -326,7 +328,7 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                     GoodsSearchActivity.start(getContext(), listDateItem.get(0).getSearch());
                 }
             });
-            llGoods1.setOnClickListener(new View.OnClickListener() {
+            llGoods1.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     GoodsSearchActivity.start(getContext(), listDateItem.get(1).getSearch());
@@ -451,12 +453,25 @@ public class HomeFragment extends MvpFragment<HomePagePresenter> implements Home
                     IntegralShopActivity.start(getContext());
                 } else if (listFirstCategoryBean.getName().equals("车型匹配")) {
                     //跳车型
+                    ((MainActivity)getActivity()).setPage(0);
+                    ((MainActivity)getActivity()).setContentFragment(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).setTag(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).selectNavigation();
                     EventBus.getDefault().post(new com.whmnrc.carpartsshow.eventbus.HomePageBean(1));
                 } else if (listFirstCategoryBean.getName().equals("品牌大全")) {
                     //跳品牌
+                    ((MainActivity)getActivity()).setPage(2);
+                    ((MainActivity)getActivity()).setContentFragment(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).setTag(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).selectNavigation();
+
                     EventBus.getDefault().post(new com.whmnrc.carpartsshow.eventbus.HomePageBean(3));
                 } else if (listFirstCategoryBean.getName().equals("全部分类")) {
                     //跳分类
+                    ((MainActivity)getActivity()).setPage(1);
+                    ((MainActivity)getActivity()).setContentFragment(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).setTag(MainActivity.CLASSIFY);
+                    ((MainActivity)getActivity()).selectNavigation();
                     EventBus.getDefault().post(new com.whmnrc.carpartsshow.eventbus.HomePageBean(2));
                 } else {
                     Intent intent = new Intent();

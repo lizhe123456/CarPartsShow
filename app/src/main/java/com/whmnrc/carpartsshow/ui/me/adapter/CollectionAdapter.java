@@ -36,15 +36,23 @@ public class CollectionAdapter extends BaseAdapter<CollectionBean.CollectionList
 
     @Override
     protected void bindDataToItemView(final BaseViewHolder holder, final CollectionBean.CollectionListProductBean item, int position) {
+        if (item.getCollection_Type() == 2){
+            holder.setText(R.id.tv_price,"积分： " + item.getPrice());
+            holder.setVisible(R.id.tv_rmb,false);
+        }else {
+            if (item.getPrice() <= 0){
+                holder.setText(R.id.tv_price, R.string.no_price);
+                holder.setVisible(R.id.tv_rmb,false);
+            }else {
+                holder.setText(R.id.tv_price, item.getPrice() + ".00");
+                holder.setVisible(R.id.tv_rmb,true);
+            }
+        }
+        holder.setText(R.id.tv_goods_desc,item.getName());
+        holder.setGlieuImage(R.id.iv_goods,item.getImagePath());
         if (type == 0){
-            holder.setText(R.id.tv_goods_desc,item.getName());
-            holder.setGlieuImage(R.id.iv_goods,item.getImagePath());
-            holder.setText(R.id.tv_price,item.getPrice()+"");
             holder.setVisible(R.id.iv_select,false);
         }else if (type == 1){
-            holder.setText(R.id.tv_goods_desc,item.getName());
-            holder.setGlieuImage(R.id.iv_goods,item.getImagePath());
-            holder.setText(R.id.tv_price,item.getPrice()+"");
             holder.setVisible(R.id.iv_select,true);
             if (item.isSelect()){
                 holder.setImageResource(R.id.iv_select,R.drawable.round_btn_selected);

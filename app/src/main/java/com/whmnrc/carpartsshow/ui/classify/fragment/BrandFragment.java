@@ -3,42 +3,30 @@ package com.whmnrc.carpartsshow.ui.classify.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.BaseFragment;
 import com.whmnrc.carpartsshow.eventbus.CarClassifyBean;
 import com.whmnrc.carpartsshow.model.http.bean.ClassificationBean;
-import com.whmnrc.carpartsshow.ui.MainActivity;
 import com.whmnrc.carpartsshow.ui.classify.adapter.brand.BrandAdapter;
 import com.whmnrc.carpartsshow.ui.classify.adapter.brand.BrandComparator;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
-import com.whmnrc.carpartsshow.ui.shopping.ShoppingCartActivity;
 import com.whmnrc.carpartsshow.util.DensityUtils;
 import com.whmnrc.carpartsshow.util.PinyinUtils;
 import com.whmnrc.carpartsshow.view.SideBar;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by lizhe on 2018/3/27.
@@ -75,14 +63,13 @@ public class BrandFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        EventBus.getDefault().register(this);
         Bundle bundle = getArguments();
         mListBrandBeans = bundle.getParcelableArrayList("list");
-
     }
 
     @Override
     protected void setData() {
+        EventBus.getDefault().register(this);
         if (mListBrandBeans != null && mListBrandBeans.size() != 0){
             filledData(mListBrandBeans);
             rightSide.setTextView(tvDialog);

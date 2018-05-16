@@ -41,7 +41,11 @@ public class ShopCarAdapter extends BaseAdapter<ShopCarBean.ListCarProductBean> 
         if (item.getProduct_Type() == 2){
             holder.setText(R.id.tv_price,"积分： " + item.getPrice());
         }else {
-            holder.setText(R.id.tv_price, "¥" + item.getPrice() + ".00");
+            if (item.getPrice() <= 0){
+                holder.setText(R.id.tv_price, R.string.no_price);
+            }else {
+                holder.setText(R.id.tv_price, "¥" + item.getPrice() + ".00");
+            }
         }
 
         holder.setGlieuImage(R.id.goods_img,item.getImagePath());

@@ -46,6 +46,7 @@ public class CreditMoneyPresenter extends BasePresenterImpl<CreditMoneyContract.
                         }else {
                             mView.loadMore(cpsResponse);
                         }
+                        page++;
                     }
                 })
         );
@@ -71,6 +72,7 @@ public class CreditMoneyPresenter extends BasePresenterImpl<CreditMoneyContract.
                         }else {
                             mView.loadMore(cpsResponse);
                         }
+                        page++;
                     }
                 })
         );

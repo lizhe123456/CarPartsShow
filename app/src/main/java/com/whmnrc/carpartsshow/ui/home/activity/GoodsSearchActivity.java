@@ -175,9 +175,9 @@ public class GoodsSearchActivity extends MvpActivity<GoodsSearchPresenter> imple
                 return false;
             }
         });
-        if (!TextUtils.isEmpty(latelClassify)){
+//        if (!TextUtils.isEmpty(latelClassify)){
             mPresenter.getListBrand(loginBean.getRepairUser_ID(),step,latelClassify);
-        }
+//        }
     }
 
     @Override

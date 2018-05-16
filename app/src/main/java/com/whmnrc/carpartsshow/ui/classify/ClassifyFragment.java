@@ -2,6 +2,7 @@ package com.whmnrc.carpartsshow.ui.classify;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -29,6 +30,7 @@ import com.whmnrc.carpartsshow.presenter.home.contract.GoodsSearchContract;
 import com.whmnrc.carpartsshow.ui.classify.fragment.BrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarBrandFragment;
 import com.whmnrc.carpartsshow.ui.classify.fragment.CarClassifyFragment;
+import com.whmnrc.carpartsshow.ui.home.HomeFragment;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
 import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
@@ -89,6 +91,14 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
     private int page = 0;
     private LoginBean loginBean;
 
+    public static ClassifyFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt("page",page);
+        ClassifyFragment fragment = new ClassifyFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     protected int setLayout() {
         return R.layout.fragment_classify;
@@ -107,6 +117,7 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 //        linearParams.height = ScreenUtils.getStatusHeight(getContext());
 //        view.setLayoutParams(linearParams);
         //使设置好的布局参数应用到控件
+        page = getArguments().getInt("page",0);
         loginBean = SpUtil.getObject(getContext(), "user");
 
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -164,7 +175,6 @@ public class ClassifyFragment extends MvpFragment<GoodsSearchPresenter> implemen
 
             @Override
             public void onPageSelected(int position) {
-                page = position;
                 switch (position) {
                     case 0:
                         selectedModels();
