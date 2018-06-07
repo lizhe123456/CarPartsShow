@@ -199,7 +199,7 @@ public class ScanCodeActivity extends MvpActivity<ScanCodePresenter> implements 
                 }
                 onFocus(new Point(pmWidth / 2, pmHeight / 2), mAutoFocusCallback);
                 parameters.setPreviewFormat(ImageFormat.NV21); // 常用格式：NV21 / YV12
-                parameters.setPreviewSize(1920, 1080); // 还可以设置很多相机的参数，但是建议先遍历当前相机是否支持该配置，不然可能会导致出错；
+                parameters.setPreviewSize(1280, 720); // 还可以设置很多相机的参数，但是建议先遍历当前相机是否支持该配置，不然可能会导致出错；
                 camera.setParameters(parameters);
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
