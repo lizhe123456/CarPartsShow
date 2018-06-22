@@ -19,6 +19,7 @@ import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.model.http.bean.UserInfoBean;
 import com.whmnrc.carpartsshow.presenter.me.MyOrderPresenter;
 import com.whmnrc.carpartsshow.presenter.me.contract.MyOrderContract;
+import com.whmnrc.carpartsshow.ui.me.activity.ReturnGoodsActivity;
 import com.whmnrc.carpartsshow.util.ScreenUtils;
 import com.whmnrc.carpartsshow.util.SpUtil;
 import com.whmnrc.carpartsshow.widgets.CPSToast;
@@ -134,7 +135,8 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
     //申请售后
     protected void applyCustomerService(OrderListBean.DataBean dataBean) {
 //        mPresenter.applyCustomerServiceClick();
-        mPresenter.applyCustomerService(dataBean.getOrder_ID());
+        ReturnGoodsActivity.start(getContext(),dataBean);
+//        mPresenter.applyCustomerService(dataBean.getOrder_ID());
     }
 
     @Override

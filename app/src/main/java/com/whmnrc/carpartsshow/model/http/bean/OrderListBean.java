@@ -279,6 +279,30 @@ public class OrderListBean {
             private int OrderItem_Money;
             private String Order_ID;
             private String Url;
+            private int OrderItem_BackNumber;
+            private int kuCun;
+            private boolean isSelected;
+
+
+            public int getKuCun() {
+                return OrderItem_Number - OrderItem_BackNumber;
+            }
+
+            public int getOrderItem_BackNumber() {
+                return OrderItem_BackNumber;
+            }
+
+            public void setOrderItem_BackNumber(int orderItem_BackNumber) {
+                OrderItem_BackNumber = orderItem_BackNumber;
+            }
+
+            public boolean isSelected() {
+                return isSelected;
+            }
+
+            public void setSelected(boolean selected) {
+                isSelected = selected;
+            }
 
             public String getUrl() {
                 return Url;

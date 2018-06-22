@@ -2,12 +2,10 @@ package com.whmnrc.carpartsshow.ui.shopping.adapter;
 
 import android.content.Context;
 import android.view.View;
-
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.base.adapter.BaseViewHolder;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
-
 import java.util.List;
 
 /**

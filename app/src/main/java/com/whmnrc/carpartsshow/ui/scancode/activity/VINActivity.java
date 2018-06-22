@@ -29,6 +29,7 @@ import com.whmnrc.carpartsshow.model.http.bean.CarModelByVINBean;
 import com.whmnrc.carpartsshow.presenter.scancode.ScanCodePresenter;
 import com.whmnrc.carpartsshow.presenter.scancode.contract.ScanCodeContract;
 import com.whmnrc.carpartsshow.ui.home.activity.GoodsSearchActivity;
+import com.whmnrc.carpartsshow.ui.scancode.AllCapTransformationMethod;
 import com.whmnrc.carpartsshow.ui.scancode.RecognizeService;
 import com.whmnrc.carpartsshow.ui.scancode.adapter.ScanCodeCarBrandAdapter;
 import com.whmnrc.carpartsshow.util.FileUtil;
@@ -78,6 +79,7 @@ public class VINActivity extends MvpActivity<ScanCodePresenter> implements ScanC
         mImagePicker.setTitle("图片裁剪");
         // 设置是否裁剪图片
 //        mImagePicker.setCropImage(true);
+        etSearch.setTransformationMethod(new AllCapTransformationMethod());
 
     }
 

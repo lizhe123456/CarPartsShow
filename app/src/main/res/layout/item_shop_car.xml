@@ -38,6 +38,7 @@
         android:layout_marginRight="@dimen/dm_20"
         android:layout_marginLeft="@dimen/dm_8"/>
     <LinearLayout
+        android:id="@+id/ll_layout"
         android:layout_width="@dimen/dm_150"
         android:layout_height="@dimen/dm_30"
         android:weightSum="4"
@@ -86,6 +87,18 @@
             android:layout_gravity="center"
             android:gravity="center"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/tv_jifen_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/goods_img"
+        android:layout_below="@+id/ll_layout"
+        android:layout_marginLeft="@dimen/dm_8"
+        android:textColor="@color/tv_666"
+        android:textSize="@dimen/dm_13"
+        android:layout_marginTop="@dimen/dm_5"
+        android:text="积分商品（不能退货）"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"

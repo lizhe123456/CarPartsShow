@@ -403,6 +403,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                         warehouseCode = orderBean.getWarehouses().get(options1).getCode();
                         tvSelectt.setText(orderBean.getWarehouses().get(options1).getName());
                         mPickerView.dismiss();
+                        map.put("WarehouseId",orderBean.getWarehouses().get(options1).getId());
                     }
                 }).setTitleText("仓库选择")
                         .setCyclic(false, false, false)
