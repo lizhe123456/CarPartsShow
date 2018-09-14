@@ -24,7 +24,7 @@ public interface MyOrderContract {
         void getOrderList(String userId,int type,int loadType);
 
         //申请售后
-        void applyCustomerService(String orderId);
+        void applyCustomerService(Map<String,Object> map);
 
         //订单加急
         void orderUrgent(String orderId);

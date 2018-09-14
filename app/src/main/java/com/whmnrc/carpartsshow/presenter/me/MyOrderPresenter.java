@@ -57,10 +57,9 @@ public class MyOrderPresenter extends BasePresenterImpl<MyOrderContract.View> im
     }
 
     @Override
-    public void applyCustomerService(String orderId) {
-        LoginBean loginBean = SpUtil.getObject(App.getInstance().getmContext(),"user");
+    public void applyCustomerService(Map<String,Object> map) {
         mView.loading("退货申请中..");
-        addSubscribe(dataManager.fetchSubmitRefundOrder(orderId,loginBean.getRepairUser_ID())
+        addSubscribe(dataManager.submitRefundGoods(map)
                 .compose(RxUtil.<CPSResponse>rxSchedulerHelper())
                 .compose(RxUtil.handleState())
                 .subscribeWith(new CommonSubscriber<CPSResponse>(mView){

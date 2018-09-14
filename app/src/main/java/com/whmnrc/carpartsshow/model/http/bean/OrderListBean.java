@@ -281,11 +281,20 @@ public class OrderListBean {
             private String Url;
             private int OrderItem_BackNumber;
             private int kuCun;
+            private int returnGoodsNum;
             private boolean isSelected;
 
 
+            public int getReturnGoodsNum() {
+                return returnGoodsNum;
+            }
+
+            public void setReturnGoodsNum(int returnGoodsNum) {
+                this.returnGoodsNum = returnGoodsNum;
+            }
+
             public int getKuCun() {
-                return OrderItem_Number - OrderItem_BackNumber;
+                return OrderItem_Number - OrderItem_BackNumber - returnGoodsNum;
             }
 
             public int getOrderItem_BackNumber() {

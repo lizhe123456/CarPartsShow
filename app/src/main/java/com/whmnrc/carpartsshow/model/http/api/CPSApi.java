@@ -18,6 +18,7 @@ import com.whmnrc.carpartsshow.model.http.bean.MsgBean;
 import com.whmnrc.carpartsshow.model.http.bean.NewTypeBean;
 import com.whmnrc.carpartsshow.model.http.bean.NewsListBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
@@ -200,8 +201,8 @@ public interface CPSApi {
 
     //立即购买
     @GET("/api/User/ToOrder")
-    Flowable<CPSResponse<OrderBean>> toOder(@Query("RepairUser_ID") String userId,
-                                            @Query("ProductAttrIds") String productAttrIds);
+    Flowable<CPSResponse<OrderBeanV2>> toOder(@Query("RepairUser_ID") String userId,
+                                              @Query("ProductAttrIds") String productAttrIds);
     //获取订单数据
     @GET("/api/User/SplitListOrder")
     Flowable<CPSResponse<OrderListBean>> splitListOrder(@Query("RepairUser_ID") String userId, @Query("PageSize") int size, @Query("PageIndex") int page, @Query("OrderType") int type);
@@ -232,6 +233,10 @@ public interface CPSApi {
     //退货
     @GET("/api/User/SubmitRefundOrder")
     Flowable<CPSResponse> submitRefundOrder(@Query("OrderId") String orederId, @Query("RepairUser_ID") String userId);
+
+    //退货
+    @POST("/api/User/SubmitRefundOrder")
+    Flowable<CPSResponse> submitRefundGoods(@Body Map<String , Object> param);
 
     //通过分类获取品牌
     @GET("/api/Home/GetListBrand")

@@ -11,18 +11,17 @@ public class UserInfoBean implements Serializable{
 
 
     /**
-     * ListServicePhone : null
-     * CurrentRepairUser : {"RepairUser_ID":"ddeqwdq","RepairUser_Name":"小李修理厂","RepairUser_State":0,"RepairUser_Sex":0,"RepairUser_RealName":"小李","RepairUser_Mobile":"15971486093","RepairUser_Pwd":"E10ADC3949BA59ABBE56E057F20F883E","RepairUser_CreateTime":"2017-05-03T00:00:00","RepairUser_IsMaster":false,"RepairUser_ParentID":null,"RepairUser_SCode":"123123","RepairUser_Provice":"湖北省","RepairUser_City":"武汉市","RepairUser_Region":"武昌区","RepairUser_DetailAddress":"丁字桥向阳佳苑B区509","RepairUser_CostMoney":0,"RepairUser_ImgOne":"1","RepairUser_ImgTwo":"2","RepairUser_ImgLicense":"3","RepairUser_ImgHandheldIdentityCard":"4","RepairUser_Integer":241911,"RepairUser_CreditMoney":50000,"Company_ID":"0465ad54-ef0a-401f-a4a8-1072fa544da2","RepairUser_CreditBeOverMoney":0,"RepairUser_CreditType":0,"RepairUser_CreditMonth":1,"RepairUser_CreditDay":20}
-     * CollectionCount : 19
+     * ListServicePhone : [{"ItemDetailId":"2ea2b9c5-a8d8-4669-a372-070eac359b40","ItemId":"2dae762a-72c7-496a-b9b9-63d3cce74bc6","ParentId":"0","ItemCode":null,"ItemName":"客服1","ItemValue":"1588888888","QuickQuery":null,"SimpleSpelling":"kf1","IsDefault":null,"SortCode":0,"DeleteMark":0,"EnabledMark":1,"Description":null,"CreateDate":"2017-12-21T19:42:54.967","CreateUserId":"System","CreateUserName":"超级管理员","ModifyDate":null,"ModifyUserId":null,"ModifyUserName":null},{"ItemDetailId":"bb460a0f-2569-4d81-a6b9-b13b06f7ead8","ItemId":"2dae762a-72c7-496a-b9b9-63d3cce74bc6","ParentId":"0","ItemCode":null,"ItemName":"客服2","ItemValue":"1577777777","QuickQuery":null,"SimpleSpelling":"kf2","IsDefault":null,"SortCode":1,"DeleteMark":0,"EnabledMark":1,"Description":null,"CreateDate":"2017-12-21T19:43:03.653","CreateUserId":"System","CreateUserName":"超级管理员","ModifyDate":null,"ModifyUserId":null,"ModifyUserName":null}]
+     * CurrentRepairUser : {"RepairUser_ID":"ddeqwdq","RepairUser_Name":"小李修理厂","RepairUser_State":0,"RepairUser_Sex":0,"RepairUser_RealName":"小李","RepairUser_Mobile":"15971486093","RepairUser_Pwd":"E10ADC3949BA59ABBE56E057F20F883E","RepairUser_CreateTime":"2017-05-03T00:00:00","RepairUser_IsMaster":false,"RepairUser_ParentID":null,"RepairUser_SCode":"102767","RepairUser_Provice":"210000","RepairUser_ProviceName":"辽宁省","RepairUser_City":"210300","RepairUser_CityName":"鞍山市","RepairUser_Region":"210311","RepairUser_RegionName":"千山区","RepairUser_DetailAddress":"西湖区骆家庄西苑一区","RepairUser_CostMoney":0,"RepairUser_ImgOne":"1","RepairUser_ImgTwo":"2","RepairUser_ImgLicense":"3","RepairUser_ImgHandheldIdentityCard":"4","RepairUser_Integer":998000,"RepairUser_CreditMoney":50000,"Company_ID":"0465ad54-ef0a-401f-a4a8-1072fa544da2","RepairUser_CreditBeOverMoney":35547.99,"RepairUser_CreditType":0,"RepairUser_CreditMonth":1,"RepairUser_CreditDay":20}
+     * CollectionCount : 7
      * CouponCount : 2
-     * WaitOrder : 0
-     * PayCompluteOrder : 7
-     * WaitGoodsOrder : 0
+     * WaitOrder : 31
+     * PayCompluteOrder : 5
+     * WaitGoodsOrder : 9
      * CompluteOrder : 0
-     * SaleOrder : 0
+     * SaleOrder : 6
      */
 
-    private List<ListServicePhone> ListServicePhone;
     private CurrentRepairUserBean CurrentRepairUser;
     private int CollectionCount;
     private int CouponCount;
@@ -31,14 +30,7 @@ public class UserInfoBean implements Serializable{
     private int WaitGoodsOrder;
     private int CompluteOrder;
     private int SaleOrder;
-
-    public List<ListServicePhone> getListServicePhone() {
-        return ListServicePhone;
-    }
-
-    public void setListServicePhone(List<ListServicePhone> ListServicePhone) {
-        this.ListServicePhone = ListServicePhone;
-    }
+    private List<ListServicePhoneBean> ListServicePhone;
 
     public CurrentRepairUserBean getCurrentRepairUser() {
         return CurrentRepairUser;
@@ -104,6 +96,14 @@ public class UserInfoBean implements Serializable{
         this.SaleOrder = SaleOrder;
     }
 
+    public List<ListServicePhoneBean> getListServicePhone() {
+        return ListServicePhone;
+    }
+
+    public void setListServicePhone(List<ListServicePhoneBean> ListServicePhone) {
+        this.ListServicePhone = ListServicePhone;
+    }
+
     public static class CurrentRepairUserBean implements Serializable{
         /**
          * RepairUser_ID : ddeqwdq
@@ -116,20 +116,23 @@ public class UserInfoBean implements Serializable{
          * RepairUser_CreateTime : 2017-05-03T00:00:00
          * RepairUser_IsMaster : false
          * RepairUser_ParentID : null
-         * RepairUser_SCode : 123123
-         * RepairUser_Provice : 湖北省
-         * RepairUser_City : 武汉市
-         * RepairUser_Region : 武昌区
-         * RepairUser_DetailAddress : 丁字桥向阳佳苑B区509
+         * RepairUser_SCode : 102767
+         * RepairUser_Provice : 210000
+         * RepairUser_ProviceName : 辽宁省
+         * RepairUser_City : 210300
+         * RepairUser_CityName : 鞍山市
+         * RepairUser_Region : 210311
+         * RepairUser_RegionName : 千山区
+         * RepairUser_DetailAddress : 西湖区骆家庄西苑一区
          * RepairUser_CostMoney : 0
          * RepairUser_ImgOne : 1
          * RepairUser_ImgTwo : 2
          * RepairUser_ImgLicense : 3
          * RepairUser_ImgHandheldIdentityCard : 4
-         * RepairUser_Integer : 241911
+         * RepairUser_Integer : 998000
          * RepairUser_CreditMoney : 50000
          * Company_ID : 0465ad54-ef0a-401f-a4a8-1072fa544da2
-         * RepairUser_CreditBeOverMoney : 0
+         * RepairUser_CreditBeOverMoney : 35547.99
          * RepairUser_CreditType : 0
          * RepairUser_CreditMonth : 1
          * RepairUser_CreditDay : 20
@@ -147,8 +150,11 @@ public class UserInfoBean implements Serializable{
         private Object RepairUser_ParentID;
         private String RepairUser_SCode;
         private String RepairUser_Provice;
+        private String RepairUser_ProviceName;
         private String RepairUser_City;
+        private String RepairUser_CityName;
         private String RepairUser_Region;
+        private String RepairUser_RegionName;
         private String RepairUser_DetailAddress;
         private int RepairUser_CostMoney;
         private String RepairUser_ImgOne;
@@ -158,38 +164,10 @@ public class UserInfoBean implements Serializable{
         private int RepairUser_Integer;
         private int RepairUser_CreditMoney;
         private String Company_ID;
-        private int RepairUser_CreditBeOverMoney;
+        private double RepairUser_CreditBeOverMoney;
         private int RepairUser_CreditType;
         private int RepairUser_CreditMonth;
         private int RepairUser_CreditDay;
-        private String RepairUser_ProviceName;
-        private String RepairUser_CityName;
-        private String RepairUser_RegionName;
-
-
-        public String getRepairUser_ProviceName() {
-            return RepairUser_ProviceName;
-        }
-
-        public void setRepairUser_ProviceName(String repairUser_ProviceName) {
-            RepairUser_ProviceName = repairUser_ProviceName;
-        }
-
-        public String getRepairUser_CityName() {
-            return RepairUser_CityName;
-        }
-
-        public void setRepairUser_CityName(String repairUser_CityName) {
-            RepairUser_CityName = repairUser_CityName;
-        }
-
-        public String getRepairUser_RegionName() {
-            return RepairUser_RegionName;
-        }
-
-        public void setRepairUser_RegionName(String repairUser_RegionName) {
-            RepairUser_RegionName = repairUser_RegionName;
-        }
 
         public String getRepairUser_ID() {
             return RepairUser_ID;
@@ -287,6 +265,14 @@ public class UserInfoBean implements Serializable{
             this.RepairUser_Provice = RepairUser_Provice;
         }
 
+        public String getRepairUser_ProviceName() {
+            return RepairUser_ProviceName;
+        }
+
+        public void setRepairUser_ProviceName(String RepairUser_ProviceName) {
+            this.RepairUser_ProviceName = RepairUser_ProviceName;
+        }
+
         public String getRepairUser_City() {
             return RepairUser_City;
         }
@@ -295,12 +281,28 @@ public class UserInfoBean implements Serializable{
             this.RepairUser_City = RepairUser_City;
         }
 
+        public String getRepairUser_CityName() {
+            return RepairUser_CityName;
+        }
+
+        public void setRepairUser_CityName(String RepairUser_CityName) {
+            this.RepairUser_CityName = RepairUser_CityName;
+        }
+
         public String getRepairUser_Region() {
             return RepairUser_Region;
         }
 
         public void setRepairUser_Region(String RepairUser_Region) {
             this.RepairUser_Region = RepairUser_Region;
+        }
+
+        public String getRepairUser_RegionName() {
+            return RepairUser_RegionName;
+        }
+
+        public void setRepairUser_RegionName(String RepairUser_RegionName) {
+            this.RepairUser_RegionName = RepairUser_RegionName;
         }
 
         public String getRepairUser_DetailAddress() {
@@ -375,11 +377,11 @@ public class UserInfoBean implements Serializable{
             this.Company_ID = Company_ID;
         }
 
-        public int getRepairUser_CreditBeOverMoney() {
+        public double getRepairUser_CreditBeOverMoney() {
             return RepairUser_CreditBeOverMoney;
         }
 
-        public void setRepairUser_CreditBeOverMoney(int RepairUser_CreditBeOverMoney) {
+        public void setRepairUser_CreditBeOverMoney(double RepairUser_CreditBeOverMoney) {
             this.RepairUser_CreditBeOverMoney = RepairUser_CreditBeOverMoney;
         }
 
@@ -408,8 +410,7 @@ public class UserInfoBean implements Serializable{
         }
     }
 
-    public class ListServicePhone{
-
+    public static class ListServicePhoneBean {
         /**
          * ItemDetailId : 2ea2b9c5-a8d8-4669-a372-070eac359b40
          * ItemId : 2dae762a-72c7-496a-b9b9-63d3cce74bc6

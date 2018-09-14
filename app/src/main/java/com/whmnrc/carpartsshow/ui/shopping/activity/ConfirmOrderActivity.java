@@ -21,6 +21,7 @@ import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.model.http.bean.CouponBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.presenter.shopping.SubmitOrderPresenter;
 import com.whmnrc.carpartsshow.presenter.shopping.contract.SubmitOrderContract;
@@ -86,8 +87,8 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
     private int price = 0;
     private int integer = 0;
     CurrencyDialog currencyDialog;
-    OrderBean.ListReceiptAddressBean addressBean;
-    OrderBean orderBean;
+    OrderBeanV2.ListReceiptAddressBean addressBean;
+    OrderBeanV2 orderBean;
     private String warehouseCode;
     private OptionsPickerView mPickerView;
 
@@ -128,7 +129,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
         recyclerView.setNestedScrollingEnabled(false);
         loginBean = SpUtil.getObject(this,"user");
         if (type == 0){
-            orderBean = new Gson().fromJson(json, OrderBean.class);
+            orderBean = new Gson().fromJson(json, OrderBeanV2.class);
             addressBean = orderBean.getListReceiptAddress().get(0);
             ConfirmOrderAdapter mAdapter = new ConfirmOrderAdapter(this);
             recyclerView.setAdapter(mAdapter);
@@ -153,7 +154,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                     addressAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
                         @Override
                         public void onClick(View view, Object item, int position) {
-                            addressBean = (OrderBean.ListReceiptAddressBean) item;
+                            addressBean = (OrderBeanV2.ListReceiptAddressBean) item;
                             if (TextUtils.isEmpty(addressBean.getMobile())) {
                                 rlAddress.setVisibility(View.GONE);
                                 String name = addressBean.getDetailAddress();
@@ -173,7 +174,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 }
             });
             textView.setText("您有" + orderBean.getCouponCount() + "张优惠券");
-            for (OrderBean.GoodsBean goodsBean : orderBean.getListGoods()) {
+            for (OrderBeanV2.ListGoodsBean goodsBean : orderBean.getListGoods()) {
                 if (goodsBean.getGoods_Type() == 2){
                     integer += goodsBean.getGoods_Price() * goodsBean.getNumber();
 
@@ -250,7 +251,8 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                     public void onClick(View v) {
                         currencyDialog.dismiss();
                     }
-                }).setPositiveButton("确认", new View.OnClickListener() {
+                }).setPositiveButton("确认",
+                        new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mPresenter.submitOrder(map);
@@ -263,7 +265,7 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 .build();
     }
 
-    private void initParam(OrderBean orderBean) {
+    private void initParam(OrderBeanV2 orderBean) {
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -400,10 +402,10 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                 mPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
                     @Override
                     public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                        warehouseCode = orderBean.getWarehouses().get(options1).getCode();
-                        tvSelectt.setText(orderBean.getWarehouses().get(options1).getName());
+                        warehouseCode = orderBean.getWarehouseList().get(options1).getCode();
+                        tvSelectt.setText(orderBean.getWarehouseList().get(options1).getName());
                         mPickerView.dismiss();
-                        map.put("WarehouseId",orderBean.getWarehouses().get(options1).getId());
+                        map.put("WarehouseId",orderBean.getWarehouseList().get(options1).getId());
                     }
                 }).setTitleText("仓库选择")
                         .setCyclic(false, false, false)
@@ -411,9 +413,9 @@ public class ConfirmOrderActivity extends MvpActivity<SubmitOrderPresenter> impl
                         .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                         .setContentTextSize(20)
                         .build();
-                if (orderBean.getWarehouses() != null && orderBean.getWarehouses().size() > 0) {
+                if (orderBean.getWarehouseList() != null && orderBean.getWarehouseList().size() > 0) {
                     List<String> list = new ArrayList<>();
-                    for (OrderBean.Warehouse warehouse:orderBean.getWarehouses()) {
+                    for (OrderBeanV2.WarehouseListBean warehouse:orderBean.getWarehouseList()) {
                         list.add(warehouse.getName());
                     }
                     mPickerView.setPicker(list);

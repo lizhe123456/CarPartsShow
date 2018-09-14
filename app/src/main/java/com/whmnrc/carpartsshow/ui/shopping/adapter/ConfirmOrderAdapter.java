@@ -6,19 +6,20 @@ import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.base.adapter.BaseViewHolder;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 
 /**
  * Created by lizhe on 2018/3/29.
  */
 
-public class ConfirmOrderAdapter extends BaseAdapter<OrderBean.GoodsBean> {
+public class ConfirmOrderAdapter extends BaseAdapter<OrderBeanV2.ListGoodsBean> {
 
     public ConfirmOrderAdapter(Context context) {
         super(context);
     }
 
     @Override
-    protected void bindDataToItemView(BaseViewHolder holder, OrderBean.GoodsBean item, int position) {
+    protected void bindDataToItemView(BaseViewHolder holder, OrderBeanV2.ListGoodsBean item, int position) {
         holder.setVisible(R.id.tv_goods_num,true);
         holder.setText(R.id.tv_goods_num,"x"+item.getNumber())
                 .setGlieuImage(R.id.iv_goods,item.getImagePath());
@@ -36,7 +37,7 @@ public class ConfirmOrderAdapter extends BaseAdapter<OrderBean.GoodsBean> {
     }
 
     @Override
-    protected int getItemViewLayoutId(int position, OrderBean.GoodsBean item) {
+    protected int getItemViewLayoutId(int position, OrderBeanV2.ListGoodsBean item) {
         return R.layout.order_goods_item;
     }
 }

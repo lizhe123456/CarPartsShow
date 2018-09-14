@@ -23,6 +23,7 @@ import com.whmnrc.carpartsshow.ui.me.activity.MyCollectActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.MyCouponActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.MyIntegralActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.NewsActivity;
+import com.whmnrc.carpartsshow.ui.me.activity.ReturnGoodsActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.UpdateAddressActivity;
 import com.whmnrc.carpartsshow.ui.me.activity.UpdatePassActivity;
 import com.whmnrc.carpartsshow.ui.scancode.activity.ScanCodeActivity;
@@ -95,4 +96,6 @@ public interface ActivityComponent {
     void inject(VINResultActivity vinResultActivity);
 
     void inject(SplashActivity splashActivity);
+
+    void inject(ReturnGoodsActivity returnGoodsActivity);
 }

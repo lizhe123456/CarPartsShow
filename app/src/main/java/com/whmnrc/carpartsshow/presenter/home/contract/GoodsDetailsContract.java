@@ -4,6 +4,7 @@ import com.whmnrc.carpartsshow.base.BasePresenter;
 import com.whmnrc.carpartsshow.base.BaseView;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 
 /**
@@ -17,7 +18,7 @@ public interface GoodsDetailsContract {
 
         void state(String msg);
 
-        void showToOrder(OrderBean orderBean);
+        void showToOrder(OrderBeanV2 orderBean);
 
         void showSeckillGoods(SeckillGoodsDetail seckillGoodsDetail);
 

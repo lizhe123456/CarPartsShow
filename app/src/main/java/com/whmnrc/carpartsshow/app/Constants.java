@@ -11,7 +11,7 @@ import com.whmnrc.carpartsshow.util.FileUtil;
 public class Constants {
 
     //正式关闭日志
-    public static final boolean IS_DEBUG = false;
+    public static final boolean IS_DEBUG = true;
 
 //    public static final String CPS_URL = "http://api.jscxqp.com/swagger/docs/v1/";
     public static final String CPS_URL = "http://api.zpkmall.com/swagger/docs/v1/";

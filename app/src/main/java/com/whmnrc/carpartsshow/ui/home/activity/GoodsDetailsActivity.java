@@ -18,6 +18,7 @@ import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.IntergralShopBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.whmnrc.carpartsshow.model.http.bean.UserInfoBean;
 import com.whmnrc.carpartsshow.presenter.home.GoodsDetailsPresenter;
@@ -230,7 +231,7 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
     @Override
     public void shoeGoodsDetails(GoodsDetailBean goodsDetailBean) {
         this.goodsDetailBean = goodsDetailBean;
-        wvX5.loadUrl(goodsDetailBean.getUrl());
+        wvX5.loadUrl(goodsDetailBean.getUrl() + "&RepairUser_ID=" + loginBean.getRepairUser_ID());
         tvNum.setText(goodsDetailBean.getCarCount()+"");
         if (goodsDetailBean.isIsCollection()){
             Drawable nav_up = getResources().getDrawable(R.drawable.like_select);
@@ -262,7 +263,7 @@ public class GoodsDetailsActivity extends MvpActivity<GoodsDetailsPresenter> imp
     }
 
     @Override
-    public void showToOrder(OrderBean orderBean) {
+    public void showToOrder(OrderBeanV2 orderBean) {
         String json = new Gson().toJson(orderBean);
         ConfirmOrderActivity.start(this,json,0);
     }

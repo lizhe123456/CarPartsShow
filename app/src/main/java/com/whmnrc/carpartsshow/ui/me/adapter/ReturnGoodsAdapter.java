@@ -36,7 +36,7 @@ public class ReturnGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detai
     @Override
     protected void bindDataToItemView(final BaseViewHolder holder, final OrderListBean.DataBean.DetailBean item, final int position) {
         holder.setText(R.id.tv_goods_name, item.getProduct_Name() == null ? "" : item.getProduct_Name())
-                .setText(R.id.tv_goods_num, item.getOrderItem_Number() + "");
+                .setText(R.id.tv_goods_num, item.getReturnGoodsNum() + "");
         if (item.getProduct_Type() == 2) {
             holder.setText(R.id.tv_price, "积分： " + item.getProduct_Price());
             holder.setVisible(R.id.tv_jifen_desc, true);
@@ -71,7 +71,7 @@ public class ReturnGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detai
                 public void onClick(View v) {
                     if (onClickRequestListener != null) {
                         //该商品货物减一
-                        int i = item.getOrderItem_Number();
+                        int i = item.getReturnGoodsNum();
                         if (i > 0) {
                             //减一请求
                             onClickRequestListener.reduce(item, position);
@@ -84,7 +84,9 @@ public class ReturnGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detai
                 public void onClick(View v) {
                     if (onClickRequestListener != null) {
                         //加一请求
-                        onClickRequestListener.plus(item, position);
+                        if (item.getKuCun() > 0) {
+                            onClickRequestListener.plus(item, position);
+                        }
                     }
                 }
             });
@@ -130,11 +132,11 @@ public class ReturnGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detai
         for (OrderListBean.DataBean.DetailBean bean : list) {
             if (bean.isSelected()) {
                 if (bean.getProduct_Type() == 2) {
-                    integral += bean.getProduct_Price() * bean.getOrderItem_Number();
+                    integral += bean.getProduct_Price() * bean.getReturnGoodsNum();
                 } else {
-                    money += bean.getProduct_Price() * bean.getOrderItem_Number();
+                    money += bean.getProduct_Price() * bean.getReturnGoodsNum();
                 }
-                num += bean.getOrderItem_Number();
+                num += bean.getReturnGoodsNum();
             }
         }
         return new String[]{"¥" + money + ".00", "积分： " + integral, num + ""};

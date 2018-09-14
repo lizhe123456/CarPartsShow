@@ -5,6 +5,7 @@ import com.whmnrc.carpartsshow.base.CommonSubscriber;
 import com.whmnrc.carpartsshow.model.DataManager;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.whmnrc.carpartsshow.model.http.response.CPSResponse;
 import com.whmnrc.carpartsshow.presenter.home.contract.GoodsDetailsContract;
@@ -115,11 +116,11 @@ public class GoodsDetailsPresenter extends BasePresenterImpl<GoodsDetailsContrac
     public void generateOrder(String userId, String pids) {
         mView.loading("提交中..");
         addSubscribe(dataManager.fetchToOder(userId,pids)
-                .compose(RxUtil.<CPSResponse<OrderBean>>rxSchedulerHelper())
-                .compose(RxUtil.<OrderBean>handle())
-                .subscribeWith(new CommonSubscriber<OrderBean>(mView){
+                .compose(RxUtil.<CPSResponse<OrderBeanV2>>rxSchedulerHelper())
+                .compose(RxUtil.<OrderBeanV2>handle())
+                .subscribeWith(new CommonSubscriber<OrderBeanV2>(mView){
                     @Override
-                    public void onNext(OrderBean orderBean) {
+                    public void onNext(OrderBeanV2 orderBean) {
                         super.onNext(orderBean);
                         mView.showToOrder(orderBean);
                     }

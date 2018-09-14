@@ -11,12 +11,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.BaseActivity;
+import com.whmnrc.carpartsshow.base.MvpActivity;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
+import com.whmnrc.carpartsshow.presenter.me.MyOrderPresenter;
+import com.whmnrc.carpartsshow.presenter.me.contract.MyOrderContract;
 import com.whmnrc.carpartsshow.ui.me.adapter.ReturnGoodsAdapter;
+import com.whmnrc.carpartsshow.widgets.CPSToast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +35,7 @@ import butterknife.OnClick;
  * Created by lizhe on 2018/6/22.
  */
 
-public class ReturnGoodsActivity extends BaseActivity implements ReturnGoodsAdapter.OnClickRequestListener {
+public class ReturnGoodsActivity extends MvpActivity<MyOrderPresenter> implements MyOrderContract.View,ReturnGoodsAdapter.OnClickRequestListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -45,6 +53,7 @@ public class ReturnGoodsActivity extends BaseActivity implements ReturnGoodsAdap
     private ReturnGoodsAdapter mAdapter;
     private boolean isAll = false;
     private boolean isEdit = false;
+    private OrderListBean.DataBean dataBean;
 
     public static void start(Context context, OrderListBean.DataBean item) {
         Intent starter = new Intent(context, ReturnGoodsActivity.class);
@@ -58,15 +67,39 @@ public class ReturnGoodsActivity extends BaseActivity implements ReturnGoodsAdap
         return R.layout.activity_retuen_goods;
     }
 
-    @Override
-    protected void init() {
 
+    @Override
+    protected void initInject() {
+        getActivityComponent().inject(this);
+    }
+
+    private void retrueGoods(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("OrderId",dataBean.getOrder_ID());
+        map.put("RepairUser_ID",dataBean.getUserInfo_ID());
+        StringBuilder orderItemIds = new StringBuilder();
+        for (int i = 0; i < dataBean.getDetail().size(); i++) {
+            if (i == dataBean.getDetail().size()-1){
+                orderItemIds.append(dataBean.getDetail().get(i).getOrderItem_ID()).append(",").append(dataBean.getDetail().get(i).getReturnGoodsNum());
+            }else {
+                orderItemIds.append(dataBean.getDetail().get(i).getOrderItem_ID()).append(",").append(dataBean.getDetail().get(i).getReturnGoodsNum()).append("|");
+            }
+        }
+        map.put("OrderItemIds",orderItemIds.toString().trim());
+        String remark = etRetGoods.getText().toString().trim();
+        if (TextUtils.isEmpty(remark)){
+            CPSToast.showText(this,"请填写退货原因");
+            return;
+        }
+        map.put("Remark",remark);
+
+        mPresenter.applyCustomerService(map);
     }
 
     @Override
     protected void setData() {
         String json = getIntent().getStringExtra("json");
-        OrderListBean.DataBean dataBean = null;
+        dataBean = null;
         if (!TextUtils.isEmpty(json)) {
             dataBean = new Gson().fromJson(json, OrderListBean.DataBean.class);
         }
@@ -81,14 +114,15 @@ public class ReturnGoodsActivity extends BaseActivity implements ReturnGoodsAdap
 
     @Override
     public void plus(OrderListBean.DataBean.DetailBean item, int position) {
-        int num = mAdapter.getDataSource().get(position).getOrderItem_Number() + 1;
-        mAdapter.getDataSource().get(position).setOrderItem_Number(num);
+        int num = mAdapter.getDataSource().get(position).getReturnGoodsNum() + 1;
+        mAdapter.getDataSource().get(position).setReturnGoodsNum(num);
         mAdapter.shopNotifyItemChanged(position);
     }
+
     @Override
     public void reduce(OrderListBean.DataBean.DetailBean item, int position) {
-        int num = mAdapter.getDataSource().get(position).getOrderItem_Number() - 1;
-        mAdapter.getDataSource().get(position).setOrderItem_Number(num);
+        int num = mAdapter.getDataSource().get(position).getReturnGoodsNum() - 1;
+        mAdapter.getDataSource().get(position).setReturnGoodsNum(num);
         mAdapter.shopNotifyItemChanged(position);
     }
 
@@ -137,7 +171,29 @@ public class ReturnGoodsActivity extends BaseActivity implements ReturnGoodsAdap
                 mAdapter.allSelected(isAll);
                 break;
             case R.id.tv_reture_goods:
+                retrueGoods();
                 break;
         }
+    }
+
+    @Override
+    public void stateError() {
+
+    }
+
+    @Override
+    public void showData(OrderListBean orderListBean) {
+
+    }
+
+    @Override
+    public void loadMore(OrderListBean orderListBean) {
+
+    }
+
+    @Override
+    public void updateData(String msg) {
+        CPSToast.showText(this,msg);
+        this.finish();
     }
 }

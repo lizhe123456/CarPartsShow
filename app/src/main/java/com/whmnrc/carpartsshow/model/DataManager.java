@@ -20,6 +20,7 @@ import com.whmnrc.carpartsshow.model.http.bean.MsgBean;
 import com.whmnrc.carpartsshow.model.http.bean.NewTypeBean;
 import com.whmnrc.carpartsshow.model.http.bean.NewsListBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
@@ -223,7 +224,7 @@ public class DataManager implements RealmHelper, HttpHelper {
     }
 
     @Override
-    public Flowable<CPSResponse<OrderBean>> fetchToOder(String userId, String productAttrIds) {
+    public Flowable<CPSResponse<OrderBeanV2>> fetchToOder(String userId, String productAttrIds) {
         return httpHelper.fetchToOder(userId, productAttrIds);
     }
 
@@ -270,6 +271,11 @@ public class DataManager implements RealmHelper, HttpHelper {
     @Override
     public Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> fetchgetListBrand(String userId, int step, String categoryName) {
         return httpHelper.fetchgetListBrand(userId, step, categoryName);
+    }
+
+    @Override
+    public Flowable<CPSResponse> submitRefundGoods(Map<String, Object> map) {
+        return httpHelper.submitRefundGoods(map);
     }
 
 }

@@ -16,6 +16,7 @@ import com.whmnrc.carpartsshow.base.MvpActivity;
 import com.whmnrc.carpartsshow.model.http.bean.GoodsDetailToBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
+import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
 import com.whmnrc.carpartsshow.presenter.shopping.ShoppingCarPresenter;
 import com.whmnrc.carpartsshow.presenter.shopping.contract.ShoppingCarContract;
@@ -238,7 +239,7 @@ public class ShoppingCartActivity extends MvpActivity<ShoppingCarPresenter> impl
     }
 
     @Override
-    public void showToOrder(OrderBean orderBean) {
+    public void showToOrder(OrderBeanV2 orderBean) {
         String json = new Gson().toJson(orderBean);
         ConfirmOrderActivity.start(this,json,0);
     }
