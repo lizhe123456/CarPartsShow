@@ -1,5 +1,6 @@
 package com.whmnrc.carpartsshow.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.app.App;
 import com.whmnrc.carpartsshow.base.BaseActivity;
@@ -31,6 +34,7 @@ import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends BaseActivity {
 
@@ -91,6 +95,15 @@ public class MainActivity extends BaseActivity {
         tag = getIntent().getStringExtra("page") == null ? HOME : getIntent().getStringExtra("page");
         selectNavigation();
         setContentFragment(tag);
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.READ_PHONE_STATE)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+
+                    }
+                });
     }
 
 

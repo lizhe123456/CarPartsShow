@@ -11,6 +11,7 @@ import com.whmnrc.carpartsshow.R;
 import com.whmnrc.carpartsshow.base.MvpFragment;
 import com.whmnrc.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
+import com.whmnrc.carpartsshow.model.http.bean.PayRecordBean;
 import com.whmnrc.carpartsshow.presenter.me.CreditMoneyPresenter;
 import com.whmnrc.carpartsshow.presenter.me.contract.CreditMoneyContract;
 import com.whmnrc.carpartsshow.ui.me.adapter.ConsumptionRecordAdapter;
@@ -55,23 +56,23 @@ public class RepayCompleteFragment extends MvpFragment<CreditMoneyPresenter> imp
 
     @Override
     protected void setData() {
-        adapter = new ConsumptionRecordAdapter(getContext());
+        adapter = new ConsumptionRecordAdapter(getContext(),0);
         final LoginBean loginBean = SpUtil.getObject(getContext(),"user");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),1,1);
+        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,1);
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),1,1);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,1);
             }
         });
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),1,2);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(),0,2);
             }
         });
     }
@@ -98,6 +99,16 @@ public class RepayCompleteFragment extends MvpFragment<CreditMoneyPresenter> imp
             vsEmpty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void showPay(List<PayRecordBean> payRecordBeans) {
+
+    }
+
+    @Override
+    public void showPayLoadMore(List<PayRecordBean> payRecordBeans) {
+
     }
 
     @Override

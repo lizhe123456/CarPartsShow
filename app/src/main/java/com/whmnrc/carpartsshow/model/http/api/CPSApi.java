@@ -20,6 +20,7 @@ import com.whmnrc.carpartsshow.model.http.bean.NewsListBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
+import com.whmnrc.carpartsshow.model.http.bean.PayRecordBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
@@ -243,4 +244,11 @@ public interface CPSApi {
     Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> getListBrand(@Query("RepairUser_ID") String userId,
                                                                                @Query("Step") int step,
                                                                                @Query("CategoryName") String categoryName);
+    //
+    @GET("/api/User/SplitOrderRecord")
+    Flowable<CPSResponse<List<PayRecordBean>>> getSplitOrderRecord(@Query("PageIndex") int page,
+                                                                   @Query("RepairUser_ID") String userId);
+
+
+
 }

@@ -3,6 +3,7 @@ package com.whmnrc.carpartsshow.ui.me.fragment.order.base;
 import android.app.Dialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,9 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -135,14 +139,16 @@ public abstract class BaseOrderFragment extends MvpFragment<MyOrderPresenter> im
     //申请售后
     protected void applyCustomerService(OrderListBean.DataBean dataBean) {
 //        mPresenter.applyCustomerServiceClick();
-        ReturnGoodsActivity.start(getContext(),dataBean);
+
 //        mPresenter.applyCustomerService(dataBean.getOrder_ID());
     }
 
+
+
     @Override
     public void updateData(String msg) {
+        refresh.autoRefresh(1000);
         CPSToast.showText(getContext(),msg);
-        refresh.autoRefresh(3000);
     }
 
     //联系客服

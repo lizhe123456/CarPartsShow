@@ -196,7 +196,7 @@ public class MeFragment extends MvpFragment<MePresenter> implements MeContract.V
         this.userInfoBean = userInfoBean;
         coupon.setText(userInfoBean.getCouponCount() + "");
         collection.setText(userInfoBean.getCollectionCount() + "");
-        money.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditMoney() + "");
+        money.setText(userInfoBean.getCurrentRepairUser().getRepairUser_CreditBeOverMoney() + "");
         integral.setText(userInfoBean.getCurrentRepairUser().getRepairUser_Integer() + "");
         tvGongsi.setText(userInfoBean.getCurrentRepairUser().getRepairUser_Name() + "");
         orderListAdapter = new OrderListAdapter(getContext());

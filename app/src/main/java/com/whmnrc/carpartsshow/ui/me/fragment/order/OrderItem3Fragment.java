@@ -19,7 +19,11 @@ public class OrderItem3Fragment extends BaseOrderFragment {
         adapter.setOnOrderListener(new OnOrderListenerAdapter() {
             @Override
             public void applyCustomerServiceClick(OrderListBean.DataBean item) {
-                //申请售后
+                if (item.getOrder_PayType() == 2){
+                    applyCustomerService(item);
+                }else if (item.getOrder_PayType() == 0){
+//                    mPresenter.applyCustomerService();
+                }
             }
 
 

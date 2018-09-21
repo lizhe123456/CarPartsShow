@@ -29,8 +29,8 @@ public class ConfirmOrderAdapter extends BaseAdapter<OrderBeanV2.ListGoodsBean> 
             holder.setText(R.id.tv_xiaoj,"积分："+(item.getGoods_Price() * item.getNumber()));
         }else {
             holder.setVisible(R.id.tv_rmb,true);
-            holder.setText(R.id.tv_price,item.getGoods_Price()+".00");
-            holder.setText(R.id.tv_xiaoj,"¥"+(item.getGoods_Price() * item.getNumber())+".00");
+            holder.setText(R.id.tv_price,item.getGoods_Price() + "");
+            holder.setText(R.id.tv_xiaoj,"¥"+(item.getGoods_Price() * item.getNumber()));
         }
 
         holder.setText(R.id.tv_znum,"共"+item.getNumber()+"件商品");

@@ -10,6 +10,7 @@ import com.whmnrc.carpartsshow.base.MvpFragment;
 import com.whmnrc.carpartsshow.base.adapter.BaseAdapter;
 import com.whmnrc.carpartsshow.model.http.bean.ConsumptionRecordBean;
 import com.whmnrc.carpartsshow.model.http.bean.LoginBean;
+import com.whmnrc.carpartsshow.model.http.bean.PayRecordBean;
 import com.whmnrc.carpartsshow.pay.alipay.AliPayTools;
 import com.whmnrc.carpartsshow.pay.wechat.pay.WechatPay;
 import com.whmnrc.carpartsshow.pay.wechat.pay.WechatPayTools;
@@ -61,7 +62,7 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
 
     @Override
     protected void setData() {
-        adapter = new ConsumptionRecordAdapter(getContext());
+        adapter = new ConsumptionRecordAdapter(getContext(),1);
         loginBean = SpUtil.getObject(getContext(), "user");
 //        tvNum.setText(loginBean);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -69,19 +70,19 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
-        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 0, 1);
+        mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 1, 1);
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refresh.finishRefresh(3000);
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 0, 1);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 1, 1);
             }
         });
         refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 refresh.finishLoadmore(3000);
-                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 0, 2);
+                mPresenter.getCreditMoney(loginBean.getRepairUser_ID(), 1, 2);
             }
         });
        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
@@ -184,6 +185,16 @@ public class WaitRepayFragment extends MvpFragment<CreditMoneyPresenter> impleme
         if (list.size() == 0) {
             CPSToast.showText(getContext(), "没有更多记录了");
         }
+    }
+
+    @Override
+    public void showPay(List<PayRecordBean> payRecordBeans) {
+
+    }
+
+    @Override
+    public void showPayLoadMore(List<PayRecordBean> payRecordBeans) {
+
     }
 
     public static void createSign(String orderId, int payType, int PayPurpose) {

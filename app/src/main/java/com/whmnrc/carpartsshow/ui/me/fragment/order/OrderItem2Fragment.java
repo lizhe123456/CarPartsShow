@@ -25,6 +25,17 @@ public class OrderItem2Fragment extends BaseOrderFragment {
                 customerServicePhone();
             }
 
+            @Override
+            public void applyCustomerServiceClick(OrderListBean.DataBean item) {
+                //申请售后
+                if (item.getOrder_PayType() == 2){
+                    applyCustomerService(item);
+                }else if (item.getOrder_PayType() == 0){
+//                    mPresenter.applyCustomerService();
+                }
+
+
+            }
         });
         return adapter;
     }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dm_15"
+    android:paddingRight="@dimen/dm_15"
+    android:paddingTop="@dimen/dm_15"
+    android:background="@color/white">
+    <LinearLayout
+        android:id="@+id/ll_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="金额：7500.00"
+            android:textColor="@color/tv_000"
+            android:textSize="@dimen/dm_15"/>
+        <TextView
+            android:id="@+id/tv_order_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已还款"
+            android:textColor="@color/tv_666"
+            android:textSize="@dimen/dm_15"
+            android:layout_marginLeft="@dimen/dm_10"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="下单时间：2017-11-11 12:12:12"
+        android:textColor="@color/tv_999"
+        android:textSize="@dimen/dm_12"
+        android:layout_below="@+id/ll_num"
+        android:layout_marginTop="@dimen/dm_15" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dm_0.5"
+        android:background="@color/slide_line"
+        android:layout_below="@+id/tv_time"
+        android:layout_marginTop="@dimen/dm_15"
+        />
+</RelativeLayout>

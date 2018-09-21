@@ -44,7 +44,7 @@ public class ReturnGoodsAdapter extends BaseAdapter<OrderListBean.DataBean.Detai
             if (item.getProduct_Price() <= 0) {
                 holder.setText(R.id.tv_price, R.string.no_price);
             } else {
-                holder.setText(R.id.tv_price, "¥" + item.getProduct_Price() + ".00");
+                holder.setText(R.id.tv_price, "¥" + item.getProduct_Price());
             }
             holder.setVisible(R.id.tv_jifen_desc, false);
         }

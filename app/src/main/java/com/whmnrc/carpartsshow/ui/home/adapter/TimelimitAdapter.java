@@ -22,8 +22,8 @@ public class  TimelimitAdapter extends BaseAdapter<SeckillGoodsBean> {
     @Override
     protected void bindDataToItemView(BaseViewHolder holder, SeckillGoodsBean item, int position) {
         holder.setText(R.id.tv_goods_desc,item.getSeckill_Name())
-                .setText(R.id.tv_price,item.getSeckill_Price()+".00")
-                .setText(R.id.tv_num,"只剩"+item.getSeckill_Stock()+"件").setText(R.id.tv_old_price,"¥"+item.getSeckill_SourcePrice()+".00");
+                .setText(R.id.tv_price,item.getSeckill_Price())
+                .setText(R.id.tv_num,"只剩"+item.getSeckill_Stock()+"件").setText(R.id.tv_old_price,"¥"+item.getSeckill_SourcePrice());
         holder.setGlieuImage(R.id.iv_goods,item.getSeckill_ImgPath());
         TextView textView = holder.getView(R.id.tv_old_price);
         textView.getPaint().setAntiAlias(true);//抗锯齿

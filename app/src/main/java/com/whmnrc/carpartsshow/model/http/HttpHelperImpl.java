@@ -22,6 +22,7 @@ import com.whmnrc.carpartsshow.model.http.bean.NewsListBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBean;
 import com.whmnrc.carpartsshow.model.http.bean.OrderBeanV2;
 import com.whmnrc.carpartsshow.model.http.bean.OrderListBean;
+import com.whmnrc.carpartsshow.model.http.bean.PayRecordBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsBean;
 import com.whmnrc.carpartsshow.model.http.bean.SeckillGoodsDetail;
 import com.whmnrc.carpartsshow.model.http.bean.ShopCarBean;
@@ -273,6 +274,11 @@ public class HttpHelperImpl implements HttpHelper{
     @Override
     public Flowable<CPSResponse<List<ClassificationBean.ListBrandBean>>> fetchgetListBrand(String userId, int step, String categoryName) {
         return cpsApi.getListBrand(userId, step, categoryName);
+    }
+
+    @Override
+    public Flowable<CPSResponse<List<PayRecordBean>>> fetchGetSplitOrderRecord(int pageIndex, String userId) {
+        return cpsApi.getSplitOrderRecord(pageIndex,userId);
     }
 
     @Override

@@ -1,41 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/dm_15"
-    android:paddingRight="@dimen/dm_15"
-    android:paddingTop="@dimen/dm_15"
+    android:orientation="vertical"
     android:background="@color/white">
-    <TextView
-        android:id="@+id/tv_num"
-        android:layout_width="wrap_content"
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="7500.00"
-        android:textColor="@color/tv_000"
-        android:textSize="@dimen/dm_16"/>
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2017-11-11 12:12:12"
-        android:textColor="@color/tv_999"
-        android:textSize="@dimen/dm_12"
-        android:layout_below="@+id/tv_num"
-        android:layout_marginTop="@dimen/dm_5" />
-    <TextView
-        android:id="@+id/tv_go"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="已还款"
-        android:textColor="@color/tv_999"
-        android:textSize="@dimen/dm_15"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:paddingLeft="@dimen/dm_15"
+        android:paddingRight="@dimen/dm_15"
+        android:paddingTop="@dimen/dm_15">
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="账期金额：7500.00"
+            android:textColor="@color/tv_000"
+            android:textSize="@dimen/dm_16" />
+
+        <TextView
+            android:id="@+id/tv_f_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_num"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <TextView
+            android:id="@+id/tv_item_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_f_price"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <TextView
+            android:id="@+id/tv_item_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_2"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <TextView
+            android:id="@+id/tv_item_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_3"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <TextView
+            android:id="@+id/tv_item_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_4"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <TextView
+            android:id="@+id/tv_item_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_5"
+            android:text="退款金额：0.00"
+            android:textColor="@color/tv_333"
+            android:textSize="@dimen/dm_12" />
+
+        <LinearLayout
+            android:id="@+id/ll_j"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_6"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="记账周期：2017-11-11 12:12:12"
+                android:textColor="@color/tv_999"
+                android:textSize="@dimen/dm_13" />
+
+            <TextView
+                android:id="@+id/tv_cat_d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dm_5"
+                android:text="查看明细"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/dm_13" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_j"
+            android:layout_marginTop="@dimen/dm_10"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/tv_go"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_item_6"
+                android:text="消费明细"
+                android:textColor="@color/tv_333"
+                android:textSize="@dimen/dm_12" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_d"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="已还款"
+            android:textColor="@color/tv_999"
+            android:textSize="@dimen/dm_15" />
+
+    </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dm_0.5"
-        android:background="@color/slide_line"
         android:layout_below="@+id/tv_time"
         android:layout_marginTop="@dimen/dm_15"
-        />
-</RelativeLayout>
+        android:background="@color/slide_line"
+        android:layout_marginLeft="@dimen/dm_15"
+        android:layout_marginRight="@dimen/dm_15"/>
+</LinearLayout>

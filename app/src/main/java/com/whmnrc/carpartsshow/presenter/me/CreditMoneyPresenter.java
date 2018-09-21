@@ -4,6 +4,7 @@ import com.whmnrc.carpartsshow.base.BasePresenterImpl;
 import com.whmnrc.carpartsshow.base.CommonSubscriber;
 import com.whmnrc.carpartsshow.model.DataManager;
 import com.whmnrc.carpartsshow.model.http.bean.ConsumptionRecordBean;
+import com.whmnrc.carpartsshow.model.http.bean.PayRecordBean;
 import com.whmnrc.carpartsshow.model.http.response.CPSResponse;
 import com.whmnrc.carpartsshow.presenter.me.contract.CreditMoneyContract;
 import com.whmnrc.carpartsshow.util.RxUtil;
@@ -53,6 +54,29 @@ public class CreditMoneyPresenter extends BasePresenterImpl<CreditMoneyContract.
     }
 
     @Override
+    public void getPay(String userId, final boolean isR) {
+        if (isR){
+            page = 1;
+        }
+        addSubscribe(dataManager.fetchGetSplitOrderRecord(page,userId)
+                .compose(RxUtil.<CPSResponse<List<PayRecordBean>>>rxSchedulerHelper())
+                .compose(RxUtil.<List<PayRecordBean>>handle())
+                .subscribeWith(new CommonSubscriber<List<PayRecordBean>>(mView){
+                    @Override
+                    public void onNext(List<PayRecordBean> payRecordBeans) {
+                        if (isR){
+                            mView.showPay(payRecordBeans);
+                        }else {
+                            mView.showPayLoadMore(payRecordBeans);
+                        }
+                        page++;
+                        super.onNext(payRecordBeans);
+                    }
+                })
+        );
+    }
+
+    @Override
     public void getCreditMoney(String userId, int state, final int type) {
         if (type == 1){
             page = 1;
@@ -77,6 +101,8 @@ public class CreditMoneyPresenter extends BasePresenterImpl<CreditMoneyContract.
                 })
         );
     }
+
+
 
 
 }
